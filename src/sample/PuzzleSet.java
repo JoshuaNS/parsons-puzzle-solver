@@ -57,18 +57,11 @@ public class PuzzleSet {
         this.setSequentialCompletion(seqComp.equals("true"));
 
         // Import each puzzle
-        NodeList puzzleXMLNodes = document.getElementsByTagName("puzzle");
-        for (int i = 0; i < puzzleXMLNodes.getLength(); i++) {
-            NodeList puzzleChildren = puzzleXMLNodes.item(i).getChildNodes();
-            // Find the index for that particular puzzle int he set
-            for (int j = 0; j < puzzleChildren.getLength(); j++) {
-                if (puzzleChildren.item(j).getNodeName().equals("index")){
-                    int index = Integer.parseInt(puzzleChildren.item(j).getTextContent());
-                    puzzles.add(index, new Puzzle(puzzleFile, index));
+        NodeList puzzleXMLNodes = document.getElementsByTagName("index");
 
-                    break;
-                }
-            }
+        for (int i = 0; i < puzzleXMLNodes.getLength(); i++) {
+            int index = Integer.parseInt(puzzleXMLNodes.item(i).getTextContent());
+            puzzles.add(index, new Puzzle(puzzleFile, index));
         }
     }
 
