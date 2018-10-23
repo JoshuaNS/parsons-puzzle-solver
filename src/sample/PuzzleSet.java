@@ -44,17 +44,17 @@ public class PuzzleSet {
         NodeList nodes = document.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++){
             if (nodes.item(i).getNodeName().equals("name")){
-                this.name = nodes.item(i).getTextContent();
+                this.setName(nodes.item(i).getTextContent());
             }
         }
 
         // Random order setting
         String order = document.getElementsByTagName("randomOrder").item(0).getTextContent();
-        this.randomOrder = order.equals("true");
+        this.setRandomOrder(order.equals("true"));
 
         // Sequential puzzle completion setting
         String seqComp = document.getElementsByTagName("sequentialComp").item(0).getTextContent();
-        this.sequentialCompletion = seqComp.equals("true");
+        this.setSequentialCompletion(seqComp.equals("true"));
 
         // Import each puzzle
         NodeList puzzleXMLNodes = document.getElementsByTagName("puzzle");
