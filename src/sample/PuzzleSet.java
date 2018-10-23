@@ -40,6 +40,21 @@ public class PuzzleSet {
         // Sequential puzzle completion setting
         String seqComp = document.getElementsByTagName("sequentialComp").item(0).getTextContent();
         this.sequentialCompletion = seqComp.equals("true");
+
+        // Import each puzzle
+        NodeList puzzleXMLNodes = document.getElementsByTagName("puzzle");
+        for (int i = 0; i < puzzleXMLNodes.getLength(); i++) {
+            NodeList puzzleChildren = puzzleXMLNodes.item(i).getChildNodes();
+            // Find the index for that particular puzzle int he set
+            for (int j = 0; j < puzzleChildren.getLength(); j++) {
+                if (puzzleChildren.item(j).getNodeName().equals("index")){
+                    int index = Integer.parseInt(puzzleChildren.item(j).getTextContent());
+                    puzzles.add(index, new Puzzle(puzzleFile, index));
+
+                    break;
+                }
+            }
+        }
     }
 
     public String getName() {

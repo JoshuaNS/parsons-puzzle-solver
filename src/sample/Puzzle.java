@@ -1,6 +1,15 @@
 package sample;
 
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.*;
+import java.io.File;
+
 public class Puzzle {
 
     private String name;
@@ -13,13 +22,35 @@ public class Puzzle {
     private ArrayList<String> distractors;
     private ArrayList<String> solution; //need to decide how we store solution
 
-    public Puzzle(String name, int index){
-        this.name = name;
-        this.index = index;
-    }
+    public Puzzle(File puzzleFile, int puzzleSetIndex){
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        try{
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(puzzleFile);
 
-    public void importPuzzle(){
-        //used to import a puzzle from a puzzle set
+            // PuzzleSet index
+            this.setIndex(puzzleSetIndex);
+            // Name
+
+            // Language
+
+            // Puzzle Type
+
+            // Keep indentation setting
+
+            // Description
+
+            // Solution
+
+            // Distractors
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getName() {
