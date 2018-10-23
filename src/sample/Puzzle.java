@@ -1,6 +1,8 @@
 package sample;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -30,6 +32,18 @@ public class Puzzle {
 
             // PuzzleSet index
             this.setIndex(puzzleSetIndex);
+
+            // Find the puzzle with this index
+            Node puzzleAtIndex;
+
+            NodeList indiciesNL = document.getElementsByTagName("index");
+            for (int i = 0; i < indiciesNL.getLength(); i++) {
+                if (Integer.parseInt(indiciesNL.item(i).getTextContent()) == this.getIndex()) {
+                    puzzleAtIndex = indiciesNL.item(i).getParentNode();
+                    break;
+                }
+            }
+
             // Name
 
             // Language
