@@ -1,7 +1,15 @@
 package sample;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +21,25 @@ public class PuzzleTest {
     void importSamplePuzzle1() {
         File f = new File("puzzlesamp.xml");
         assertTrue(f.exists());
-        Puzzle p = new Puzzle(f, 1);
+
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = null;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        Document document = null;
+        try {
+            document = documentBuilder.parse(f);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Puzzle p = new Puzzle((Element)document.getElementsByTagName("puzzle").item(0));
+
         List<String> expectedSolution = new ArrayList<>();
         expectedSolution.add("for num in range(1, 21):");
         expectedSolution.add("if num % 3 == 0 and num % 5 == 0:");
