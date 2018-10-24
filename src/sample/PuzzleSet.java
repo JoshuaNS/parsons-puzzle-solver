@@ -1,6 +1,7 @@
 package sample;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -61,7 +62,13 @@ public class PuzzleSet {
 
         for (int i = 0; i < puzzleXMLNodes.getLength(); i++) {
             int index = Integer.parseInt(puzzleXMLNodes.item(i).getTextContent());
-            puzzles.add(index, new Puzzle(puzzleFile, index));
+            if (puzzleXMLNodes.item(i).getParentNode() instanceof Element) {
+                Element puzzleAtIndex = (Element)puzzleXMLNodes.item(i).getParentNode();
+                puzzles.add(index, new Puzzle(puzzleAtIndex));
+            }
+            else {
+                System.err.println("Puzzle parent node not an Element.");
+            }
         }
     }
 

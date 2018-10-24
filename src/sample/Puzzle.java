@@ -24,54 +24,20 @@ public class Puzzle {
     private ArrayList<String> solutions;
     private ArrayList<String> distractors;
 
-    public Puzzle(File puzzleFile, int puzzleSetIndex){
+    public Puzzle(Element puzzleXML){
         solutions = new ArrayList<>();
         distractors = new ArrayList<>();
 
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = null;
-        try {
-            documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        Document document = null;
-        try {
-            document = documentBuilder.parse(puzzleFile);
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // PuzzleSet index
-        this.setIndex(puzzleSetIndex);
-
-        // Find the puzzle with this index
-        Element puzzleAtIndex = null;
-
-        NodeList indiciesNL = document.getElementsByTagName("index");
-        for (int i = 0; i < indiciesNL.getLength(); i++) {
-            if (Integer.parseInt(indiciesNL.item(i).getTextContent()) == this.getIndex()) {
-                if (indiciesNL.item(i).getParentNode() instanceof Element){
-                    puzzleAtIndex = (Element)indiciesNL.item(i).getParentNode();
-                }
-                else {
-                    System.err.println("Puzzle parent node not an Element.");
-                    // error
-                }
-                break;
-            }
-        }
-
+        // Index
+        this.setIndex(Integer.parseInt(puzzleXML.getElementsByTagName("index").item(0).getTextContent()));
         // Name
-        this.setName(puzzleAtIndex.getElementsByTagName("name").item(0).getTextContent());
+        this.setName(puzzleXML.getElementsByTagName("name").item(0).getTextContent());
 
         // Language
-        this.setLanguage(puzzleAtIndex.getElementsByTagName("lang").item(0).getTextContent());
+        this.setLanguage(puzzleXML.getElementsByTagName("lang").item(0).getTextContent());
 
         // Puzzle Type
-        String ptype = puzzleAtIndex.getElementsByTagName("format").item(0).getTextContent();
+        String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
         if (ptype.equals("DnD")) {
             this.setType(PuzzleType.DnD);
         }
@@ -80,13 +46,13 @@ public class Puzzle {
         }
 
         // Keep indentation setting
-        this.setIndentRequired(puzzleAtIndex.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
+        this.setIndentRequired(puzzleXML.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
 
         // Description
-        this.setDescription(puzzleAtIndex.getElementsByTagName("description").item(0).getTextContent());
+        this.setDescription(puzzleXML.getElementsByTagName("description").item(0).getTextContent());
 
         // Solution
-        Element solutionNodes = (Element)puzzleAtIndex.getElementsByTagName("solution").item(0);
+        Element solutionNodes = (Element)puzzleXML.getElementsByTagName("solution").item(0);
         NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
         for (int i = 0; i < solutionBlocks.getLength(); i++) {
             int index = Integer.parseInt(solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue());
@@ -94,7 +60,7 @@ public class Puzzle {
         }
 
         // Distractors
-        Element distractorNodes = (Element)puzzleAtIndex.getElementsByTagName("distractors").item(0);
+        Element distractorNodes = (Element)puzzleXML.getElementsByTagName("distractors").item(0);
         NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
         for (int i = 0; i < distractorBlocks.getLength(); i++) {
             int index = Integer.parseInt(distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue().replaceAll("[^0-9]", ""));
