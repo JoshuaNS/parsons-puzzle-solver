@@ -64,7 +64,7 @@ public class PuzzleSet {
             int index = Integer.parseInt(puzzleXMLNodes.item(i).getTextContent());
             if (puzzleXMLNodes.item(i).getParentNode() instanceof Element) {
                 Element puzzleAtIndex = (Element)puzzleXMLNodes.item(i).getParentNode();
-                puzzles.add(index, new Puzzle(puzzleAtIndex));
+                puzzles.add(index-1, new Puzzle(puzzleAtIndex));
             }
             else {
                 System.err.println("Puzzle parent node not an Element.");
