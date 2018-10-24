@@ -23,7 +23,6 @@ public class Puzzle {
     private String description;
     private ArrayList<String> solutions;
     private ArrayList<String> distractors;
-    private ArrayList<String> solution; //need to decide how we store solution
 
     public Puzzle(File puzzleFile, int puzzleSetIndex){
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -89,7 +88,7 @@ public class Puzzle {
         NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
         for (int i = 0; i < solutionBlocks.getLength(); i++) {
             int index = Integer.parseInt(solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue());
-            this.solution.add(index, solutionBlocks.item(i).getNodeValue());
+            this.solutions.add(index, solutionBlocks.item(i).getNodeValue());
         }
 
         // Distractors
