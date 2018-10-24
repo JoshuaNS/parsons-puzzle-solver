@@ -85,9 +85,20 @@ public class Puzzle {
         this.setDescription(puzzleAtIndex.getElementsByTagName("description").item(0).getTextContent());
 
         // Solution
+        Element solutionNodes = (Element)puzzleAtIndex.getElementsByTagName("solution");
+        NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
+        for (int i = 0; i < solutionBlocks.getLength(); i++) {
+            int index = Integer.parseInt(solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue());
+            this.solution.add(index, solutionBlocks.item(i).getNodeValue());
+        }
 
         // Distractors
-
+        Element distractorNodes = (Element)puzzleAtIndex.getElementsByTagName("distractors");
+        NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
+        for (int i = 0; i < distractorBlocks.getLength(); i++) {
+            int index = Integer.parseInt(distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue().replaceAll("[^0-9]", ""));
+            this.distractors.add(index, distractorBlocks.item(i).getNodeValue());
+        }
     }
 
     public String getName() {
