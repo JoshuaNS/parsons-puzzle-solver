@@ -1,6 +1,7 @@
 package sample;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -26,45 +27,67 @@ public class Puzzle {
 
     public Puzzle(File puzzleFile, int puzzleSetIndex){
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        try{
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(puzzleFile);
-
-            // PuzzleSet index
-            this.setIndex(puzzleSetIndex);
-
-            // Find the puzzle with this index
-            Node puzzleAtIndex;
-
-            NodeList indiciesNL = document.getElementsByTagName("index");
-            for (int i = 0; i < indiciesNL.getLength(); i++) {
-                if (Integer.parseInt(indiciesNL.item(i).getTextContent()) == this.getIndex()) {
-                    puzzleAtIndex = indiciesNL.item(i).getParentNode();
-                    break;
-                }
-            }
-
-            // Name
-
-            // Language
-
-            // Puzzle Type
-
-            // Keep indentation setting
-
-            // Description
-
-            // Solution
-
-            // Distractors
-
+        DocumentBuilder documentBuilder = null;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        Document document = null;
+        try {
+            document = documentBuilder.parse(puzzleFile);
+        } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
         }
+
+        // PuzzleSet index
+        this.setIndex(puzzleSetIndex);
+
+        // Find the puzzle with this index
+        Element puzzleAtIndex = null;
+
+        NodeList indiciesNL = document.getElementsByTagName("index");
+        for (int i = 0; i < indiciesNL.getLength(); i++) {
+            if (Integer.parseInt(indiciesNL.item(i).getTextContent()) == this.getIndex()) {
+                if (indiciesNL.item(i).getParentNode() instanceof Element){
+                    puzzleAtIndex = (Element)indiciesNL.item(i).getParentNode();
+                }
+                else {
+                    System.err.println("Puzzle parent node not an Element.");
+                    // error
+                }
+
+                break;
+            }
+        }
+
+        // Name
+        this.setName(puzzleAtIndex.getElementsByTagName("name").item(0).getTextContent());
+
+        // Language
+        this.setLanguage(puzzleAtIndex.getElementsByTagName("language").item(0).getTextContent());
+
+        // Puzzle Type
+        String ptype = puzzleAtIndex.getElementsByTagName("format").item(0).getTextContent();
+        if (ptype.equals("DnD")) {
+            this.setType(PuzzleType.DnD);
+        }
+        else if (ptype.equals("MC")) {
+            this.setType(PuzzleType.MC);
+        }
+
+        // Keep indentation setting
+        this.setIndentRequired(puzzleAtIndex.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
+
+        // Description
+        this.setDescription(puzzleAtIndex.getElementsByTagName("description").item(0).getTextContent());
+
+        // Solution
+
+        // Distractors
+
     }
 
     public String getName() {
