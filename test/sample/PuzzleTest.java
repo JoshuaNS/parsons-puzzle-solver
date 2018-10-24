@@ -38,7 +38,7 @@ public class PuzzleTest {
             e.printStackTrace();
         }
 
-        Puzzle p = new Puzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        Puzzle p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
 
         List<String> expectedSolution = new ArrayList<>();
         expectedSolution.add("for num in range(1, 21):");

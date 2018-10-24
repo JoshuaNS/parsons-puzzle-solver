@@ -87,7 +87,15 @@ public class PuzzleSet {
             int index = Integer.parseInt(puzzleXMLNodes.item(i).getTextContent());
             if (puzzleXMLNodes.item(i).getParentNode() instanceof Element) {
                 Element puzzleAtIndex = (Element)puzzleXMLNodes.item(i).getParentNode();
-                puzzles.add(index-1, new Puzzle(puzzleAtIndex));
+                switch (puzzleAtIndex.getElementsByTagName("type").item(0).getTextContent()) {
+                    case "DnD":
+                        puzzles.add(index-1, new DragNDropPuzzle(puzzleAtIndex));
+                        break;
+                    case "MC":
+                        puzzles.add(index-1, new MultipleChoicePuzzle(puzzleAtIndex));
+                        break;
+                }
+
             }
             else {
                 System.err.println("Puzzle parent node not an Element.");

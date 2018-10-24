@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.util.*;
 
-public class Puzzle {
+public abstract class Puzzle {
 
     private String name;
     private int index;
@@ -96,6 +96,8 @@ public class Puzzle {
             this.distractors.add(index-1, distractorBlocks.item(i).getTextContent());
         }
     }
+
+    abstract Object checkSolution(Object providedSolution);
 
     public String getName() {
         return name;
