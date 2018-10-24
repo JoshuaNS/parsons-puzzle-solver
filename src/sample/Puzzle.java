@@ -1,6 +1,9 @@
 package sample;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import java.util.*;
+
 public class Puzzle {
 
     private String name;
@@ -11,15 +14,49 @@ public class Puzzle {
     private String description;
     private ArrayList<String> solutions;
     private ArrayList<String> distractors;
-    private ArrayList<String> solution; //need to decide how we store solution
 
-    public Puzzle(String name, int index){
-        this.name = name;
-        this.index = index;
-    }
+    public Puzzle(Element puzzleXML){
+        solutions = new ArrayList<>();
+        distractors = new ArrayList<>();
 
-    public void importPuzzle(){
-        //used to import a puzzle from a puzzle set
+        // Index
+        this.setIndex(Integer.parseInt(puzzleXML.getElementsByTagName("index").item(0).getTextContent()));
+        // Name
+        this.setName(puzzleXML.getElementsByTagName("name").item(0).getTextContent());
+
+        // Language
+        this.setLanguage(puzzleXML.getElementsByTagName("lang").item(0).getTextContent());
+
+        // Puzzle Type
+        String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
+        if (ptype.equals("DnD")) {
+            this.setType(PuzzleType.DnD);
+        }
+        else if (ptype.equals("MC")) {
+            this.setType(PuzzleType.MC);
+        }
+
+        // Keep indentation setting
+        this.setIndentRequired(puzzleXML.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
+
+        // Description
+        this.setDescription(puzzleXML.getElementsByTagName("description").item(0).getTextContent());
+
+        // Solution
+        Element solutionNodes = (Element)puzzleXML.getElementsByTagName("solution").item(0);
+        NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
+        for (int i = 0; i < solutionBlocks.getLength(); i++) {
+            int index = Integer.parseInt(solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue());
+            this.solutions.add(index-1, solutionBlocks.item(i).getTextContent());
+        }
+
+        // Distractors
+        Element distractorNodes = (Element)puzzleXML.getElementsByTagName("distractors").item(0);
+        NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
+        for (int i = 0; i < distractorBlocks.getLength(); i++) {
+            int index = Integer.parseInt(distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue().replaceAll("[^0-9]", ""));
+            this.distractors.add(index-1, distractorBlocks.item(i).getTextContent());
+        }
     }
 
     public String getName() {
