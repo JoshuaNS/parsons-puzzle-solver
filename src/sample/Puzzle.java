@@ -25,6 +25,9 @@ public class Puzzle {
     private ArrayList<String> distractors;
 
     public Puzzle(File puzzleFile, int puzzleSetIndex){
+        solutions = new ArrayList<>();
+        distractors = new ArrayList<>();
+
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
         try {
@@ -57,7 +60,6 @@ public class Puzzle {
                     System.err.println("Puzzle parent node not an Element.");
                     // error
                 }
-
                 break;
             }
         }
@@ -66,7 +68,7 @@ public class Puzzle {
         this.setName(puzzleAtIndex.getElementsByTagName("name").item(0).getTextContent());
 
         // Language
-        this.setLanguage(puzzleAtIndex.getElementsByTagName("language").item(0).getTextContent());
+        this.setLanguage(puzzleAtIndex.getElementsByTagName("lang").item(0).getTextContent());
 
         // Puzzle Type
         String ptype = puzzleAtIndex.getElementsByTagName("format").item(0).getTextContent();
@@ -84,19 +86,19 @@ public class Puzzle {
         this.setDescription(puzzleAtIndex.getElementsByTagName("description").item(0).getTextContent());
 
         // Solution
-        Element solutionNodes = (Element)puzzleAtIndex.getElementsByTagName("solution");
+        Element solutionNodes = (Element)puzzleAtIndex.getElementsByTagName("solution").item(0);
         NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
         for (int i = 0; i < solutionBlocks.getLength(); i++) {
             int index = Integer.parseInt(solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue());
-            this.solutions.add(index, solutionBlocks.item(i).getNodeValue());
+            this.solutions.add(index-1, solutionBlocks.item(i).getTextContent());
         }
 
         // Distractors
-        Element distractorNodes = (Element)puzzleAtIndex.getElementsByTagName("distractors");
+        Element distractorNodes = (Element)puzzleAtIndex.getElementsByTagName("distractors").item(0);
         NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
         for (int i = 0; i < distractorBlocks.getLength(); i++) {
             int index = Integer.parseInt(distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue().replaceAll("[^0-9]", ""));
-            this.distractors.add(index, distractorBlocks.item(i).getNodeValue());
+            this.distractors.add(index-1, distractorBlocks.item(i).getTextContent());
         }
     }
 
