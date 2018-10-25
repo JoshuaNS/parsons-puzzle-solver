@@ -14,6 +14,7 @@ public class Puzzle {
     private String description;
     private ArrayList<String> solutions;
     private ArrayList<String> distractors;
+    private ArrayList<String> falseAnswers;
 
     public Puzzle(Element puzzleXML){
         solutions = new ArrayList<>();
@@ -22,25 +23,62 @@ public class Puzzle {
         // Index
         this.setIndex(Integer.parseInt(puzzleXML.getElementsByTagName("index").item(0).getTextContent()));
         // Name
-        this.setName(puzzleXML.getElementsByTagName("name").item(0).getTextContent());
+        try{
+            this.setName(puzzleXML.getElementsByTagName("name").item(0).getTextContent());
+        } catch (NullPointerException e){
+            //if the name is not provided, just use the index
+            this.setName("Puzzle "+Integer.toString(this.getIndex()));
+        }
 
         // Language
-        this.setLanguage(puzzleXML.getElementsByTagName("lang").item(0).getTextContent());
-
-        // Puzzle Type
-        String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
-        if (ptype.equals("DnD")) {
-            this.setType(PuzzleType.DnD);
+        try{
+            this.setLanguage(puzzleXML.getElementsByTagName("lang").item(0).getTextContent());
+        } catch (NullPointerException e){
+            //default string if no language is specified
+            this.setLanguage("None Specified");
         }
-        else if (ptype.equals("MC")) {
-            this.setType(PuzzleType.MC);
+
+        // False Answers
+        if (puzzleXML.getElementsByTagName("falseAnswers").item(0) != null) {
+            this.falseAnswers = new ArrayList<>();
+            Element falseSolutionNodes = (Element)puzzleXML.getElementsByTagName("falseAnswers").item(0);
+            NodeList falseSolutionBlocks =  falseSolutionNodes.getElementsByTagName("answer");
+            for (int i = 0; i < falseSolutionBlocks.getLength(); i++) {
+                this.solutions.add(falseSolutionBlocks.item(i).getTextContent());
+            }
+        }
+        // Puzzle Type
+        try{
+            String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
+            if (ptype.equals("DnD")) {
+                this.setType(PuzzleType.DnD);
+            }
+            else if (ptype.equals("MC")) {
+                this.setType(PuzzleType.MC);
+            }
+        } catch (NullPointerException e) {
+            //check for falseAnswers parameter to determine if its MC
+            if (this.getFalseAnswers() != null){
+                this.setType(PuzzleType.MC);
+            } else{
+                this.setType(PuzzleType.DnD);
+            }
         }
 
         // Keep indentation setting
-        this.setIndentRequired(puzzleXML.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
+        try{
+            this.setIndentRequired(puzzleXML.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
+        } catch (NullPointerException e){
+            this.setIndentRequired(false);
+        }
 
         // Description
-        this.setDescription(puzzleXML.getElementsByTagName("description").item(0).getTextContent());
+        try{
+            this.setDescription(puzzleXML.getElementsByTagName("description").item(0).getTextContent());
+        } catch (NullPointerException e){
+            //if no description provided, initialize but keep blank
+            this.setDescription("");
+        }
 
         // Solution
         Element solutionNodes = (Element)puzzleXML.getElementsByTagName("solution").item(0);
@@ -122,6 +160,15 @@ public class Puzzle {
     public void setDistractors(ArrayList<String> distractors) {
         this.distractors = distractors;
     }
+
+    public ArrayList<String> getFalseAnswers() {
+        return falseAnswers;
+    }
+
+    public void setFalseAnswers(ArrayList<String> falseAnswers) {
+        this.falseAnswers = falseAnswers;
+    }
+
 }
 
 enum PuzzleType{

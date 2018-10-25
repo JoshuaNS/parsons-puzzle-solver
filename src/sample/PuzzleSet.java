@@ -20,6 +20,11 @@ public class PuzzleSet {
 
     public PuzzleSet (String name){
         this.name = name;
+        puzzles = new ArrayList<>();
+    }
+
+    public PuzzleSet (){
+        puzzles = new ArrayList<>();
     }
 
     public void importPuzzleSet(File puzzleFile){
@@ -48,14 +53,32 @@ public class PuzzleSet {
                 this.setName(nodes.item(i).getTextContent());
             }
         }
+        //name
+
+        try{
+            this.setName(document.getElementsByTagName("setName").item(0).getTextContent());
+        } catch (NullPointerException e) {
+            //if no name specified, call it Puzzle Set
+            this.setName("Puzzle Set");
+        }
 
         // Random order setting
-        String order = document.getElementsByTagName("randomOrder").item(0).getTextContent();
-        this.setRandomOrder(order.equals("true"));
+        try{
+            String order = document.getElementsByTagName("randomOrder").item(0).getTextContent();
+            this.setRandomOrder(order.equals("true"));
+        } catch (NullPointerException e){
+            //set to false if not specified
+            this.setRandomOrder(false);
+        }
 
         // Sequential puzzle completion setting
-        String seqComp = document.getElementsByTagName("sequentialComp").item(0).getTextContent();
-        this.setSequentialCompletion(seqComp.equals("true"));
+        try{
+            String seqComp = document.getElementsByTagName("sequentialComp").item(0).getTextContent();
+            this.setSequentialCompletion(seqComp.equals("true"));
+        } catch (NullPointerException e){
+            //set to false if not specified
+            this.setSequentialCompletion(false);
+        }
 
         // Import each puzzle
         NodeList puzzleXMLNodes = document.getElementsByTagName("index");
