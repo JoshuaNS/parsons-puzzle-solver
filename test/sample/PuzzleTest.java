@@ -58,11 +58,12 @@ public class PuzzleTest {
         expectedDistractors.add("elif num % 3 == 0 and num % 5 == 0");
 
         assertEquals(p.getIndex(), 1);
-        assertEquals(p.getDescription(), "Output the numbers 1-20, print “fizz” if the number is divisible by 3, “buzz” if it is divisible by 5, and “fizzbuzz” if it is divisible by both");
-        assertEquals(p.getName(),"Lab 1 - Puzzle 1");
-        assertEquals(p.getLanguage(), "Python");
-        assertEquals(p.getType(), PuzzleType.DnD);
-        assertEquals(p.isIndentRequired(), false);
+        assertEquals("Output the numbers 1-20, print “fizz” if the number is divisible by 3, “buzz” if it is divisible by 5, and “fizzbuzz” if it is divisible by both",
+                p.getDescription());
+        assertEquals("Lab 1 - Puzzle 1", p.getName());
+        assertEquals("Python", p.getLanguage());
+        assertEquals(PuzzleType.DnD, p.getType());
+        assertEquals(false, p.isIndentRequired());
 
         assertNotNull(p.getSolutions());
         assertLinesMatch(expectedSolution, p.getSolutions());
@@ -92,16 +93,16 @@ public class PuzzleTest {
         }
 
         Puzzle p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
-        assertEquals(p.getType(), PuzzleType.DnD);
-        assertEquals(p.isIndentRequired(), false);
-        assertEquals(p.getName(), "Puzzle 1");
-        assertEquals(p.getLanguage(), "None Specified");
-        assertEquals(p.getDescription(), "");
+        assertEquals(PuzzleType.DnD, p.getType());
+        assertEquals(false, p.isIndentRequired());
+        assertEquals("Puzzle 1", p.getName());
+        assertEquals("None Specified", p.getLanguage());
+        assertEquals("", p.getDescription());
         Puzzle p2 = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
-        assertEquals(p2.getType(), PuzzleType.MC);
-        assertEquals(p2.isIndentRequired(), false);
-        assertEquals(p2.getName(), "Puzzle 2");
-        assertEquals(p2.getLanguage(), "None Specified");
-        assertEquals(p2.getDescription(), "");
+        assertEquals(PuzzleType.MC, p2.getType());
+        assertEquals(false, p2.isIndentRequired());
+        assertEquals("Puzzle 2", p2.getName());
+        assertEquals("None Specified", p2.getLanguage());
+        assertEquals("", p2.getDescription());
     }
 }
