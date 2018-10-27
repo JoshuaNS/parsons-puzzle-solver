@@ -5,6 +5,7 @@
    <sequentialComp>false</sequentialComp>
    <puzzle>
       <index>1</index>
+      <format>DnD</format>
       <solution>
          <block id="1">for num in range(1, 21):</block>
          <block id="2">if num % 3 == 0 and num % 5 == 0:</block>
@@ -25,6 +26,7 @@
    </puzzle>
    <puzzle>
       <index>2</index>
+      <format>MC</format>
       <solution>
          <block id="1">for num in range(1, 21):</block>
          <block id="2">if num % 3 == 0 and num % 5 == 0:</block>
