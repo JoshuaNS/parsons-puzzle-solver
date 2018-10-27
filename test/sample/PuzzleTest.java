@@ -91,13 +91,13 @@ public class PuzzleTest {
             e.printStackTrace();
         }
 
-        Puzzle p = new Puzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        Puzzle p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
         assertEquals(p.getType(), PuzzleType.DnD);
         assertEquals(p.isIndentRequired(), false);
         assertEquals(p.getName(), "Puzzle 1");
         assertEquals(p.getLanguage(), "None Specified");
         assertEquals(p.getDescription(), "");
-        Puzzle p2 = new Puzzle((Element)document.getElementsByTagName("puzzle").item(1));
+        Puzzle p2 = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
         assertEquals(p2.getType(), PuzzleType.MC);
         assertEquals(p2.isIndentRequired(), false);
         assertEquals(p2.getName(), "Puzzle 2");

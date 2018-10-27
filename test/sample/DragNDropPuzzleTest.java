@@ -20,7 +20,7 @@ class DragNDropPuzzleTest {
     private static Puzzle p;
     @BeforeAll
     static void setupSamplePuzzle() {
-        File f = new File("puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.xml");
         assertTrue(f.exists());
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
