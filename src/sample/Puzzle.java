@@ -38,15 +38,6 @@ public abstract class Puzzle {
             this.setLanguage("None Specified");
         }
 
-        // False Answers
-        if (puzzleXML.getElementsByTagName("falseAnswers").item(0) != null) {
-            this.falseAnswers = new ArrayList<>();
-            Element falseSolutionNodes = (Element)puzzleXML.getElementsByTagName("falseAnswers").item(0);
-            NodeList falseSolutionBlocks =  falseSolutionNodes.getElementsByTagName("answer");
-            for (int i = 0; i < falseSolutionBlocks.getLength(); i++) {
-                this.solutions.add(falseSolutionBlocks.item(i).getTextContent());
-            }
-        }
         // Puzzle Type
         try{
             String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
