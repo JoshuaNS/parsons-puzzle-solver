@@ -41,6 +41,7 @@ public abstract class Puzzle {
         // Puzzle Type
         try{
             String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
+
             if (ptype.equals("DnD")) {
                 this.setType(PuzzleType.DnD);
             }
@@ -48,12 +49,9 @@ public abstract class Puzzle {
                 this.setType(PuzzleType.MC);
             }
         } catch (NullPointerException e) {
-            //check for falseAnswers parameter to determine if its MC
-            if (this.getFalseAnswers() != null){
-                this.setType(PuzzleType.MC);
-            } else{
-                this.setType(PuzzleType.DnD);
-            }
+            // Error state, considered bad XML
+            System.err.println("Puzzle type not specified");
+            // TODO: have this throw an exception that we deal with
         }
 
         // Keep indentation setting
