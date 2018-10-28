@@ -71,7 +71,7 @@ public class PuzzleTest {
         assertLinesMatch(expectedDistractors, p.getDistractors());
     }
     @Test
-    //uses an XML with no types, no indent, no name, no language, no description, and ensures it functions as desired
+    //uses an XML with no indent, no name, no language, no description, and ensures it functions as desired
     void importSamplePuzzleMissingParams() {
         File f = new File("testfiles/puzzlesamperror1.xml");
         assertTrue(f.exists());

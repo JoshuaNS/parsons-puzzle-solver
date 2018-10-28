@@ -21,7 +21,13 @@ public abstract class Puzzle {
         distractors = new ArrayList<>();
 
         // Index
-        this.setIndex(Integer.parseInt(puzzleXML.getElementsByTagName("index").item(0).getTextContent()));
+        try{
+            this.setIndex(Integer.parseInt(puzzleXML.getElementsByTagName("index").item(0).getTextContent()));
+        } catch (NullPointerException e) {
+            // Error state, considered bad XML
+            System.err.println("Puzzle index not specified");
+            // TODO: have this throw an exception that we deal with
+        }
         // Name
         try{
             this.setName(puzzleXML.getElementsByTagName("name").item(0).getTextContent());
@@ -87,6 +93,20 @@ public abstract class Puzzle {
     }
 
     abstract Object checkSolution(Object providedSolution);
+
+    abstract Object buildAnswers();
+
+    public ArrayList<String> buildChoices(){
+        ArrayList<String> choices = new ArrayList<>();
+        for (int i = 0; i < this.getSolutions().size(); i++){
+            choices.add(this.getSolutions().get(i));
+        }
+        for (int i = 0; i < this.getDistractors().size(); i++){
+            choices.add(this.getDistractors().get(i));
+        }
+        Collections.shuffle(choices);
+        return choices;
+    }
 
     public String getName() {
         return name;

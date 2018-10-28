@@ -27,6 +27,11 @@ public class PuzzleSet {
         puzzles = new ArrayList<>();
     }
 
+    public PuzzleSet (File puzzleFile){
+        puzzles = new ArrayList<>();
+        importPuzzleSet(puzzleFile);
+    }
+
     public void importPuzzleSet(File puzzleFile){
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
@@ -101,6 +106,17 @@ public class PuzzleSet {
                 System.err.println("Puzzle parent node not an Element.");
             }
         }
+    }
+
+    //returns a puzzle at the given index
+    //todo: no check for puzzles with the same index
+    public Puzzle getPuzzle(int index) {
+        for (int i = 0; i < this.getPuzzles().size(); i++){
+            if (this.getPuzzles().get(i).getIndex() == index) {
+                return this.getPuzzles().get(i);
+            }
+        }
+        return null;
     }
 
     public String getName() {

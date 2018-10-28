@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MultipleChoicePuzzle extends Puzzle {
 
@@ -23,6 +24,42 @@ public class MultipleChoicePuzzle extends Puzzle {
 
     @Override
     Object checkSolution(Object providedSolution) {
-        return null;
+        if (!(providedSolution instanceof ArrayList)) {
+            System.err.println("Solution wasn't provided as ArrayList");
+            return null;
+        }
+        ArrayList<String> givenSolution = (ArrayList<String>)providedSolution;
+
+        if (getSolutions().size() != givenSolution.size()) {
+            return false;
+        }
+        for (int i = 0; i < getSolutions().size(); i++) {
+            if (!givenSolution.get(i).equals(getSolutions().get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //returns an array of possible answers. The first answer is the correct one
+    @Override
+    public ArrayList<ArrayList<String>> buildAnswers(){
+        ArrayList<ArrayList<String>> answers = new ArrayList<>();
+        answers.add(this.getSolutions());
+        for (int i = 0; i < this.getFalseAnswers().size(); i++){
+            ArrayList<String> newAnswer = new ArrayList<>();
+            ArrayList<String> myList = new ArrayList<String>(Arrays.asList(this.getFalseAnswers().get(i).split(",")));
+            for (int j = 0; j < myList.size(); j++) {
+                String s = myList.get(j).trim();
+                if (s.startsWith("X")) {
+                    s = s.substring(s.length() - 1);
+                    newAnswer.add(this.getDistractors().get(Integer.parseInt(s) - 1));
+                } else {
+                    newAnswer.add(this.getSolutions().get(Integer.parseInt(s) - 1));
+                }
+            }
+            answers.add(newAnswer);
+        }
+        return answers;
     }
 }
