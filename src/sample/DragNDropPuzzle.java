@@ -11,11 +11,6 @@ public class DragNDropPuzzle extends Puzzle {
     }
 
     @Override
-    Object buildAnswers() {
-        return null;
-    }
-
-    @Override
     Object checkSolution(Object providedSolution) {
         if (!(providedSolution instanceof ArrayList)) {
             System.err.println("Solution wasn't provided as ArrayList");

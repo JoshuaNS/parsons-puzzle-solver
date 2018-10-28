@@ -94,8 +94,6 @@ public abstract class Puzzle {
 
     abstract Object checkSolution(Object providedSolution);
 
-    abstract Object buildAnswers();
-
     public ArrayList<String> buildChoices(){
         ArrayList<String> choices = new ArrayList<>();
         for (int i = 0; i < this.getSolutions().size(); i++){

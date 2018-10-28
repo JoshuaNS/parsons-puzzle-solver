@@ -42,7 +42,6 @@ public class MultipleChoicePuzzle extends Puzzle {
     }
 
     //returns an array of possible answers. The first answer is the correct one
-    @Override
     public ArrayList<ArrayList<String>> buildAnswers(){
         ArrayList<ArrayList<String>> answers = new ArrayList<>();
         answers.add(this.getSolutions());

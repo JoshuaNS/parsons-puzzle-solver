@@ -79,13 +79,14 @@ class PuzzleSetTest {
         currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
         if (currentPuzz.getType().equals(PuzzleType.MC)){
+            MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
             System.out.print("Choose the correct choice:\n");
-            ArrayList<String> choices = currentPuzz.buildChoices();
+            ArrayList<String> choices = mcPuzz.buildChoices();
             for (int i = 0; i < choices.size(); i++){
                 System.out.print(choices.get(i) +"\n");
             }
 
-            ArrayList<ArrayList<String>> answers = (ArrayList<ArrayList<String>>)currentPuzz.buildAnswers();
+            ArrayList<ArrayList<String>> answers = (ArrayList<ArrayList<String>>)mcPuzz.buildAnswers();
 
             for (int i = 0; i < answers.size(); i++){
                 System.out.print("\nAnswer " +(i+1) +"\n");
@@ -96,7 +97,7 @@ class PuzzleSetTest {
             int choice = 1;
 
             System.out.print("\nChecking solution...\n");
-            boolean result = (boolean) currentPuzz.checkSolution(answers.get(choice-1));
+            boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice-1));
             if (result){
                 assertTrue(result);
                 System.out.print("Congratulations! Puzzle solved.\n");

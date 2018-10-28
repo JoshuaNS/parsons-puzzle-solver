@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MultipleChoicePuzzleTest {
-    private static Puzzle p;
+    private static MultipleChoicePuzzle p;
     @BeforeAll
     static void setupSamplePuzzle() {
         File f = new File("testfiles/puzzlesamp.xml");
