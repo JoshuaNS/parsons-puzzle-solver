@@ -111,12 +111,7 @@ public class PuzzleSet {
     //returns a puzzle at the given index
     //todo: no check for puzzles with the same index
     public Puzzle getPuzzle(int index) {
-        for (int i = 0; i < this.getPuzzles().size(); i++){
-            if (this.getPuzzles().get(i).getIndex() == index) {
-                return this.getPuzzles().get(i);
-            }
-        }
-        return null;
+        return this.getPuzzles().get(index-1);
     }
 
     public String getName() {

@@ -47,9 +47,10 @@ public class MultipleChoicePuzzle extends Puzzle {
         answers.add(this.getSolutions());
         for (int i = 0; i < this.getFalseAnswers().size(); i++){
             ArrayList<String> newAnswer = new ArrayList<>();
-            ArrayList<String> myList = new ArrayList<String>(Arrays.asList(this.getFalseAnswers().get(i).split(",")));
-            for (int j = 0; j < myList.size(); j++) {
-                String s = myList.get(j).trim();
+            //parse string to obtain solution list
+            ArrayList<String> answerStrings = new ArrayList<>(Arrays.asList(this.getFalseAnswers().get(i).split(",")));
+            for (int j = 0; j < answerStrings.size(); j++) {
+                String s = answerStrings.get(j).trim();
                 if (s.startsWith("X")) {
                     s = s.substring(s.length() - 1);
                     newAnswer.add(this.getDistractors().get(Integer.parseInt(s) - 1));
