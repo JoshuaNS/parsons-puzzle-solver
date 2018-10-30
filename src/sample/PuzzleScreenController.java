@@ -5,9 +5,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.TextAlignment;
@@ -20,10 +20,16 @@ public class PuzzleScreenController {
 
     private PuzzleSet currentPuzzleSet;
     private int puzzleIndex;
+    private Puzzle currentPuzzle;
     private ArrayList<String> puzzleFragments;
+    private ArrayList<ArrayList<String>> puzzleAnswers; //currently only used by MC
+    private ToggleGroup puzzleAnswerToggles; //holds MC selection
 
     @FXML
     private GridPane CodeFragmentGrid;
+
+    @FXML
+    private GridPane SolutionGrid;
 
     @FXML
     private Label FeedbackText;
@@ -54,7 +60,24 @@ public class PuzzleScreenController {
 
     @FXML
     void CheckAnswer(ActionEvent event) {
+        if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
 
+        }
+        else if (currentPuzzle.getType().equals(PuzzleType.MC)){
+            Toggle selectedAnswer = puzzleAnswerToggles.getSelectedToggle();
+            if(selectedAnswer != null){
+                Object result = currentPuzzle.checkSolution(selectedAnswer.getUserData());
+                if(result == null)
+                    FeedbackText.setText("Error: Invalid answer");
+                else if(result.equals(true))
+                    FeedbackText.setText("Solution is Correct!");
+                else
+                    FeedbackText.setText("Incorrect Answer!");
+            }
+            else{
+                FeedbackText.setText("Error: No answer selected");
+            }
+        }
     }
 
     @FXML
@@ -90,10 +113,13 @@ public class PuzzleScreenController {
 
     //Changes the currently selected puzzle
     private void setCurrentPuzzle(){
-        Puzzle currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
+        currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
         ProblemName.setText(currentPuzzle.getName());
         ProblemDescription.setText(currentPuzzle.getDescription());
         puzzleFragments = currentPuzzle.buildChoices();
+        if(currentPuzzle.getType() == PuzzleType.MC){
+            puzzleAnswers = (((MultipleChoicePuzzle)currentPuzzle).buildAnswers());
+        }
     }
 
     //Loads the currently selected puzzle into the UI
@@ -101,6 +127,9 @@ public class PuzzleScreenController {
         //Reset the code fragment grid to use the current puzzle
         CodeFragmentGrid.getChildren().clear();
         CodeFragmentGrid.getRowConstraints().clear();
+        SolutionGrid.getChildren().clear();
+        SolutionGrid.getRowConstraints().clear();
+        puzzleAnswerToggles = new ToggleGroup();
 
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setVgrow(Priority.NEVER);
@@ -123,11 +152,40 @@ public class PuzzleScreenController {
             CodeFragmentGrid.setMargin(newLabel,labelMargins);
 
             Label newFragment = new Label(puzzleFragments.get(i));
+            newFragment.setTooltip(new Tooltip(puzzleFragments.get(i)));
             newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
             newFragment.setPadding(paddings);
             newFragment.setMaxWidth(Double.MAX_VALUE);
             CodeFragmentGrid.add(newFragment,1, i);
             CodeFragmentGrid.setMargin(newFragment,fragmentMargins);
+        }
+
+        //Set the solution data
+        if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
+
+        }
+        else if (currentPuzzle.getType().equals(PuzzleType.MC)){
+            for(int i = 0; i < puzzleAnswers.size(); i++){
+                SolutionGrid.getRowConstraints().add(rowConstraint);
+
+                Label newLabel = new Label("" + (i+1));
+                newLabel.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
+                newLabel.setPadding(paddings);
+                newLabel.setMaxWidth(Double.MAX_VALUE);
+                newLabel.setAlignment(Pos.CENTER);
+                SolutionGrid.add(newLabel,0, i);
+                SolutionGrid.setMargin(newLabel,labelMargins);
+
+                RadioButton newAnswer = new RadioButton(puzzleAnswers.get(i).toString()); //TODO: replace with proper answer text
+                newAnswer.setTooltip(new Tooltip(puzzleAnswers.get(i).toString()));
+                newAnswer.setUserData(puzzleAnswers.get(i));
+                newAnswer.setToggleGroup(puzzleAnswerToggles);
+                newAnswer.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
+                newAnswer.setPadding(paddings);
+                newAnswer.setMaxWidth(Double.MAX_VALUE);
+                SolutionGrid.add(newAnswer,1, i);
+                SolutionGrid.setMargin(newAnswer,fragmentMargins);
+            }
         }
     }
 }
