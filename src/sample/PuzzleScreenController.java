@@ -26,6 +26,7 @@ public class PuzzleScreenController {
     private ArrayList<String> puzzleFragments;
     private ArrayList<ArrayList<String>> puzzleAnswers; //currently only used by MC
     private ToggleGroup puzzleAnswerToggles; //holds MC selection
+    private ArrayList<Label> puzzleAnswerLabels; //holds DnD answer
 
     @FXML
     private GridPane CodeFragmentGrid;
@@ -62,24 +63,32 @@ public class PuzzleScreenController {
 
     @FXML
     void CheckAnswer(ActionEvent event) {
+        Object answer = null;
         if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
-
+            ArrayList<String> answerList = new ArrayList<>();
+            for (Label solution : puzzleAnswerLabels) {
+                answerList.add(solution.getText());
+            }
+            answer = answerList;
         }
         else if (currentPuzzle.getType().equals(PuzzleType.MC)){
             Toggle selectedAnswer = puzzleAnswerToggles.getSelectedToggle();
             if(selectedAnswer != null){
-                Object result = currentPuzzle.checkSolution(selectedAnswer.getUserData());
-                if(result == null)
-                    FeedbackText.setText("Error: Invalid answer");
-                else if(result.equals(true))
-                    FeedbackText.setText("Solution is Correct!");
-                else
-                    FeedbackText.setText("Incorrect Answer!");
+                answer = selectedAnswer.getUserData();
             }
             else{
                 FeedbackText.setText("Error: No answer selected");
+                return;
             }
         }
+
+        Object result = currentPuzzle.checkSolution(answer);
+        if(result == null)
+            FeedbackText.setText("Error: Invalid answer");
+        else if(result.equals(true))
+            FeedbackText.setText("Solution is Correct!");
+        else
+            FeedbackText.setText("Incorrect Answer!");
     }
 
     @FXML
@@ -132,6 +141,7 @@ public class PuzzleScreenController {
         SolutionGrid.getChildren().clear();
         SolutionGrid.getRowConstraints().clear();
         puzzleAnswerToggles = new ToggleGroup();
+        puzzleAnswerLabels = new ArrayList<>();
 
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setVgrow(Priority.NEVER);
@@ -196,6 +206,8 @@ public class PuzzleScreenController {
                 newFragment.setMaxWidth(Double.MAX_VALUE);
                 SolutionGrid.add(newFragment,1, i);
                 SolutionGrid.setMargin(newFragment,fragmentMargins);
+
+                puzzleAnswerLabels.add(newFragment);
 
                 newFragment.setOnDragOver(new EventHandler<DragEvent>() {
                     public void handle(DragEvent event) {
