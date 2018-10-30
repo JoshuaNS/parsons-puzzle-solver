@@ -162,7 +162,17 @@ public class PuzzleScreenController {
 
         //Set the solution data
         if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
+            for(int i = 0; i < currentPuzzle.getSolutions().size(); i++){
+                SolutionGrid.getRowConstraints().add(rowConstraint);
 
+                Label newLabel = new Label("" + (i+1));
+                newLabel.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
+                newLabel.setPadding(paddings);
+                newLabel.setMaxWidth(Double.MAX_VALUE);
+                newLabel.setAlignment(Pos.CENTER);
+                SolutionGrid.add(newLabel,0, i);
+                SolutionGrid.setMargin(newLabel,labelMargins);
+            }
         }
         else if (currentPuzzle.getType().equals(PuzzleType.MC)){
             for(int i = 0; i < puzzleAnswers.size(); i++){
