@@ -18,6 +18,7 @@ public class PuzzleScreenController {
 
     private PuzzleSet currentPuzzleSet;
     private int puzzleIndex;
+    ArrayList<String> puzzleFragments;
 
     @FXML
     private GridPane CodeFragmentGrid;
@@ -34,9 +35,10 @@ public class PuzzleScreenController {
     @FXML
     void NextPuzzle(ActionEvent event) {
 
-        if(puzzleIndex+1 < currentPuzzleSet.getPuzzles().size()) {
+        if(puzzleIndex+1 <= currentPuzzleSet.getPuzzles().size()) {
             puzzleIndex++;
 
+            setCurrentPuzzle();
             loadPuzzle();
         }
         else{
@@ -60,17 +62,19 @@ public class PuzzleScreenController {
         currentPuzzleSet = new PuzzleSet(f);
         puzzleIndex = 1;
 
+        setCurrentPuzzle();
         loadPuzzle();
+    }
+
+    private void setCurrentPuzzle(){
+        Puzzle currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
+        ProblemName.setText(currentPuzzle.getName());
+        ProblemDescription.setText(currentPuzzle.getDescription());
+        puzzleFragments = currentPuzzle.buildChoices();
     }
 
     //Loads the currently selected puzzle into the UI
     private void loadPuzzle(){
-        Puzzle currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
-        ProblemName.setText(currentPuzzle.getName());
-        ProblemDescription.setText(currentPuzzle.getDescription());
-
-        ArrayList<String> choices = currentPuzzle.buildChoices();
-
         //Reset the code fragment grid to use the current puzzle
         CodeFragmentGrid.getChildren().clear();
         CodeFragmentGrid.getRowConstraints().clear();
@@ -83,7 +87,7 @@ public class PuzzleScreenController {
         Insets paddings = new Insets(5,5,5,5);
 
 
-        for(int i = 0; i < choices.size(); i++){
+        for(int i = 0; i < puzzleFragments.size(); i++){
             CodeFragmentGrid.getRowConstraints().add(rowConstraint);
 
             //Creates button with A-Z label. Bit messy and won't work past 26 lines
@@ -96,7 +100,7 @@ public class PuzzleScreenController {
             CodeFragmentGrid.setMargin(newLabel,labelMargins);
 
             //Creates button with A-Z label. Bit messy and won't work past 26 lines
-            Label newFragment = new Label(choices.get(i));
+            Label newFragment = new Label(puzzleFragments.get(i));
             newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
             newFragment.setPadding(paddings);
             newFragment.setMaxWidth(Double.MAX_VALUE);
