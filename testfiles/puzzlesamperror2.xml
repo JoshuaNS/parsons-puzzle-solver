@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <puzzleset>
    <puzzle>
-      <name>Lab 1 - Puzzle 1</name>
+      <name>Lab 2 - Puzzle 1</name>
       <index>1</index>
       <lang>Python</lang>
       <format>DnD</format>
@@ -26,7 +26,7 @@
       </distractors>
    </puzzle>
    <puzzle>
-      <name>Lab 1 - Puzzle 2</name>
+      <name>Lab 2 - Puzzle 2</name>
       <index>2</index>
       <lang>Python</lang>
       <format>MC</format>
