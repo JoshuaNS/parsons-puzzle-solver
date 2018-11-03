@@ -20,7 +20,8 @@ public class Block {
         // Calculate tab
         int minTab = calculateTab(lines[0]);
         for (int i = 1; i < lines.length; i++) {
-            if (calculateTab(lines[i]) < minTab) {
+            // If the line is only whitespace, don't count it in minTab calcuation
+            if (lines[i].trim().length() > 0 && calculateTab(lines[i]) < minTab) {
                 minTab = calculateTab(lines[i]);
             }
         }
