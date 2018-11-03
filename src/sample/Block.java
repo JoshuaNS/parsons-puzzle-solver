@@ -22,7 +22,9 @@ public class Block {
         }
 
         // Reduce tabs
-
+        for (String line : lines) {
+            this.lines.add(reduceTab(line, minTab));
+        }
     }
 
     @Override
@@ -32,6 +34,17 @@ public class Block {
         }
         Block b = (Block) o;
         return this.id.equals(b.id) && this.associatedPuzzle == b.associatedPuzzle;
+    }
+
+    public String getLines() {
+        StringBuilder sb = new StringBuilder();
+        for (String line : this.lines) {
+            sb.append(line);
+            sb.append('\n');
+        }
+        // Remove last newline
+        sb.setLength(sb.length() - 1);
+        return sb.toString();
     }
 
     private int calculateTab(String line) {
@@ -81,6 +94,5 @@ public class Block {
         else {
             return line.substring(tabIndex);
         }
-
     }
 }
