@@ -15,6 +15,7 @@ public abstract class Puzzle {
     private ArrayList<String> solutions;
     private ArrayList<String> distractors;
     private ArrayList<String> falseAnswers;
+    private int tabWidth;
 
     public Puzzle(Element puzzleXML){
         solutions = new ArrayList<>();
@@ -90,6 +91,9 @@ public abstract class Puzzle {
             int index = Integer.parseInt(distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue().replaceAll("[^0-9]", ""));
             this.distractors.add(index-1, distractorBlocks.item(i).getTextContent());
         }
+
+        // Assume tabWidth (in space characters) is 4 for now.
+        this.setTabWidth(4);
     }
 
     abstract Object checkSolution(Object providedSolution);
@@ -178,6 +182,13 @@ public abstract class Puzzle {
         this.falseAnswers = falseAnswers;
     }
 
+    public int getTabWidth() {
+        return tabWidth;
+    }
+
+    public void setTabWidth(int tabWidth) {
+        this.tabWidth = tabWidth;
+    }
 }
 
 enum PuzzleType{
