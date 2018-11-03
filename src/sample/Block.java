@@ -8,6 +8,13 @@ public class Block {
 
     public Block(String id, String textInput, Puzzle associatedPuzzle) {
         this.associatedPuzzle = associatedPuzzle;
+        int tabWidth;
+        if (this.associatedPuzzle == null) {
+            tabWidth = 4;
+        }
+        else {
+            tabWidth = associatedPuzzle.getTabWidth();
+        }
         String[] lines = textInput.split("\n");
 
         // Calculate tab
@@ -24,7 +31,8 @@ public class Block {
 
         // Reduce tabs
         for (int i = 0; i < lines.length; i++) {
-            this.lines[i] = reduceTab(lines[i], minTab);
+            String line = spaceToTab(lines[i], tabWidth);
+            this.lines[i] = reduceTab(line, minTab);
         }
     }
     public Block(String id, String textInput) {
@@ -51,25 +59,33 @@ public class Block {
         return sb.toString();
     }
 
+    private static String spaceToTab(String line, int tabWidth) {
+        int spaceCount = 0;
+        char[] characters = line.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < characters.length; i++) {
+            if (characters[i] == '\t') {
+                sb.append(characters[i]);
+            }
+            else if (characters[i] == ' ') {
+                spaceCount++;
+                if (spaceCount % tabWidth == 0) {
+                    sb.append('\t');
+                }
+            }
+            else {
+                sb.append(line.substring(i));
+                break;
+            }
+        }
+        return sb.toString();
+    }
     private int calculateTab(String line) {
         int tabCount = 0;
-        int spaceCount = 0;
-        int tabWidth;
-        if (associatedPuzzle == null) {
-            tabWidth = 4;
-        }
-        else {
-            tabWidth = associatedPuzzle.getTabWidth();
-        }
+
         for (char c : line.toCharArray()) {
             if (c == '\t') {
                 tabCount++;
-            }
-            else if (c == ' ') {
-                spaceCount++;
-                if (spaceCount % tabWidth == 0) {
-                    tabCount++;
-                }
             }
             else {
                 break;
@@ -80,38 +96,18 @@ public class Block {
 
     private String reduceTab(String line, int count) {
         int tabIndex = 0;
-        int spaceCount = 0;
-        int tabWidth;
-        if (associatedPuzzle == null) {
-            tabWidth = 4;
-        }
-        else {
-            tabWidth = associatedPuzzle.getTabWidth();
-        }
 
         char[] characters = line.toCharArray();
         for (int i = 0; tabIndex < count && i < characters.length; i++) {
             if (characters[i] == '\t') {
                 tabIndex++;
             }
-            else if (characters[i] == ' ') {
-                spaceCount++;
-                if (spaceCount % tabWidth == 0) {
-                    tabIndex++;
-                }
-            }
             else {
                 break;
             }
         }
-        // If space count isn't 0, spaces must have been used as indenting characters, so remove those
-        if (spaceCount != 0) {
-            return line.substring(spaceCount);
-        }
-        // Otherwise, use tab characters must be used, or there were no prepending whitespace characeters
-        else {
-            return line.substring(tabIndex);
-        }
+
+        return line.substring(tabIndex);
     }
 
     public int getTab() {
