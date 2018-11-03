@@ -1,15 +1,12 @@
 package sample;
 
-import java.util.List;
-
 public class Block {
     private Puzzle associatedPuzzle;
     private String id;
     private int tab;
-    private List<String> lines;
-    private String line;
+    private String[] lines;
 
-    public Block(Puzzle associatedPuzzle, String textInput) {
+    public Block(String id, String textInput, Puzzle associatedPuzzle) {
         this.associatedPuzzle = associatedPuzzle;
         String[] lines = textInput.split("\n");
 
@@ -21,9 +18,13 @@ public class Block {
             }
         }
 
+        this.lines = new String[lines.length];
+        this.tab = minTab;
+        this.id = id;
+
         // Reduce tabs
-        for (String line : lines) {
-            this.lines.add(reduceTab(line, minTab));
+        for (int i = 0; i < lines.length; i++) {
+            this.lines[i] = reduceTab(lines[i], minTab);
         }
     }
 
@@ -94,5 +95,13 @@ public class Block {
         else {
             return line.substring(tabIndex);
         }
+    }
+
+    public int getTab() {
+        return tab;
+    }
+
+    public String getID() {
+        return id;
     }
 }
