@@ -27,6 +27,9 @@ public class Block {
             this.lines[i] = reduceTab(lines[i], minTab);
         }
     }
+    public Block(String id, String textInput) {
+        this(id, textInput, null);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -51,13 +54,20 @@ public class Block {
     private int calculateTab(String line) {
         int tabCount = 0;
         int spaceCount = 0;
+        int tabWidth;
+        if (associatedPuzzle == null) {
+            tabWidth = 4;
+        }
+        else {
+            tabWidth = associatedPuzzle.getTabWidth();
+        }
         for (char c : line.toCharArray()) {
             if (c == '\t') {
                 tabCount++;
             }
             else if (c == ' ') {
                 spaceCount++;
-                if (spaceCount % associatedPuzzle.getTabWidth() == 0) {
+                if (spaceCount % tabWidth == 0) {
                     tabCount++;
                 }
             }
@@ -71,6 +81,13 @@ public class Block {
     private String reduceTab(String line, int count) {
         int tabIndex = 0;
         int spaceCount = 0;
+        int tabWidth;
+        if (associatedPuzzle == null) {
+            tabWidth = 4;
+        }
+        else {
+            tabWidth = associatedPuzzle.getTabWidth();
+        }
 
         char[] characters = line.toCharArray();
         for (int i = 0; tabIndex < count && i < characters.length; i++) {
@@ -79,7 +96,7 @@ public class Block {
             }
             else if (characters[i] == ' ') {
                 spaceCount++;
-                if (spaceCount % associatedPuzzle.getTabWidth() == 0) {
+                if (spaceCount % tabWidth == 0) {
                     tabIndex++;
                 }
             }
