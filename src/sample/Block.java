@@ -15,7 +15,7 @@ public class Block {
         else {
             tabWidth = associatedPuzzle.getTabWidth();
         }
-        String[] lines = textInput.split("\n");
+        String[] lines = textInput.split("\n", -1);
 
         // Calculate tab
         int minTab = calculateTab(lines[0]);

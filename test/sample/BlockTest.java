@@ -31,13 +31,10 @@ class BlockTest {
 
     @Test
     void importNoPrependMultiLine() {
-        String s1 = "int i = 0;\nint x = 5;\ndouble y = 3.2";
-        String s2 = "int i = 0;\nint x = 5;\ndouble y = 3.2\n\n";
-        Block b1 = new Block("1", s1);
-        Block b2 = new Block("2", s2);
+        String s = "int i = 0;\nint x = 5;\ndouble y = 3.2\n\n";
+        Block b = new Block("1", s);
 
-        assertEquals(s1, b1.getLines());
-        assertEquals(s2, b2.getLines());
+        assertEquals(s, b.getLines());
     }
 
     @Test
