@@ -51,7 +51,7 @@ class PuzzleSetTest {
             System.out.print("Drag into the correct order:\n");
             ArrayList<Block> choices = currentPuzz.buildChoices();
             for (int i = 0; i < choices.size(); i++){
-                System.out.print(choices.get(i) +"\n");
+                System.out.print(choices.get(i).getLines() +"\n");
             }
 
             List<Block> providedSolution = new ArrayList<>();
@@ -81,23 +81,36 @@ class PuzzleSetTest {
         if (currentPuzz.getType().equals(PuzzleType.MC)){
             MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
             System.out.print("Choose the correct choice:\n");
-            ArrayList<Block> choices = mcPuzz.buildChoices();
-            for (int i = 0; i < choices.size(); i++){
-                System.out.print(choices.get(i) +"\n");
-            }
-
-            ArrayList<ArrayList<String>> answers = (ArrayList<ArrayList<String>>)mcPuzz.buildAnswers();
-
-            for (int i = 0; i < answers.size(); i++){
-                System.out.print("\nAnswer " +(i+1) +"\n");
-                for (int j = 0; j < answers.get(i).size(); j++) {
-                    System.out.print(answers.get(i).get(j) +"\n");
+            List<Block> lines = mcPuzz.getLines();
+            int choiceAreaCount = 1;
+            for (int i = 0; i < lines.size(); i++){
+                if (lines.get(i).hasAssociatedBlocks()) {
+                    System.out.println("<<AREA " + choiceAreaCount++ + ">>");
+                }
+                else {
+                    System.out.print(lines.get(i).getLines() + "\n");
                 }
             }
-            int choice = 1;
+            System.out.println();
+            System.out.println("Choices are:");
+            List<Block> solutionSet = mcPuzz.getSolutionSet();
+            choiceAreaCount = 1;
+            for (int i = 0; i < solutionSet.size(); i++) {
+                List<Block> choices = new ArrayList<>();
+                choices.add(solutionSet.get(i));
+                choices.addAll(solutionSet.get(i).getAssociatedBlocks());
+                Collections.shuffle(choices);
+                System.out.println("<<AREA " + choiceAreaCount++ + ">>:");
+                for (Block b : choices) {
+                    System.out.println(b.getLines());
+                }
+                System.out.println();
+            }
+
+            List<Block> answers = currentPuzz.getSolutionSet();
 
             System.out.print("\nChecking solution...\n");
-            boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice-1));
+            boolean result = (boolean) mcPuzz.checkSolution(answers);
             if (result){
                 assertTrue(result);
                 System.out.print("Congratulations! Puzzle solved.\n");
