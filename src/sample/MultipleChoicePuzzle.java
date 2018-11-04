@@ -31,27 +31,4 @@ public class MultipleChoicePuzzle extends Puzzle {
         }
         return true;
     }
-
-    //returns an array of possible answers. The first answer is the correct one
-//    public ArrayList<ArrayList<String>> buildAnswers(){
-//        ArrayList<ArrayList<String>> answers = new ArrayList<>();
-//        answers.add(this.getLines());
-//        for (int i = 0; i < this.getFalseAnswers().size(); i++){
-//            ArrayList<String> newAnswer = new ArrayList<>();
-//            //parse string to obtain solution list
-//            ArrayList<String> answerStrings = new ArrayList<>(Arrays.asList(this.getFalseAnswers().get(i).split(",")));
-//            for (int j = 0; j < answerStrings.size(); j++) {
-//                String s = answerStrings.get(j).trim();
-//                if (s.startsWith("X")) {
-//                    s = s.substring(s.length() - 1);
-//                    newAnswer.add(this.getDistractors().get(Integer.parseInt(s) - 1));
-//                } else {
-//                    newAnswer.add(this.getLines().get(Integer.parseInt(s) - 1));
-//                }
-//            }
-//            answers.add(newAnswer);
-//        }
-//        return answers;
-//        return null;
-//    }
 }
