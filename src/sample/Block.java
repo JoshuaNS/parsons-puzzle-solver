@@ -130,4 +130,7 @@ public class Block {
     public void addAssociatedBlock(Block b) {
         associatedBlocks.add(b);
     }
+    public boolean hasAssociatedBlocks() {
+        return associatedBlocks.size() != 0;
+    }
 }

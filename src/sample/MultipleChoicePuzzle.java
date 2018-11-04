@@ -11,7 +11,7 @@ public class MultipleChoicePuzzle extends Puzzle {
         super(puzzleAtIndex);
         List<Block> solution = new ArrayList<>();
         for (Block b : this.getLines()) {
-            if (b.getAssociatedBlocks().size() != 0) {
+            if (b.hasAssociatedBlocks()) {
                 solution.add(b);
             }
         }
