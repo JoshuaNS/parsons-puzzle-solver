@@ -81,7 +81,7 @@ public class Block {
         }
         return sb.toString();
     }
-    private int calculateTab(String line) {
+    private static int calculateTab(String line) {
         int tabCount = 0;
 
         for (char c : line.toCharArray()) {
@@ -95,7 +95,7 @@ public class Block {
         return tabCount;
     }
 
-    private String reduceTab(String line, int count) {
+    private static String reduceTab(String line, int count) {
         int tabIndex = 0;
 
         char[] characters = line.toCharArray();
