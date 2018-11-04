@@ -1,8 +1,13 @@
 package sample;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Block {
     private Puzzle associatedPuzzle;
     private String id;
+    private List<Block> associatedBlocks;
     private int tab;
     private String[] lines;
 
@@ -29,6 +34,7 @@ public class Block {
         this.lines = new String[lines.length];
         this.tab = minTab;
         this.id = id;
+        this.associatedBlocks = new ArrayList<>();
 
         // Reduce tabs
         for (int i = 0; i < lines.length; i++) {
@@ -117,5 +123,11 @@ public class Block {
 
     public String getID() {
         return id;
+    }
+    public List<Block> getAssociatedBlocks() {
+        return associatedBlocks;
+    }
+    public void addAssociatedBlock(Block b) {
+        associatedBlocks.add(b);
     }
 }

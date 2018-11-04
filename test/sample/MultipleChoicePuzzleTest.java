@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -44,14 +45,21 @@ class MultipleChoicePuzzleTest {
     }
     @Test
     void checkSolutionMultipleChoice() {
-        ArrayList<ArrayList<String>> choices = (ArrayList<ArrayList<String>>)p.buildAnswers();
-        assertTrue((boolean) p.checkSolution(choices.get(0)));
+        List<Block> answers = new ArrayList<>(p.getSolutionSet());
+
+        assertTrue((boolean) p.checkSolution(answers));
     }
 
     @Test
     void checkBadSolutionMultipleChoice() {
-        ArrayList<ArrayList<String>> choices = (ArrayList<ArrayList<String>>)p.buildAnswers();
-        assertFalse((boolean) p.checkSolution(choices.get(1)));
-        assertFalse((boolean) p.checkSolution(choices.get(2)));
+        ArrayList<Block> answers = new ArrayList<>(p.getSolutionSet());
+
+        // Replace one of the answers with a distractor
+        Block distractorForLineTwo = answers.get(1).getAssociatedBlocks().get(0);
+        answers.remove(1);
+        answers.add(1, distractorForLineTwo);
+
+        assertEquals(new Block("2X1", "if num % 3 == 0:", p), distractorForLineTwo);
+        assertFalse((boolean) p.checkSolution(answers));
     }
 }

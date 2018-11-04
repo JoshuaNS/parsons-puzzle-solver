@@ -65,10 +65,14 @@ public class PuzzleTest {
         assertEquals(PuzzleType.DnD, p.getType());
         assertEquals(false, p.isIndentRequired());
 
-        assertNotNull(p.getSolutions());
-        assertLinesMatch(expectedSolution, p.getSolutions());
+        assertNotNull(p.getLines());
+        for (int i = 0; i < p.getLines().size(); i++) {
+            assertEquals(expectedSolution.get(i), p.getLines().get(i).getLines());
+        }
         assertNotNull(p.getDistractors());
-        assertLinesMatch(expectedDistractors, p.getDistractors());
+        for (int i = 0; i < p.getDistractors().size(); i++) {
+            assertEquals(expectedDistractors.get(i), p.getDistractors().get(i).getLines());
+        }
     }
     @Test
     //uses an XML with no indent, no name, no language, no description, and ensures it functions as desired

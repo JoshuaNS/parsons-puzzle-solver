@@ -3,6 +3,8 @@ package sample;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Puzzle {
 
@@ -12,13 +14,14 @@ public abstract class Puzzle {
     private PuzzleType type;
     private boolean indentRequired;
     private String description;
-    private ArrayList<String> solutions;
-    private ArrayList<String> distractors;
-    private ArrayList<String> falseAnswers;
+    private List<Block> solutionSet;
+    private List<Block> lines;
+    private List<Block> distractors;
     private int tabWidth;
+    private static Pattern distractorPattern = Pattern.compile("(\\d+)X(\\d+)");
 
     public Puzzle(Element puzzleXML){
-        solutions = new ArrayList<>();
+        lines = new ArrayList<>();
         distractors = new ArrayList<>();
 
         // Index
@@ -80,28 +83,49 @@ public abstract class Puzzle {
         Element solutionNodes = (Element)puzzleXML.getElementsByTagName("solution").item(0);
         NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
         for (int i = 0; i < solutionBlocks.getLength(); i++) {
-            int index = Integer.parseInt(solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue());
-            this.solutions.add(index-1, solutionBlocks.item(i).getTextContent());
+            String id = solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
+            int index = Integer.parseInt(id);
+            this.lines.add(index-1, new Block(id, solutionBlocks.item(i).getTextContent(), this));
         }
 
         // Distractors
         Element distractorNodes = (Element)puzzleXML.getElementsByTagName("distractors").item(0);
         NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
         for (int i = 0; i < distractorBlocks.getLength(); i++) {
-            int index = Integer.parseInt(distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue().replaceAll("[^0-9]", ""));
-            this.distractors.add(index-1, distractorBlocks.item(i).getTextContent());
+            String id = distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
+
+            Matcher m = distractorPattern.matcher(id);
+            int associatedID;
+            if (m.find()) {
+                associatedID = Integer.parseInt(m.group(1));
+            }
+            // If the pattern doesn't match, it should be a non-distractor block, with no need for association.
+            else {
+                associatedID = -1;
+            }
+
+            Block b = new Block(id, distractorBlocks.item(i).getTextContent(), this);
+
+            // Add associated between both blocks
+            // associatedID of 0 means no association
+            if (associatedID > 0) {
+                b.addAssociatedBlock(this.lines.get(associatedID - 1));
+                this.lines.get(associatedID - 1).addAssociatedBlock(b);
+            }
+
+            this.distractors.add(b);
         }
 
         // Assume tabWidth (in space characters) is 4 for now.
         this.setTabWidth(4);
     }
 
-    abstract Object checkSolution(Object providedSolution);
+    abstract Object checkSolution(List<Block> providedSolution);
 
-    public ArrayList<String> buildChoices(){
-        ArrayList<String> choices = new ArrayList<>();
-        for (int i = 0; i < this.getSolutions().size(); i++){
-            choices.add(this.getSolutions().get(i));
+    public ArrayList<Block> buildChoices(){
+        ArrayList<Block> choices = new ArrayList<>();
+        for (int i = 0; i < this.getLines().size(); i++){
+            choices.add(this.getLines().get(i));
         }
         for (int i = 0; i < this.getDistractors().size(); i++){
             choices.add(this.getDistractors().get(i));
@@ -158,28 +182,20 @@ public abstract class Puzzle {
         this.description = description;
     }
 
-    public ArrayList<String> getSolutions() {
-        return solutions;
+    public List<Block> getLines() {
+        return lines;
     }
 
-    public void setSolutions(ArrayList<String> solutions) {
-        this.solutions = solutions;
+    public void setLines(List<Block> lines) {
+        this.lines = lines;
     }
 
-    public ArrayList<String> getDistractors() {
+    public List<Block> getDistractors() {
         return distractors;
     }
 
-    public void setDistractors(ArrayList<String> distractors) {
+    public void setDistractors(List<Block> distractors) {
         this.distractors = distractors;
-    }
-
-    public ArrayList<String> getFalseAnswers() {
-        return falseAnswers;
-    }
-
-    public void setFalseAnswers(ArrayList<String> falseAnswers) {
-        this.falseAnswers = falseAnswers;
     }
 
     public int getTabWidth() {
@@ -188,6 +204,14 @@ public abstract class Puzzle {
 
     public void setTabWidth(int tabWidth) {
         this.tabWidth = tabWidth;
+    }
+
+    public List<Block> getSolutionSet() {
+        return solutionSet;
+    }
+
+    protected void setSolutionSet(List<Block> solutionSet) {
+        this.solutionSet = solutionSet;
     }
 }
 

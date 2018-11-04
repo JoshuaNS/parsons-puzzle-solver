@@ -49,21 +49,21 @@ class PuzzleSetTest {
         System.out.print("Puzzle loaded.\n\n");
         if (currentPuzz.getType().equals(PuzzleType.DnD)){
             System.out.print("Drag into the correct order:\n");
-            ArrayList<String> choices = currentPuzz.buildChoices();
+            ArrayList<Block> choices = currentPuzz.buildChoices();
             for (int i = 0; i < choices.size(); i++){
                 System.out.print(choices.get(i) +"\n");
             }
 
-            List<String> providedSolution = new ArrayList<>();
-            providedSolution.add("for num in range(1, 21):");
-            providedSolution.add("if num % 3 == 0 and num % 5 == 0:");
-            providedSolution.add("print('FizzBuzz')");
-            providedSolution.add("elif num % 3 == 0:");
-            providedSolution.add("print('Fizz')");
-            providedSolution.add("elif num % 5 == 0:");
-            providedSolution.add("print('Buzz')");
-            providedSolution.add("else:");
-            providedSolution.add("print(num)");
+            List<Block> providedSolution = new ArrayList<>();
+            providedSolution.add(new Block("1","for num in range(1, 21):", currentPuzz));
+            providedSolution.add(new Block("1","if num % 3 == 0 and num % 5 == 0:", currentPuzz));
+            providedSolution.add(new Block("1","print('FizzBuzz')", currentPuzz));
+            providedSolution.add(new Block("1","elif num % 3 == 0:", currentPuzz));
+            providedSolution.add(new Block("1","print('Fizz')", currentPuzz));
+            providedSolution.add(new Block("1","elif num % 5 == 0:", currentPuzz));
+            providedSolution.add(new Block("1","print('Buzz')", currentPuzz));
+            providedSolution.add(new Block("1","else:", currentPuzz));
+            providedSolution.add(new Block("1","print(num)", currentPuzz));
 
             System.out.print("\nChecking solution...\n");
             boolean result = (boolean) currentPuzz.checkSolution(providedSolution);
@@ -81,7 +81,7 @@ class PuzzleSetTest {
         if (currentPuzz.getType().equals(PuzzleType.MC)){
             MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
             System.out.print("Choose the correct choice:\n");
-            ArrayList<String> choices = mcPuzz.buildChoices();
+            ArrayList<Block> choices = mcPuzz.buildChoices();
             for (int i = 0; i < choices.size(); i++){
                 System.out.print(choices.get(i) +"\n");
             }

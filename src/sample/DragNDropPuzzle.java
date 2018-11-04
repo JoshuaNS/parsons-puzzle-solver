@@ -2,27 +2,23 @@ package sample;
 
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DragNDropPuzzle extends Puzzle {
 
     public DragNDropPuzzle(Element puzzleXML) {
         super(puzzleXML);
+        this.setSolutionSet(Collections.unmodifiableList(this.getLines()));
     }
 
     @Override
-    Object checkSolution(Object providedSolution) {
-        if (!(providedSolution instanceof ArrayList)) {
-            System.err.println("Solution wasn't provided as ArrayList");
-            return null;
-        }
-        ArrayList<String> givenSolution = (ArrayList<String>)providedSolution;
-
-        if (getSolutions().size() != givenSolution.size()) {
+    Object checkSolution(List<Block> providedSolution) {
+        if (getSolutionSet().size() != providedSolution.size()) {
             return false;
         }
-        for (int i = 0; i < getSolutions().size(); i++) {
-            if (!givenSolution.get(i).equals(getSolutions().get(i))) {
+        for (int i = 0; i < getLines().size(); i++) {
+            if (!providedSolution.get(i).equals(getSolutionSet().get(i))) {
                 return false;
             }
         }
