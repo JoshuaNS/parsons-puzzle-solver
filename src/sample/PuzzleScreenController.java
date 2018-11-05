@@ -18,6 +18,10 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Controller class for the PuzzleScreen GUI
+ * @author Travis Ridge
+ */
 public class PuzzleScreenController {
 
     private PuzzleSet currentPuzzleSet;
@@ -43,26 +47,42 @@ public class PuzzleScreenController {
     @FXML
     private Label ProblemDescription;
 
+    /**
+     * Loads the next puzzle in the PuzzleSet into the GUI, if applicable.
+     * Currently only supports sequential puzzle order.
+     * Feedback text bar displays an error message if no next puzzle exists.
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
     @FXML
-    void NextPuzzle(ActionEvent event) {
+    public void NextPuzzle(ActionEvent event) {
 
-        if(puzzleIndex+1 <= currentPuzzleSet.getPuzzles().size()) {
-            puzzleIndex++;
-            setCurrentPuzzle();
-            loadPuzzleData();
+        if(puzzleIndexValid(puzzleIndex+1)) {
+            setCurrentPuzzle(puzzleIndex+1);
         }
         else{
             FeedbackText.setText("Error: No puzzles remaining");
         }
     }
 
+    /**
+     * Reloads the currently selected puzzle, clearing all progress in the GUI.
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
     @FXML
-    void ResetPuzzle(ActionEvent event) {
+    public void ResetPuzzle(ActionEvent event) {
         loadPuzzleData();
     }
 
+    /**
+     * Checks the current solution answer and determines result.
+     * One of three results will occur depend on answer:
+     * 1. Invalid answer error message if an invalid solution supplied (i.e. multiple choice with no answer).
+     * 2. Correct answer message if solution was the correct answer.
+     * 3. Incorrect answer message if solution was valid but incorrect.
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
     @FXML
-    void CheckAnswer(ActionEvent event) {
+    public void CheckAnswer(ActionEvent event) {
         Object answer = null;
         if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
             ArrayList<String> answerList = new ArrayList<>();
@@ -91,8 +111,12 @@ public class PuzzleScreenController {
             FeedbackText.setText("Incorrect Answer!");
     }
 
+    /**
+     * Selects a new PuzzleSet file to be used, and loads the file if valid.
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
     @FXML
-    void LoadPuzzleSet(ActionEvent event){
+    public void LoadPuzzleSet(ActionEvent event){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         File f = fileChooser.showOpenDialog(null);
@@ -102,28 +126,47 @@ public class PuzzleScreenController {
         }
     }
 
+    /**
+     * Exits the application
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
     @FXML
-    void Exit(ActionEvent event){
+    public void Exit(ActionEvent event){
         System.exit(0);
     }
 
+    /**
+     * Initializes the puzzle screen.
+     * Currently loads a hardcoded test file during initialization.
+     */
     @FXML
     public void initialize(){
         File f = new File("testfiles/puzzlesamp.xml");
         setPuzzleSet(f);
     }
 
-    //Changes the currently selected puzzle set
+    /**
+     * Loads a new puzzle set from a file, and loads the first puzzle in the set to the GUI.
+     * @param f The file containing the new puzzle set.
+     */
     private void setPuzzleSet(File f){
         currentPuzzleSet = new PuzzleSet(f);
-        puzzleIndex = 1;
 
-        setCurrentPuzzle();
-        loadPuzzleData();
+        setCurrentPuzzle(1);
     }
 
     //Changes the currently selected puzzle
-    private void setCurrentPuzzle(){
+
+    /**
+     * Sets a new puzzle and loads it into the GUI.
+     * @param newPuzzleIndex The index of the new puzzle within the puzzle set.
+     */
+    private void setCurrentPuzzle(int newPuzzleIndex){
+        if(!puzzleIndexValid(newPuzzleIndex)){
+            throw new IllegalArgumentException("newPuzzleIndex: " + newPuzzleIndex);
+        }
+
+        puzzleIndex = newPuzzleIndex;
         currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
         ProblemName.setText(currentPuzzle.getName());
         ProblemDescription.setText(currentPuzzle.getDescription());
@@ -131,9 +174,13 @@ public class PuzzleScreenController {
         if(currentPuzzle.getType() == PuzzleType.MC){
             puzzleAnswers = (((MultipleChoicePuzzle)currentPuzzle).buildAnswers());
         }
+        loadPuzzleData();
     }
 
-    //Loads the currently selected puzzle into the UI
+    /**
+     * Loads the data for the currently selected puzzle into the GUI.
+     * Can be used to load a new puzzle or reset progress on the current puzzle.
+     */
     private void loadPuzzleData(){
         //Reset the code fragment grid to use the current puzzle
         CodeFragmentGrid.getChildren().clear();
@@ -266,5 +313,14 @@ public class PuzzleScreenController {
                 SolutionGrid.setMargin(newAnswer,fragmentMargins);
             }
         }
+    }
+
+    /**
+     * Determines whether a given integer value is a valid puzzle index for the current puzzle set.
+     * @param index The index of the puzzle to be checked
+     * @return A boolean value of it the puzzle index is valid
+     */
+    private boolean puzzleIndexValid(int index){
+        return (index <= currentPuzzleSet.getPuzzles().size() || index >= 1);
     }
 }
