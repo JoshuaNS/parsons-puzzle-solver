@@ -54,6 +54,10 @@ public class Block {
         Block b = (Block) o;
         return this.id.equals(b.id) && this.associatedPuzzle == b.associatedPuzzle;
     }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
     public String getLines() {
         StringBuilder sb = new StringBuilder();
