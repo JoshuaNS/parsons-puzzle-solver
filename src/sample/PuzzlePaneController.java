@@ -40,6 +40,9 @@ public class PuzzlePaneController {
         }
     }
 
+    /**
+     * Initializes the puzzle screen.
+     */
     @FXML
     public void initialize(){
         File f = new File("testfiles/puzzlesamp.xml");
@@ -62,7 +65,8 @@ public class PuzzlePaneController {
     private void setPuzzleSet(File f){
         try {
             currentPuzzleSet = new PuzzleSet(f);
-            openPuzzleSolver(1);
+            openPuzzleSelect();
+            //openPuzzleSolver(1);
         }
         catch(Exception e) {
             System.err.println(e.toString());
@@ -74,11 +78,32 @@ public class PuzzlePaneController {
     }
 
     /**
+     * Opens the puzzle select for the selected puzzle set
+     * @throws IOException
+     */
+    public void openPuzzleSelect() throws IOException {
+        //Remove currently open view if applicable
+        if(currentView != null){
+            PuzzlePane.getChildren().remove(currentView);
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "PuzzleSelect.fxml"));
+        currentView =  loader.load();
+        PuzzleSelectController controller = loader.getController();
+
+        controller.setRootController(this);
+        controller.setPuzzleSet(currentPuzzleSet);
+
+        PuzzlePane.setCenter(currentView);
+    }
+
+    /**
      * Opens the puzzle solver for the selected puzzle
      * @param index The index of the puzzle within the puzzle set
      * @throws IOException
      */
-    private void openPuzzleSolver(int index) throws IOException {
+    public void openPuzzleSolver(int index) throws IOException {
         if(!puzzleIndexValid(index)){
             throw new IllegalArgumentException("Puzzle Index: " + index);
         }
@@ -93,7 +118,7 @@ public class PuzzlePaneController {
         currentView =  loader.load();
         PuzzleScreenController controller = loader.getController();
 
-
+        controller.setRootController(this);
         controller.setPuzzleSet(currentPuzzleSet, index);
 
         PuzzlePane.setCenter(currentView);
@@ -105,6 +130,6 @@ public class PuzzlePaneController {
      * @return A boolean value of it the puzzle index is valid
      */
     private boolean puzzleIndexValid(int index){
-        return (index <= currentPuzzleSet.getPuzzles().size() || index >= 1);
+        return (index <= currentPuzzleSet.getPuzzles().size() && index >= 1);
     }
 }

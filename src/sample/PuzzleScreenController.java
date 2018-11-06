@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @author Travis Ridge
  */
 public class PuzzleScreenController {
-
+    private PuzzlePaneController rootController; //Link to the controller of the root for passing event
     private PuzzleSet currentPuzzleSet;
     private int puzzleIndex;
     private Puzzle currentPuzzle;
@@ -60,7 +60,10 @@ public class PuzzleScreenController {
             setCurrentPuzzle(puzzleIndex+1);
         }
         else{
-            FeedbackText.setText("Error: No puzzles remaining");
+            try {
+                rootController.openPuzzleSelect();
+            }
+            catch (Exception e) {}
         }
     }
 
@@ -120,7 +123,15 @@ public class PuzzleScreenController {
     }
 
     /**
-     * Loads a new puzzle set from a file, and loads the first puzzle in the set to the GUI.
+     * Sets the root controller of the puzzle screen
+     * @param controller The PuzzlePane controller
+     */
+    public void setRootController(PuzzlePaneController controller){
+        rootController = controller;
+    }
+
+    /**
+     * Sets a new puzzle set, and loads the selected puzzle in the set to the GUI.
      * @param puzzleSet The set of the puzzles to be loaded
      * @param puzzleIndex The index of the first puzzle to be loaded
      */
@@ -300,6 +311,6 @@ public class PuzzleScreenController {
      * @return A boolean value of it the puzzle index is valid
      */
     private boolean puzzleIndexValid(int index){
-        return (index <= currentPuzzleSet.getPuzzles().size() || index >= 1);
+        return (index <= currentPuzzleSet.getPuzzles().size() && index >= 1);
     }
 }
