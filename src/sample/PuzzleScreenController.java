@@ -112,50 +112,23 @@ public class PuzzleScreenController {
     }
 
     /**
-     * Selects a new PuzzleSet file to be used, and loads the file if valid.
-     * @param event The ActionEvent sent by PuzzleScreen
-     */
-    @FXML
-    public void LoadPuzzleSet(ActionEvent event){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        File f = fileChooser.showOpenDialog(null);
-
-        if(f != null && f.exists()){ //if null no file was selected
-            setPuzzleSet(f);
-        }
-    }
-
-    /**
-     * Exits the application
-     * @param event The ActionEvent sent by PuzzleScreen
-     */
-    @FXML
-    public void Exit(ActionEvent event){
-        System.exit(0);
-    }
-
-    /**
      * Initializes the puzzle screen.
-     * Currently loads a hardcoded test file during initialization.
      */
     @FXML
     public void initialize(){
-        File f = new File("testfiles/puzzlesamp.xml");
-        setPuzzleSet(f);
+
     }
 
     /**
      * Loads a new puzzle set from a file, and loads the first puzzle in the set to the GUI.
-     * @param f The file containing the new puzzle set.
+     * @param puzzleSet The set of the puzzles to be loaded
+     * @param puzzleIndex The index of the first puzzle to be loaded
      */
-    private void setPuzzleSet(File f){
-        currentPuzzleSet = new PuzzleSet(f);
+    public void setPuzzleSet(PuzzleSet puzzleSet, int puzzleIndex){
+        currentPuzzleSet = puzzleSet;
 
-        setCurrentPuzzle(1);
+        setCurrentPuzzle(puzzleIndex);
     }
-
-    //Changes the currently selected puzzle
 
     /**
      * Sets a new puzzle and loads it into the GUI.
@@ -175,6 +148,7 @@ public class PuzzleScreenController {
             puzzleAnswers = (((MultipleChoicePuzzle)currentPuzzle).buildAnswers());
         }
         loadPuzzleData();
+
     }
 
     /**
@@ -182,6 +156,11 @@ public class PuzzleScreenController {
      * Can be used to load a new puzzle or reset progress on the current puzzle.
      */
     private void loadPuzzleData(){
+        //Check that a puzzle has actually been loaded first
+        if(currentPuzzle == null){
+            throw new IllegalStateException("No puzzle selected.");
+        }
+
         //Reset the code fragment grid to use the current puzzle
         CodeFragmentGrid.getChildren().clear();
         CodeFragmentGrid.getRowConstraints().clear();
