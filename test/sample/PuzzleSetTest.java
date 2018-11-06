@@ -107,10 +107,12 @@ class PuzzleSetTest {
                 System.out.println();
             }
 
-            List<Block> answers = currentPuzz.getSolutionSet();
+            List<List<Block>> answers = ((MultipleChoicePuzzle) currentPuzz).buildAnswers(5);
+
+            int choice = 0; // Select the correct choice
 
             System.out.print("\nChecking solution...\n");
-            boolean result = (boolean) mcPuzz.checkSolution(answers);
+            boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice));
             if (result){
                 assertTrue(result);
                 System.out.print("Congratulations! Puzzle solved.\n");

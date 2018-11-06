@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,5 +62,30 @@ class MultipleChoicePuzzleTest {
 
         assertEquals(new Block("2X1", "if num % 3 == 0:", p), distractorForLineTwo);
         assertFalse((boolean) p.checkSolution(answers));
+    }
+
+    @Test
+    void buildAnswersContainsSolution() {
+        List<List<Block>> answers = p.buildAnswers( 4);
+
+        assertTrue(answers.contains(p.getSolutionSet()));
+    }
+
+    @Test
+    void buildAnswersUniqueArray() {
+        List<List<Block>> answers = p.buildAnswers(4);
+
+        assertEquals(answers.size(), new HashSet<>(answers).size());
+    }
+
+    @Test
+    void buildAnswersBadChoiceQuantity() {
+        List<List<Block>> answers = p.buildAnswers(30);
+        for (List<Block> answer : answers) {
+            for (Block b : answer) {
+                System.out.println(b.getLines());
+            }
+            System.out.println();
+        }
     }
 }
