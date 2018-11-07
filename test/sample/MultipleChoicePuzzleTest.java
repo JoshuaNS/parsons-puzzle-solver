@@ -18,9 +18,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+/**
+ * MultipleChoicePuzzleTest: Test class for MultipleChoicePuzzle
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 class MultipleChoicePuzzleTest {
     private static MultipleChoicePuzzle p;
+    /**
+     * Test of import of a sample xml file
+     */
     @BeforeAll
     static void setupSamplePuzzle() {
         File f = new File("testfiles/puzzlesamp.xml");
@@ -44,6 +52,10 @@ class MultipleChoicePuzzleTest {
 
         p = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
     }
+
+    /**
+     * Checking the solution of the provided puzzle
+     */
     @Test
     void checkSolutionMultipleChoice() {
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
@@ -51,6 +63,9 @@ class MultipleChoicePuzzleTest {
         assertTrue((boolean) p.checkSolution(answers));
     }
 
+    /**
+     * Checking invalid solution of the provided puzzle
+     */
     @Test
     void checkBadSolutionMultipleChoice() {
         ArrayList<Block> answers = new ArrayList<>(p.getSolutionSet());
@@ -64,6 +79,9 @@ class MultipleChoicePuzzleTest {
         assertFalse((boolean) p.checkSolution(answers));
     }
 
+    /**
+     * Check that result of buildAnswers contains the solution
+     */
     @Test
     void buildAnswersContainsSolution() {
         List<List<Block>> answers = p.buildAnswers( 4);

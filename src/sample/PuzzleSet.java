@@ -12,26 +12,50 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+/**
+ * A PuzzleSet Object is an object that contains multiple puzzle objects
+ * When the UI is instantiated a puzzleSet is opened by reading an XML file
+ *
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public class PuzzleSet {
     private String name;
     private boolean sequentialCompletion;
     private boolean randomOrder;
     private ArrayList<Puzzle> puzzles;
 
+    /**
+     * Puzzle set constructor that is created by passing in the name of the set
+     * @param name
+     */
     public PuzzleSet (String name){
         this.name = name;
         puzzles = new ArrayList<>();
     }
 
+    /**
+     * Default Constructor
+     */
     public PuzzleSet (){
         puzzles = new ArrayList<>();
     }
 
+    /**
+     * Constructor that imports an XML file using importPuzzleSet
+     * @param puzzleFile
+     */
     public PuzzleSet (File puzzleFile){
         puzzles = new ArrayList<>();
         importPuzzleSet(puzzleFile);
     }
 
+    /**
+     * Sets the values of a puzzleSet using the data from an XML file
+     * @param puzzleFile
+     */
     public void importPuzzleSet(File puzzleFile){
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
@@ -108,7 +132,11 @@ public class PuzzleSet {
         }
     }
 
-    //returns a puzzle at the given index
+    /**
+     * Returns the puzzle with the given index
+     * @param index
+     * @return
+     */
     //todo: no check for puzzles with the same index
     public Puzzle getPuzzle(int index) {
         return this.getPuzzles().get(index-1);

@@ -6,6 +6,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A Puzzle object is the object that contains the data for a single puzzle in a puzzle set
+ * Data that a puzzle contains includes the description, solutions and distractors, among other details
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public abstract class Puzzle {
 
     private String name;
@@ -20,6 +27,10 @@ public abstract class Puzzle {
     private int tabWidth;
     private static Pattern distractorPattern = Pattern.compile("(\\d+)X(\\d+)");
 
+    /**
+     * Puzzle constructor which takes the UML data as an input and converts it to a puzzle object
+     * @param puzzleXML
+     */
     public Puzzle(Element puzzleXML){
         lines = new ArrayList<>();
         distractors = new ArrayList<>();
@@ -120,7 +131,17 @@ public abstract class Puzzle {
         this.setTabWidth(4);
     }
 
+    /**
+     * abstract method that defines the method of checking if a solution is correct
+     * @param providedSolution
+     * @return
+     */
     abstract Object checkSolution(List<Block> providedSolution);
+
+    /**
+     * buildChoices returns a list of the choices presented to a user in a scrambled state
+     * @return
+     */
 
     public ArrayList<Block> buildChoices(){
         ArrayList<Block> choices = new ArrayList<>();

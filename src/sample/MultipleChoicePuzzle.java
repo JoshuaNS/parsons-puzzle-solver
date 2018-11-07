@@ -4,8 +4,20 @@ import org.w3c.dom.Element;
 
 import java.util.*;
 
+/**
+ * Child class for Multiple Choice Puzzles
+ *
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public class MultipleChoicePuzzle extends Puzzle {
 
+    /**
+     * Constructor which takes in a puzzle xml object
+     * Sets the solution which is the list of blocks that have associated distractors
+     * @param puzzleAtIndex
+     */
     public MultipleChoicePuzzle(Element puzzleAtIndex) {
         super(puzzleAtIndex);
         List<Block> solution = new ArrayList<>();
@@ -17,6 +29,11 @@ public class MultipleChoicePuzzle extends Puzzle {
         this.setSolutionSet(Collections.unmodifiableList(solution));
     }
 
+    /**
+     * Method that defines the method of checking if a solution is correct
+     * @param providedSolution
+     * @return
+     */
     @Override
     Object checkSolution(List<Block> providedSolution) {
 
@@ -33,10 +50,9 @@ public class MultipleChoicePuzzle extends Puzzle {
 
 
     /**
-     *
+     * array of possible answers. The first answer is the correct one
      * @param choiceQuantity
      * @return
-     * array of possible answers. The first answer is the correct one
      */
     public List<List<Block>> buildAnswers(int choiceQuantity){
         List<List<Block>> answers = new ArrayList<>();

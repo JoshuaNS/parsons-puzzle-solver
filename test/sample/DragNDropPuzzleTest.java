@@ -16,8 +16,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * DragNDropPuzzleTest: Test class for DragNDropPuzzle
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 class DragNDropPuzzleTest {
     private static Puzzle p;
+
+    /**
+     * Setting up a DragNDrop puzzle from XML file
+     */
     @BeforeAll
     static void setupSamplePuzzle() {
         File f = new File("testfiles/puzzlesamp.xml");
@@ -41,6 +51,10 @@ class DragNDropPuzzleTest {
 
         p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
     }
+
+    /**
+     * Checking a provided solution to the predefined puzzle
+     */
     @Test
     void checkSolutionDragNDrop() {
         List<Block> providedSolution = new ArrayList<>();
@@ -57,6 +71,9 @@ class DragNDropPuzzleTest {
         assertTrue((boolean) p.checkSolution(providedSolution));
     }
 
+    /**
+     * Checking incorrect solution to predefined puzzle
+     */
     @Test
     void checkBadSolutionDragNDrop() {
         List<Block> providedSolution = new ArrayList<>();

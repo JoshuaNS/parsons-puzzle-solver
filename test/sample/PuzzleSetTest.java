@@ -8,7 +8,16 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * PuzzleSetTest: Test class for PuzzleSet
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 class PuzzleSetTest {
+    /**
+     * Test of import of a sample xml file
+     */
     @Test
     void importSamplePuzzle1() {
         PuzzleSet ps = new PuzzleSet("Lab 1");
@@ -21,8 +30,10 @@ class PuzzleSetTest {
         assertEquals("Lab 1 - Puzzle 2", puzzles.get(1).getName());
     }
 
+    /**
+     * Test of import with Name, sequential, random all not specified
+     */
     @Test
-    //test with Name, sequential, random all not specified
     void importSamplePuzzleInvalid() {
         PuzzleSet ps = new PuzzleSet();
         File f = new File("testfiles/puzzlesamperror2.xml");
@@ -32,6 +43,10 @@ class PuzzleSetTest {
         assertFalse(ps.isSequentialCompletion());
     }
 
+    /**
+     * Test of operation of program
+     * Operates a simulation of a puzzle import and solve for DnD and MC
+     */
     @Test
     void operationTest(){
         System.out.print("Welcome to the puzzle solver. Please import a puzzle.\n");

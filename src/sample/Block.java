@@ -4,6 +4,14 @@ package sample;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A block is a particular line of code that is present in a puzzle
+ * A block may be part of a solution or it may be a distractor to another block
+ *
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public class Block {
     private Puzzle associatedPuzzle;
     private String id;
@@ -11,6 +19,12 @@ public class Block {
     private int tab;
     private String[] lines;
 
+    /**
+     * Block constructor which takes block ID, the block text and associated puzzle
+     * @param id
+     * @param textInput
+     * @param associatedPuzzle
+     */
     public Block(String id, String textInput, Puzzle associatedPuzzle) {
         this.associatedPuzzle = associatedPuzzle;
         int tabWidth;
@@ -42,6 +56,12 @@ public class Block {
             this.lines[i] = reduceTab(line, minTab);
         }
     }
+
+    /**
+     * Constructor with no associated puzzle
+     * @param id
+     * @param textInput
+     */
     public Block(String id, String textInput) {
         this(id, textInput, null);
     }
@@ -59,6 +79,10 @@ public class Block {
         return id.hashCode();
     }
 
+    /**
+     * Converts the lines into a single string with newLine characters
+     * @return
+     */
     public String getLines() {
         StringBuilder sb = new StringBuilder();
         for (String line : this.lines) {
@@ -70,6 +94,12 @@ public class Block {
         return sb.toString();
     }
 
+    /**
+     * Converts space in line to tabs
+     * @param line
+     * @param tabWidth
+     * @return
+     */
     private static String spaceToTab(String line, int tabWidth) {
         int spaceCount = 0;
         char[] characters = line.toCharArray();
@@ -91,6 +121,12 @@ public class Block {
         }
         return sb.toString();
     }
+
+    /**
+     * Counts the number of tabs in a line
+     * @param line
+     * @return
+     */
     private static int calculateTab(String line) {
         int tabCount = 0;
 
@@ -105,6 +141,12 @@ public class Block {
         return tabCount;
     }
 
+    /**
+     * Remove leading tabs from a line up to the number defined by count
+     * @param line
+     * @param count
+     * @return
+     */
     private static String reduceTab(String line, int count) {
         int tabIndex = 0;
 
