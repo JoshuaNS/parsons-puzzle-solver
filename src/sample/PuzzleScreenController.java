@@ -1,21 +1,14 @@
 package sample;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.FileChooser;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -192,111 +185,20 @@ public class PuzzleScreenController {
             CodeFragmentGrid.getRowConstraints().add(rowConstraint);
 
             //Creates button with A-Z label. Bit messy and won't work past 26 lines
-            Label newLabel = new Label("" + (char)('A' + i));
-            newLabel.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-            newLabel.setPadding(paddings);
-            newLabel.setMaxWidth(Double.MAX_VALUE);
+            PuzzleLabel newLabel = new PuzzleLabel("" + (char)('A' + i), false);
             newLabel.setAlignment(Pos.CENTER);
             CodeFragmentGrid.add(newLabel,0, i);
-            CodeFragmentGrid.setMargin(newLabel,labelMargins);
+            GridPane.setMargin(newLabel,labelMargins);
 
-            Label newFragment = new Label(puzzleFragments.get(i));
-            newFragment.setTooltip(new Tooltip(puzzleFragments.get(i)));
-            newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-            newFragment.setPadding(paddings);
-            newFragment.setMaxWidth(Double.MAX_VALUE);
-            CodeFragmentGrid.add(newFragment,1, i);
-            CodeFragmentGrid.setMargin(newFragment,fragmentMargins);
-
+            PuzzleLabel newFragment;
             if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
-                newFragment.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    public void handle(MouseEvent event) {
-                        /* drag was detected, start a drag-and-drop gesture*/
-                        /* allow any transfer mode */
-                        if((newFragment.getText() != null && !newFragment.getText().isEmpty())) {
-                            Dragboard db = newFragment.startDragAndDrop(TransferMode.ANY);
-
-                            /* Put a string on a dragboard */
-                            ClipboardContent content = new ClipboardContent();
-                            content.putString(newFragment.getText());
-                            db.setContent(content);
-
-                            newFragment.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
-                        }
-
-                        event.consume();
-                    }
-                });
-                newFragment.setOnDragDone(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                    }
-                });
-                newFragment.setOnDragOver(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        /* data is dragged over the target */
-                        /* accept it only if it is not dragged from the same node
-                         * and if it has a string data */
-                        if (event.getGestureSource() != newFragment &&
-                                event.getDragboard().hasString()) {
-                            /* allow for both copying and moving, whatever user chooses */
-                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        }
-
-                        event.consume();
-                    }
-                });
-                newFragment.setOnDragDropped(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        /* data dropped */
-                        /* if there is a string data on dragboard, read it and use it */
-                        Dragboard db = event.getDragboard();
-                        boolean success = false;
-                        if (db.hasString()) {
-                            //newFragment.setText(db.getString());
-                            //newFragment.setTooltip(new Tooltip(db.getString()));
-                            Label source = (Label) event.getGestureSource();
-                            Label target = (Label) event.getGestureTarget();
-
-                            String temp = target.getText();
-
-                            target.setText(source.getText());
-                            if (source.getText() == null || source.getText().isEmpty())
-                                target.setTooltip(null);
-                            else
-                                target.setTooltip(new Tooltip(source.getText()));
-
-                            source.setText(temp);
-                            if (temp == null || temp.isEmpty())
-                                source.setTooltip(null);
-                            else
-                                source.setTooltip(new Tooltip(temp));
-
-                            success = true;
-                        }
-
-                        /* let the source know whether the string was successfully
-                         * transferred and used */
-                        event.setDropCompleted(success);
-
-                        event.consume();
-                    }
-                });
-                newFragment.setOnDragEntered(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        if(event.getGestureSource() != newFragment){
-                            newFragment.setStyle("-fx-background-color: steelblue; -fx-border-color: black;");
-                        }
-                    }
-                });
-                newFragment.setOnDragExited(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        if(event.getGestureSource() != newFragment){
-                            newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                        }
-                    }
-                });
+                newFragment = new PuzzleFragmentLabel(puzzleFragments.get(i));
             }
+            else{
+                newFragment = new PuzzleLabel(puzzleFragments.get(i));
+            }
+            CodeFragmentGrid.add(newFragment,1, i);
+            GridPane.setMargin(newFragment,fragmentMargins);
         }
 
         //Set the solution data
@@ -304,123 +206,25 @@ public class PuzzleScreenController {
             for(int i = 0; i < currentPuzzle.getSolutions().size(); i++) {
                 SolutionGrid.getRowConstraints().add(rowConstraint);
 
-                Label newLabel = new Label("" + (i + 1));
-                newLabel.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                newLabel.setPadding(paddings);
-                newLabel.setMaxWidth(Double.MAX_VALUE);
+                PuzzleLabel newLabel = new PuzzleLabel("" + (i + 1), false);
                 newLabel.setAlignment(Pos.CENTER);
                 SolutionGrid.add(newLabel, 0, i);
-                SolutionGrid.setMargin(newLabel, labelMargins);
+                GridPane.setMargin(newLabel, labelMargins);
 
-                Label newFragment = new Label();
-                newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                newFragment.setPadding(paddings);
-                newFragment.setMaxWidth(Double.MAX_VALUE);
+                PuzzleFragmentLabel newFragment = new PuzzleFragmentLabel(null);
                 SolutionGrid.add(newFragment, 1, i);
-                SolutionGrid.setMargin(newFragment, fragmentMargins);
-
+                GridPane.setMargin(newFragment, fragmentMargins);
                 puzzleAnswerLabels.add(newFragment);
-
-                newFragment.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    public void handle(MouseEvent event) {
-                        /* drag was detected, start a drag-and-drop gesture*/
-                        /* allow any transfer mode */
-                        if((newFragment.getText() != null && !newFragment.getText().isEmpty())) {
-                            Dragboard db = newFragment.startDragAndDrop(TransferMode.ANY);
-
-                            /* Put a string on a dragboard */
-                            ClipboardContent content = new ClipboardContent();
-                            content.putString(newFragment.getText());
-                            db.setContent(content);
-
-                            newFragment.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
-                        }
-
-                        event.consume();
-                    }
-                });
-                newFragment.setOnDragDone(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                    }
-                });
-                newFragment.setOnDragOver(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        /* data is dragged over the target */
-                        /* accept it only if it is not dragged from the same node
-                         * and if it has a string data */
-                        if (event.getGestureSource() != newFragment &&
-                                event.getDragboard().hasString()) {
-                            /* allow for both copying and moving, whatever user chooses */
-                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        }
-
-                        event.consume();
-                    }
-                });
-                newFragment.setOnDragDropped(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        /* data dropped */
-                        /* if there is a string data on dragboard, read it and use it */
-                        Dragboard db = event.getDragboard();
-                        boolean success = false;
-                        if (db.hasString()) {
-                            //newFragment.setText(db.getString());
-                            //newFragment.setTooltip(new Tooltip(db.getString()));
-                            Label source = (Label) event.getGestureSource();
-                            Label target = (Label) event.getGestureTarget();
-
-                            String temp = target.getText();
-
-                            target.setText(source.getText());
-                            if (source.getText() == null || source.getText().isEmpty())
-                                target.setTooltip(null);
-                            else
-                                target.setTooltip(new Tooltip(source.getText()));
-
-                            source.setText(temp);
-                            if (temp == null || temp.isEmpty())
-                                source.setTooltip(null);
-                            else
-                                source.setTooltip(new Tooltip(temp));
-
-                            success = true;
-                        }
-
-                        /* let the source know whether the string was successfully
-                         * transferred and used */
-                        event.setDropCompleted(success);
-
-                        event.consume();
-                    }
-                });
-                newFragment.setOnDragEntered(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        if(event.getGestureSource() != newFragment){
-                            newFragment.setStyle("-fx-background-color: steelblue; -fx-border-color: black;");
-                        }
-                    }
-                });
-                newFragment.setOnDragExited(new EventHandler<DragEvent>() {
-                    public void handle(DragEvent event) {
-                        if(event.getGestureSource() != newFragment){
-                            newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                        }
-                    }
-                });
             }
         }
         else if (currentPuzzle.getType().equals(PuzzleType.MC)){
             for(int i = 0; i < puzzleAnswers.size(); i++){
                 SolutionGrid.getRowConstraints().add(rowConstraint);
 
-                Label newLabel = new Label("" + (i+1));
-                newLabel.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-                newLabel.setPadding(paddings);
-                newLabel.setMaxWidth(Double.MAX_VALUE);
+                PuzzleLabel newLabel = new PuzzleLabel("" + (i+1),false);
                 newLabel.setAlignment(Pos.CENTER);
                 SolutionGrid.add(newLabel,0, i);
-                SolutionGrid.setMargin(newLabel,labelMargins);
+                GridPane.setMargin(newLabel,labelMargins);
 
                 RadioButton newAnswer = new RadioButton(puzzleAnswers.get(i).toString()); //TODO: replace with proper answer text
                 newAnswer.setTooltip(new Tooltip(puzzleAnswers.get(i).toString()));
@@ -430,7 +234,7 @@ public class PuzzleScreenController {
                 newAnswer.setPadding(paddings);
                 newAnswer.setMaxWidth(Double.MAX_VALUE);
                 SolutionGrid.add(newAnswer,1, i);
-                SolutionGrid.setMargin(newAnswer,fragmentMargins);
+                GridPane.setMargin(newAnswer,fragmentMargins);
             }
         }
     }

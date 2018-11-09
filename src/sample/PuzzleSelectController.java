@@ -1,18 +1,8 @@
 package sample;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 /**
@@ -64,33 +54,21 @@ public class PuzzleSelectController {
             throw new IllegalStateException("No puzzle selected.");
         }
 
-        PuzzleList.getChildren().clear();;
-
-        Insets paddings = new Insets(5,5,5,5);
+        PuzzleList.getChildren().clear();
 
         ProblemName.setText(puzzleSet.getName());
         for(Puzzle p : puzzleSet.getPuzzles()){
-            Label newFragment = new Label(p.getName());
-            newFragment.setTooltip(new Tooltip(p.getDescription()));
+            PuzzleLabel newFragment = new PuzzleLabel(p.getName());
             newFragment.setUserData(p.getIndex());
-            newFragment.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
-            newFragment.setPadding(paddings);
-            newFragment.setMaxWidth(Double.MAX_VALUE);
-            newFragment.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                public void handle(MouseEvent event) {
-                    try {
-                        if (rootController != null) {
-                            rootController.openPuzzleSolver((int) newFragment.getUserData());
-                        }
-                    }
-                    catch (Exception e) {}
-
-                    event.consume();
+            newFragment.setOnMouseClicked(event -> {
+                if (rootController != null) {
+                    rootController.openPuzzleSolver((int) newFragment.getUserData());
                 }
+                event.consume();
             });
 
             PuzzleList.getChildren().add(newFragment);
-            PuzzleList.setVgrow(newFragment, Priority.NEVER);
+            VBox.setVgrow(newFragment, Priority.NEVER);
         }
     }
 }

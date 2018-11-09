@@ -3,13 +3,10 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
-import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 
@@ -79,18 +76,24 @@ public class PuzzlePaneController {
 
     /**
      * Opens the puzzle select for the selected puzzle set
-     * @throws IOException
      */
-    public void openPuzzleSelect() throws IOException {
+    public void openPuzzleSelect() {
+        PuzzleSelectController controller;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleSelect.fxml"));
+            currentView = loader.load();
+            controller = loader.getController();
+        }
+        catch (IOException e){
+            System.err.println("PuzzleSelect could not be loaded.");
+            return;
+        }
+
         //Remove currently open view if applicable
         if(currentView != null){
             PuzzlePane.getChildren().remove(currentView);
         }
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "PuzzleSelect.fxml"));
-        currentView =  loader.load();
-        PuzzleSelectController controller = loader.getController();
 
         controller.setRootController(this);
         controller.setPuzzleSet(currentPuzzleSet);
@@ -101,22 +104,28 @@ public class PuzzlePaneController {
     /**
      * Opens the puzzle solver for the selected puzzle
      * @param index The index of the puzzle within the puzzle set
-     * @throws IOException
      */
-    public void openPuzzleSolver(int index) throws IOException {
+    public void openPuzzleSolver(int index) {
         if(!puzzleIndexValid(index)){
             throw new IllegalArgumentException("Puzzle Index: " + index);
+        }
+
+        PuzzleScreenController controller;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleScreen.fxml"));
+            currentView = loader.load();
+            controller = loader.getController();
+        }
+        catch (IOException e){
+            System.err.println("PuzzleScreen could not be loaded.");
+            return;
         }
 
         //Remove currently open view if applicable
         if(currentView != null){
             PuzzlePane.getChildren().remove(currentView);
         }
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "PuzzleScreen.fxml"));
-        currentView =  loader.load();
-        PuzzleScreenController controller = loader.getController();
 
         controller.setRootController(this);
         controller.setPuzzleSet(currentPuzzleSet, index);
