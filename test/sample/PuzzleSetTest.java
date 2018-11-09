@@ -28,6 +28,8 @@ class PuzzleSetTest {
         assertEquals("Lab 1 - Puzzle 1", puzzles.get(0).getName());
         assertNotNull(puzzles.get(1));
         assertEquals("Lab 1 - Puzzle 2", puzzles.get(1).getName());
+        assertNotNull(puzzles.get(2));
+        assertEquals("Lab 1 - Puzzle 3", puzzles.get(2).getName());
     }
 
     /**
@@ -62,41 +64,43 @@ class PuzzleSetTest {
         System.out.print("Loading puzzle with index " +input +"...\n");
         Puzzle currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
+
         if (currentPuzz.getType().equals(PuzzleType.DnD)){
             System.out.print("Drag into the correct order:\n");
-            ArrayList<Block> choices = currentPuzz.buildChoices();
+            List<Block> choices = currentPuzz.getChoices().get(0);
             for (int i = 0; i < choices.size(); i++){
                 System.out.print(choices.get(i).getLines() +"\n");
             }
 
             List<Block> providedSolution = new ArrayList<>();
             providedSolution.add(new Block("1","for num in range(1, 21):", currentPuzz));
-            providedSolution.add(new Block("1","if num % 3 == 0 and num % 5 == 0:", currentPuzz));
-            providedSolution.add(new Block("1","print('FizzBuzz')", currentPuzz));
-            providedSolution.add(new Block("1","elif num % 3 == 0:", currentPuzz));
-            providedSolution.add(new Block("1","print('Fizz')", currentPuzz));
-            providedSolution.add(new Block("1","elif num % 5 == 0:", currentPuzz));
-            providedSolution.add(new Block("1","print('Buzz')", currentPuzz));
-            providedSolution.add(new Block("1","else:", currentPuzz));
-            providedSolution.add(new Block("1","print(num)", currentPuzz));
+            providedSolution.add(new Block("2","if num % 3 == 0 and num % 5 == 0:", currentPuzz));
+            providedSolution.add(new Block("3","print('FizzBuzz')", currentPuzz));
+            providedSolution.add(new Block("4","elif num % 3 == 0:", currentPuzz));
+            providedSolution.add(new Block("5","print('Fizz')", currentPuzz));
+            providedSolution.add(new Block("6","elif num % 5 == 0:", currentPuzz));
+            providedSolution.add(new Block("7","print('Buzz')", currentPuzz));
+            providedSolution.add(new Block("8","else:", currentPuzz));
+            providedSolution.add(new Block("9","print(num)", currentPuzz));
 
             System.out.print("\nChecking solution...\n");
             boolean result = (boolean) currentPuzz.checkSolution(providedSolution);
-            if (result){
-                assertTrue(result);
-                System.out.print("Congratulations! Puzzle solved.\n");
-            }
+
+            assertTrue(result);
+            System.out.print("Congratulations! Puzzle solved.\n");
+
             System.out.print("Returning to menu...\n");
         }
         System.out.print("Enter an index to open a puzzle:\n");
-        input = 2;
+        input = 3;
         System.out.print("Loading puzzle with index " +input +"...\n");
         currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
-        if (currentPuzz.getType().equals(PuzzleType.MC)){
-            MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
+
+        if (currentPuzz.getType().equals(PuzzleType.FiB)){
+            FillBlanksPuzzle fbPuzz = (FillBlanksPuzzle) currentPuzz;
             System.out.print("Choose the correct choice:\n");
-            List<Block> lines = mcPuzz.getLines();
+            List<Block> lines = fbPuzz.getLines();
             int choiceAreaCount = 1;
             for (int i = 0; i < lines.size(); i++){
                 if (lines.get(i).hasAssociatedBlocks()) {
@@ -108,7 +112,7 @@ class PuzzleSetTest {
             }
             System.out.println();
             System.out.println("Choices are:");
-            List<Block> solutionSet = mcPuzz.getSolutionSet();
+            List<Block> solutionSet = fbPuzz.getSolutionSet();
             choiceAreaCount = 1;
             for (int i = 0; i < solutionSet.size(); i++) {
                 List<Block> choices = new ArrayList<>();
@@ -122,18 +126,49 @@ class PuzzleSetTest {
                 System.out.println();
             }
 
-            List<List<Block>> answers = ((MultipleChoicePuzzle) currentPuzz).buildAnswers(5);
+            List<List<Block>> answers = new ArrayList<>();
+            answers.add(currentPuzz.getSolutionSet());
+            answers.addAll(currentPuzz.getChoices());
 
-            int choice = 0; // Select the correct choice
+            // Select the correct choice
+            int choice = answers.indexOf(currentPuzz.getSolutionSet());
+            System.out.print("\nChecking solution...\n");
+            boolean result = (boolean) fbPuzz.checkSolution(answers.get(choice));
+
+            assertTrue(result);
+            System.out.print("Congratulations! Puzzle solved.\n");
+
+            System.out.print("Returning to menu...\n");
+        }
+        System.out.print("Enter an index to open a puzzle:\n");
+        input = 2;
+        System.out.print("Loading puzzle with index " +input +"...\n");
+        currentPuzz = ps.getPuzzle(input);
+
+        System.out.print("Puzzle loaded.\n\n");
+        if (currentPuzz.getType().equals(PuzzleType.MC)){
+            MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
+            System.out.print("Choose the correct choice:\n");
+
+            List<List<Block>> answers = mcPuzz.getChoices();
+
+            for (int i = 0; i < answers.size(); i++){
+                System.out.print("\nAnswer " +(i+1) +"\n");
+                for (int j = 0; j < answers.get(i).size(); j++) {
+                    System.out.print(answers.get(i).get(j).getLines() +"\n");
+                }
+            }
+            // Choosing the correct answer.
+            int choice = answers.indexOf(currentPuzz.getSolutionSet());
 
             System.out.print("\nChecking solution...\n");
             boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice));
-            if (result){
-                assertTrue(result);
-                System.out.print("Congratulations! Puzzle solved.\n");
-            }
+
+            assertTrue(result);
+            System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }
+
         System.out.print("Enter an index to open a puzzle:\n");
         input = 0;
         System.out.print("Exiting program.\n");

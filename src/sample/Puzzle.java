@@ -60,20 +60,24 @@ public abstract class Puzzle {
         }
 
         // Puzzle Type
-        try{
-            String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
+        String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
 
-            if (ptype.equals("DnD")) {
+        switch (ptype) {
+            case "DnD":
                 this.setType(PuzzleType.DnD);
-            }
-            else if (ptype.equals("MC")) {
-                this.setType(PuzzleType.MC);
-            }
-        } catch (NullPointerException e) {
-            // Error state, considered bad XML
-            System.err.println("Puzzle type not specified");
-            // TODO: have this throw an exception that we deal with
+                break;
+            case "MC":
+                this.setType((PuzzleType.MC));
+                break;
+            case "FiB":
+                this.setType((PuzzleType.FiB));
+                break;
+            default:
+                // Error state, considered bad XML
+                System.err.println("Puzzle type not specified");
+                // TODO: have this throw an exception that we deal with
         }
+
 
         // Keep indentation setting
         try{
@@ -139,22 +143,24 @@ public abstract class Puzzle {
     abstract Object checkSolution(List<Block> providedSolution);
 
     /**
-     * buildChoices returns a list of the choices presented to a user in a scrambled state
+     * getChoices returns a list of the choices presented to a user in a scrambled state
      * @return
      */
+    public abstract List<List<Block>> getChoices();
 
-    public ArrayList<Block> buildChoices(){
-        ArrayList<Block> choices = new ArrayList<>();
-        for (int i = 0; i < this.getLines().size(); i++){
-            choices.add(this.getLines().get(i));
+    public Block getBlock(String id) {
+        Block b = lines.stream()
+                .filter(x -> id.equals(x.getID()))
+                .findAny()
+                .orElse(null);
+        if (b == null) {
+            b = distractors.stream()
+                    .filter(x -> id.equals(x.getID()))
+                    .findAny()
+                    .orElse(null);
         }
-        for (int i = 0; i < this.getDistractors().size(); i++){
-            choices.add(this.getDistractors().get(i));
-        }
-        Collections.shuffle(choices);
-        return choices;
+        return b;
     }
-
     public String getName() {
         return name;
     }
@@ -237,5 +243,5 @@ public abstract class Puzzle {
 }
 
 enum PuzzleType{
-    DnD, MC;
+    DnD, MC, FiB;
 }

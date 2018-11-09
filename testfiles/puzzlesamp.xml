@@ -9,7 +9,7 @@
       <lang>Python</lang>
       <format>DnD</format>
       <indent>false</indent>
-      <description>Output the numbers 1-20, print “fizz” if the number is divisible by 3, “buzz” if it is divisible by 5, and “fizzbuzz” if it is divisible by both</description>
+      <description>Output the numbers 1-20, print "fizz" if the number is divisible by 3, "buzz" if it is divisible by 5, and "fizzbuzz" if it is divisible by both</description>
       <solution>
          <block id="1">for num in range(1, 21):</block>
          <block id="2">if num % 3 == 0 and num % 5 == 0:</block>
@@ -34,7 +34,56 @@
       <lang>Python</lang>
       <format>MC</format>
       <indent>false</indent>
-      <description>Output the numbers 1-20, print “fizz” if the number is divisible by 3, “buzz” if it is divisible by 5, and “fizzbuzz” if it is divisible by both</description>
+      <description>Output the numbers 1-20, print "fizz" if the number is divisible by 3, "buzz" if it is divisible by 5, and "fizzbuzz" if it is divisible by both</description>
+      <solution>
+         <block id="1">for num in range(1, 21):</block>
+         <block id="2">if num % 3 == 0 and num % 5 == 0:</block>
+         <block id="3">print('FizzBuzz')</block>
+         <block id="4">elif num % 3 == 0:</block>
+         <block id="5">print('Fizz')</block>
+         <block id="6">elif num % 5 == 0:</block>
+         <block id="7">print('Buzz')</block>
+         <block id="8">else:</block>
+         <block id="9">print(num)</block>
+      </solution>
+      <falseAnswers>
+         <answer>
+            <id>0X1</id>
+            <id>2</id>
+            <id>3</id>
+            <id>4</id>
+            <id>5</id>
+            <id>6</id>
+            <id>7</id>
+            <id>8</id>
+            <id>9</id>
+         </answer>
+         <answer>
+            <id>1</id>
+            <id>0X2</id>
+            <id>3</id>
+            <id>0X3</id>
+            <id>5</id>
+            <id>0X4</id>
+            <id>7</id>
+            <id>8</id>
+            <id>9</id>
+         </answer>
+      </falseAnswers>
+      <distractors>
+         <block id="0X1">for num in range(0, 21):</block>
+         <block id="0X2">if num % 3 == 0:</block>
+         <block id="0X3">elif num % 5 == 0:</block>
+         <block id="0X4">elif num % 3 == 0 and num % 5 == 0</block>
+      </distractors>
+   </puzzle>
+   <puzzle>
+      <name>Lab 1 - Puzzle 3</name>
+      <index>3</index>
+      <lang>Python</lang>
+      <format>FiB</format>
+      <indent>false</indent>
+      <description>Output the numbers 1-20, print "fizz" if the number is divisible by 3, "buzz" if it is divisible by 5, and "fizzbuzz" if it is divisible by both</description>
       <solution>
          <block id="1">for num in range(1, 21):</block>
          <block id="2">if num % 3 == 0 and num % 5 == 0:</block>

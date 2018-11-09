@@ -114,6 +114,7 @@ public class PuzzleSet {
 
         for (int i = 0; i < puzzleXMLNodes.getLength(); i++) {
             int index = Integer.parseInt(puzzleXMLNodes.item(i).getTextContent());
+            //TODO Issue if index is not unique
             if (puzzleXMLNodes.item(i).getParentNode() instanceof Element) {
                 Element puzzleAtIndex = (Element)puzzleXMLNodes.item(i).getParentNode();
                 switch (puzzleAtIndex.getElementsByTagName("format").item(0).getTextContent()) {
@@ -122,6 +123,9 @@ public class PuzzleSet {
                         break;
                     case "MC":
                         puzzles.add(index-1, new MultipleChoicePuzzle(puzzleAtIndex));
+                        break;
+                    case "FiB":
+                        puzzles.add(index-1, new FillBlanksPuzzle(puzzleAtIndex));
                         break;
                 }
 

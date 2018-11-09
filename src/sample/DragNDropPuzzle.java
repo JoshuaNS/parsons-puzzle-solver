@@ -2,6 +2,7 @@ package sample;
 
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 /**
@@ -39,5 +40,21 @@ public class DragNDropPuzzle extends Puzzle {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<List<Block>> getChoices() {
+        List<Block> choices = new ArrayList<>();
+        for (int i = 0; i < this.getLines().size(); i++){
+            choices.add(this.getLines().get(i));
+        }
+        for (int i = 0; i < this.getDistractors().size(); i++){
+            choices.add(this.getDistractors().get(i));
+        }
+        Collections.shuffle(choices);
+	    // There is only one possible "choice" for this type of test
+        List<List<Block>> arr = new ArrayList<>();
+        arr.add(choices);
+        return arr;
     }
 }
