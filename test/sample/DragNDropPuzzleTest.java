@@ -16,8 +16,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * DragNDropPuzzleTest: Test class for DragNDropPuzzle
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 class DragNDropPuzzleTest {
     private static Puzzle p;
+
+    /**
+     * Setting up a DragNDrop puzzle from XML file
+     */
     @BeforeAll
     static void setupSamplePuzzle() {
         File f = new File("testfiles/puzzlesamp.xml");
@@ -41,34 +51,41 @@ class DragNDropPuzzleTest {
 
         p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
     }
+
+    /**
+     * Checking a provided solution to the predefined puzzle
+     */
     @Test
     void checkSolutionDragNDrop() {
-        List<String> providedSolution = new ArrayList<>();
-        providedSolution.add("for num in range(1, 21):");
-        providedSolution.add("if num % 3 == 0 and num % 5 == 0:");
-        providedSolution.add("print('FizzBuzz')");
-        providedSolution.add("elif num % 3 == 0:");
-        providedSolution.add("print('Fizz')");
-        providedSolution.add("elif num % 5 == 0:");
-        providedSolution.add("print('Buzz')");
-        providedSolution.add("else:");
-        providedSolution.add("print(num)");
+        List<Block> providedSolution = new ArrayList<>();
+        providedSolution.add(new Block("1","for num in range(1, 21):", p));
+        providedSolution.add(new Block("2","if num % 3 == 0 and num % 5 == 0:", p));
+        providedSolution.add(new Block("3", "print('FizzBuzz')", p));
+        providedSolution.add(new Block("4", "elif num % 3 == 0:", p));
+        providedSolution.add(new Block("5", "print('Fizz')", p));
+        providedSolution.add(new Block("6", "elif num % 5 == 0:", p));
+        providedSolution.add(new Block("7", "print('Buzz')", p));
+        providedSolution.add(new Block("8", "else:", p));
+        providedSolution.add(new Block("9", "print(num)", p));
 
         assertTrue((boolean) p.checkSolution(providedSolution));
     }
 
+    /**
+     * Checking incorrect solution to predefined puzzle
+     */
     @Test
     void checkBadSolutionDragNDrop() {
-        List<String> providedSolution = new ArrayList<>();
-        providedSolution.add("for num in range(1, 21):");
-        providedSolution.add("elif num % 5 == 0:");
-        providedSolution.add("print('Buzz')");
-        providedSolution.add("else:");
-        providedSolution.add("print(num)");
-        providedSolution.add("if num % 3 == 0 and num % 5 == 0:");
-        providedSolution.add("print('FizzBuzz')");
-        providedSolution.add("elif num % 3 == 0:");
-        providedSolution.add("print('Fizz')");
+        List<Block> providedSolution = new ArrayList<>();
+        providedSolution.add(new Block("1","for num in range(1, 21):", p));
+        providedSolution.add(new Block("2","if num % 3 == 0 and num % 5 == 0:", p));
+        providedSolution.add(new Block("6", "elif num % 5 == 0:", p));
+        providedSolution.add(new Block("7", "print('Buzz')", p));
+        providedSolution.add(new Block("8", "else:", p));
+        providedSolution.add(new Block("9", "print(num)", p));
+        providedSolution.add(new Block("3", "print('FizzBuzz')", p));
+        providedSolution.add(new Block("4", "elif num % 3 == 0:", p));
+        providedSolution.add(new Block("5", "print('Fizz')", p));
 
         assertFalse((boolean) p.checkSolution(providedSolution));
     }

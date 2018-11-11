@@ -3,63 +3,82 @@ package sample;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
+/**
+ * Child class for Multiple Choice Puzzles
+ *
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public class MultipleChoicePuzzle extends Puzzle {
-
+    List<List<Block>> falseAnswers;
+    /**
+     * Constructor which takes in a puzzle xml object
+     * Sets the solution which is the list of blocks that have associated distractors
+     * @param puzzleAtIndex
+     */
     public MultipleChoicePuzzle(Element puzzleAtIndex) {
         super(puzzleAtIndex);
-
-        // False Answers
-        if (puzzleAtIndex.getElementsByTagName("falseAnswers").item(0) != null) {
-            this.setFalseAnswers(new ArrayList<>());
+        falseAnswers = new ArrayList<>();
+        // Get falseAnswers specific to MultipleChoice
+	    if (puzzleAtIndex.getElementsByTagName("falseAnswers").item(0) != null) {
             Element falseSolutionNodes = (Element)puzzleAtIndex.getElementsByTagName("falseAnswers").item(0);
             NodeList falseSolutionBlocks =  falseSolutionNodes.getElementsByTagName("answer");
+
             for (int i = 0; i < falseSolutionBlocks.getLength(); i++) {
-                this.getFalseAnswers().add(falseSolutionBlocks.item(i).getTextContent());
+                /*
+                  Formatted as
+                  <falseAnswers>
+                    <solution>
+                      <id>1</id>
+                      <id>2</id>
+                      ...
+                 */
+                NodeList idList = ((Element)falseSolutionBlocks.item(i)).getElementsByTagName("id");
+                falseAnswers.add(i, new ArrayList<>());
+                for (int j = 0; j < idList.getLength(); j++) {
+                    Block blockToAdd = getBlock(idList.item(j).getTextContent());
+                    //TODO: Error or exception if null?
+                    falseAnswers.get(i).add(j, blockToAdd);
+                }
             }
         }
+	
+        this.setSolutionSet(Collections.unmodifiableList(getLines()));
     }
 
+    /**
+     * Method that defines the method of checking if a solution is correct
+     * @param providedSolution
+     * @return
+     */
     @Override
-    Object checkSolution(Object providedSolution) {
-        if (!(providedSolution instanceof ArrayList)) {
-            System.err.println("Solution wasn't provided as ArrayList");
-            return null;
-        }
-        ArrayList<String> givenSolution = (ArrayList<String>)providedSolution;
+    Object checkSolution(List<Block> providedSolution) {
 
-        if (getSolutions().size() != givenSolution.size()) {
+        if (providedSolution.size() != getSolutionSet().size()) {
             return false;
         }
-        for (int i = 0; i < getSolutions().size(); i++) {
-            if (!givenSolution.get(i).equals(getSolutions().get(i))) {
+        for (int i = 0; i < getSolutionSet().size(); i++) {
+            if (!providedSolution.get(i).equals(getSolutionSet().get(i))) {
                 return false;
             }
         }
         return true;
     }
 
-    //returns an array of possible answers. The first answer is the correct one
-    public ArrayList<ArrayList<String>> buildAnswers(){
-        ArrayList<ArrayList<String>> answers = new ArrayList<>();
-        answers.add(this.getSolutions());
-        for (int i = 0; i < this.getFalseAnswers().size(); i++){
-            ArrayList<String> newAnswer = new ArrayList<>();
-            //parse string to obtain solution list
-            ArrayList<String> answerStrings = new ArrayList<>(Arrays.asList(this.getFalseAnswers().get(i).split(",")));
-            for (int j = 0; j < answerStrings.size(); j++) {
-                String s = answerStrings.get(j).trim();
-                if (s.startsWith("X")) {
-                    s = s.substring(s.length() - 1);
-                    newAnswer.add(this.getDistractors().get(Integer.parseInt(s) - 1));
-                } else {
-                    newAnswer.add(this.getSolutions().get(Integer.parseInt(s) - 1));
-                }
-            }
-            answers.add(newAnswer);
-        }
-        return answers;
+
+    /**
+     * getChoices returns a list of the choices presented to a user in a scrambled state
+     * @return
+     */
+    @Override
+    public List<List<Block>> getChoices(){
+	    List<List<Block>> choices = new ArrayList<>();
+	    choices.add(getSolutionSet());
+	    choices.addAll(falseAnswers);
+	    Collections.shuffle(choices);
+        return choices;
     }
 }

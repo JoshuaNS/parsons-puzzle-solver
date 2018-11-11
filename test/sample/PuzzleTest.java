@@ -14,9 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * PuzzleTest: Test class for Puzzle
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public class PuzzleTest {
 
+    /**
+     * Test import of a single puzzle using a full puzzle set file
+     */
     @Test
     void importSamplePuzzle1() {
         File f = new File("testfiles/puzzlesamp.xml");
@@ -58,20 +66,27 @@ public class PuzzleTest {
         expectedDistractors.add("elif num % 3 == 0 and num % 5 == 0");
 
         assertEquals(p.getIndex(), 1);
-        assertEquals("Output the numbers 1-20, print “fizz” if the number is divisible by 3, “buzz” if it is divisible by 5, and “fizzbuzz” if it is divisible by both",
+        assertEquals("Output the numbers 1-20, print \"fizz\" if the number is divisible by 3, \"buzz\" if it is divisible by 5, and \"fizzbuzz\" if it is divisible by both",
                 p.getDescription());
         assertEquals("Lab 1 - Puzzle 1", p.getName());
         assertEquals("Python", p.getLanguage());
         assertEquals(PuzzleType.DnD, p.getType());
         assertEquals(false, p.isIndentRequired());
 
-        assertNotNull(p.getSolutions());
-        assertLinesMatch(expectedSolution, p.getSolutions());
+        assertNotNull(p.getLines());
+        for (int i = 0; i < p.getLines().size(); i++) {
+            assertEquals(expectedSolution.get(i), p.getLines().get(i).getLines());
+        }
         assertNotNull(p.getDistractors());
-        assertLinesMatch(expectedDistractors, p.getDistractors());
+        for (int i = 0; i < p.getDistractors().size(); i++) {
+            assertEquals(expectedDistractors.get(i), p.getDistractors().get(i).getLines());
+        }
     }
+
+    /**
+     * Test of puzzle import with no indent, no name, no language, no description, and ensures it functions as desired
+     */
     @Test
-    //uses an XML with no indent, no name, no language, no description, and ensures it functions as desired
     void importSamplePuzzleMissingParams() {
         File f = new File("testfiles/puzzlesamperror1.xml");
         assertTrue(f.exists());
