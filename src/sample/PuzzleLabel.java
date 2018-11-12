@@ -28,14 +28,4 @@ public class PuzzleLabel extends Label {
         setPadding(padding);
         setMaxWidth(Double.MAX_VALUE);
     }
-
-    public void setLabelText(String text){
-        setText(text);
-        if(text != null && !text.isEmpty()) {
-            setTooltip(new Tooltip(text));
-        }
-        else{
-            setTooltip(null);
-        }
-    }
 }
