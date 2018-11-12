@@ -2,7 +2,6 @@ package sample;
 
 import org.junit.jupiter.api.Test;
 import java.io.File;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -89,7 +88,7 @@ class PuzzleSetTest {
             boolean result = (boolean) currentPuzz.checkSolution(providedSolution);
 
             assertTrue(result);
-            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + (int)currentTime);
+            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }
@@ -139,7 +138,7 @@ class PuzzleSetTest {
             boolean result = (boolean) fbPuzz.checkSolution(answers.get(choice));
 
             assertTrue(result);
-            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + (int)currentTime);
+            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }
@@ -169,7 +168,7 @@ class PuzzleSetTest {
             boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice));
 
             assertTrue(result);
-            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + (int)currentTime);
+            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }

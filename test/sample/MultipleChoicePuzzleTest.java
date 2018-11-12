@@ -111,8 +111,7 @@ class MultipleChoicePuzzleTest {
     public void checkFeedback() {
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
 
-
-        int startTime = (int) System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertTrue((boolean)p.checkSolution(answers));

@@ -28,7 +28,7 @@ public abstract class Puzzle {
     private static Pattern distractorPattern = Pattern.compile("(\\d+)X(\\d+)");
 
     //statistics parameters
-    private int timeElapsed = 0; //time elapsed in milliseconds
+    private long timeElapsed = 0; //time elapsed in milliseconds
     private boolean isCompleted = false;
     private int numAttempts = 0;
 
@@ -166,6 +166,22 @@ public abstract class Puzzle {
         }
         return b;
     }
+
+    /**
+     * Increment the number of attempts taken
+     */
+    public void incAttempts(){
+        //when checking solution, add 1 to number of attempts
+        this.setNumAttempts(this.getNumAttempts() + 1);
+    }
+
+    /**
+     * Reset the number of attempts taken
+     */
+    public void resetAttempts(){
+        //when checking solution, add 1 to number of attempts
+        this.setNumAttempts(0);
+    }
     public String getName() {
         return name;
     }
@@ -246,11 +262,11 @@ public abstract class Puzzle {
         this.solutionSet = solutionSet;
     }
 
-    public int getTimeElapsed() {
+    public long getTimeElapsed() {
         return timeElapsed;
     }
 
-    public void setTimeElapsed(int timeElapsed) {
+    public void setTimeElapsed(long timeElapsed) {
         this.timeElapsed = timeElapsed;
     }
 

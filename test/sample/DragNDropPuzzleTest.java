@@ -78,7 +78,7 @@ class DragNDropPuzzleTest {
     void checkFeedback() {
         List<Block> providedSolution = p.getSolutionSet();
 
-        int startTime = (int) System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertTrue((boolean) p.checkSolution(providedSolution));
