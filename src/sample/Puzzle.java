@@ -171,7 +171,6 @@ public abstract class Puzzle {
      * Increment the number of attempts taken
      */
     public void incAttempts(){
-        //when checking solution, add 1 to number of attempts
         this.setNumAttempts(this.getNumAttempts() + 1);
     }
 
@@ -179,7 +178,6 @@ public abstract class Puzzle {
      * Reset the number of attempts taken
      */
     public void resetAttempts(){
-        //when checking solution, add 1 to number of attempts
         this.setNumAttempts(0);
     }
     public String getName() {
