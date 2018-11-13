@@ -64,6 +64,7 @@ class PuzzleSetTest {
         System.out.print("Loading puzzle with index " +input +"...\n");
         Puzzle currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
+        long currentTime = System.currentTimeMillis();
 
         if (currentPuzz.getType().equals(PuzzleType.DnD)){
             System.out.print("Drag into the correct order:\n");
@@ -87,8 +88,8 @@ class PuzzleSetTest {
             boolean result = (boolean) currentPuzz.checkSolution(providedSolution);
 
             assertTrue(result);
+            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
             System.out.print("Congratulations! Puzzle solved.\n");
-
             System.out.print("Returning to menu...\n");
         }
         System.out.print("Enter an index to open a puzzle:\n");
@@ -96,6 +97,7 @@ class PuzzleSetTest {
         System.out.print("Loading puzzle with index " +input +"...\n");
         currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
+        currentTime = System.currentTimeMillis();
 
         if (currentPuzz.getType().equals(PuzzleType.FiB)){
             FillBlanksPuzzle fbPuzz = (FillBlanksPuzzle) currentPuzz;
@@ -136,8 +138,8 @@ class PuzzleSetTest {
             boolean result = (boolean) fbPuzz.checkSolution(answers.get(choice));
 
             assertTrue(result);
+            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
             System.out.print("Congratulations! Puzzle solved.\n");
-
             System.out.print("Returning to menu...\n");
         }
         System.out.print("Enter an index to open a puzzle:\n");
@@ -146,6 +148,7 @@ class PuzzleSetTest {
         currentPuzz = ps.getPuzzle(input);
 
         System.out.print("Puzzle loaded.\n\n");
+        currentTime = System.currentTimeMillis();
         if (currentPuzz.getType().equals(PuzzleType.MC)){
             MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
             System.out.print("Choose the correct choice:\n");
@@ -165,6 +168,7 @@ class PuzzleSetTest {
             boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice));
 
             assertTrue(result);
+            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }

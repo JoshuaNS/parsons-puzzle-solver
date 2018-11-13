@@ -72,6 +72,23 @@ class DragNDropPuzzleTest {
     }
 
     /**
+     * Check various puzzle feedback
+     */
+    @Test
+    void checkFeedback() {
+        List<Block> providedSolution = p.getSolutionSet();
+
+        long startTime = System.currentTimeMillis();
+        assertEquals(p.getNumAttempts(), 0);
+        assertFalse(p.isCompleted());
+        assertTrue((boolean) p.checkSolution(providedSolution));
+        assertEquals(p.getNumAttempts(), 1);
+        assertTrue(p.isCompleted());
+        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        assertTrue(p.getTimeElapsed() > 0);
+    }
+
+    /**
      * Checking incorrect solution to predefined puzzle
      */
     @Test
@@ -87,6 +104,10 @@ class DragNDropPuzzleTest {
         providedSolution.add(new Block("4", "elif num % 3 == 0:", p));
         providedSolution.add(new Block("5", "print('Fizz')", p));
 
+        assertEquals(p.getNumAttempts(), 0);
+        assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(providedSolution));
+        assertEquals(p.getNumAttempts(), 1);
+        assertFalse(p.isCompleted());
     }
 }

@@ -56,6 +56,7 @@ public class MultipleChoicePuzzle extends Puzzle {
      */
     @Override
     Object checkSolution(List<Block> providedSolution) {
+        this.incAttempts();
 
         if (providedSolution.size() != getSolutionSet().size()) {
             return false;
@@ -65,6 +66,7 @@ public class MultipleChoicePuzzle extends Puzzle {
                 return false;
             }
         }
+        this.setCompleted(true);
         return true;
     }
 

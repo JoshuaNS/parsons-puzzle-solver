@@ -1,5 +1,10 @@
 package sample;
-
+/**
+ * MultipleChoicePuzzleTest: Test class for MultipleChoicePuzzle
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 12th 2018
+ *
+ */
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -45,6 +50,9 @@ class MultipleChoicePuzzleTest {
         p = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
     }
 
+    /**
+     * Test of importing false answers
+     */
     @Test
     public void importFalseAnswersSuccessful()
     {
@@ -86,8 +94,45 @@ class MultipleChoicePuzzleTest {
         assertTrue(p.getChoices().contains(solution));
     }
 
+    /**
+     * Checking valid solution
+     */
     @Test
-    public void checkSolutionFillBlanks() {
-        assertTrue((boolean)p.checkSolution(p.getSolutionSet()));
+    public void checkSolutionMultipleChoice() {
+        List<Block> answers = new ArrayList<>(p.getSolutionSet());
+
+        assertTrue((boolean)p.checkSolution(answers));
+    }
+
+    /**
+     * Check various feedback
+     */
+    @Test
+    public void checkFeedback() {
+        List<Block> answers = new ArrayList<>(p.getSolutionSet());
+
+        long startTime = System.currentTimeMillis();
+        assertEquals(p.getNumAttempts(), 0);
+        assertFalse(p.isCompleted());
+        assertTrue((boolean)p.checkSolution(answers));
+        assertEquals(p.getNumAttempts(), 1);
+        assertTrue(p.isCompleted());
+        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        assertTrue(p.getTimeElapsed() > 0);
+    }
+
+    /**
+     * Checking invalid solution of the provided puzzle
+     */
+    @Test
+    void checkBadSolutionMultipleChoice() {
+        List<Block> answers = new ArrayList<>(p.getSolutionSet());
+        answers.remove(0);
+
+        assertEquals(p.getNumAttempts(), 0);
+        assertFalse(p.isCompleted());
+        assertFalse((boolean)p.checkSolution(answers));
+        assertEquals(p.getNumAttempts(), 1);
+        assertFalse(p.isCompleted());
     }
 }

@@ -27,6 +27,11 @@ public abstract class Puzzle {
     private int tabWidth;
     private static Pattern distractorPattern = Pattern.compile("(\\d+)X(\\d+)");
 
+    //statistics parameters
+    private long timeElapsed = 0; //time elapsed in milliseconds
+    private boolean isCompleted = false;
+    private int numAttempts = 0;
+
     /**
      * Puzzle constructor which takes the UML data as an input and converts it to a puzzle object
      * @param puzzleXML
@@ -161,6 +166,20 @@ public abstract class Puzzle {
         }
         return b;
     }
+
+    /**
+     * Increment the number of attempts taken
+     */
+    public void incAttempts(){
+        this.setNumAttempts(this.getNumAttempts() + 1);
+    }
+
+    /**
+     * Reset the number of attempts taken
+     */
+    public void resetAttempts(){
+        this.setNumAttempts(0);
+    }
     public String getName() {
         return name;
     }
@@ -240,6 +259,31 @@ public abstract class Puzzle {
     protected void setSolutionSet(List<Block> solutionSet) {
         this.solutionSet = solutionSet;
     }
+
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    public void setTimeElapsed(long timeElapsed) {
+        this.timeElapsed = timeElapsed;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public int getNumAttempts() {
+        return numAttempts;
+    }
+
+    public void setNumAttempts(int numAttempts) {
+        this.numAttempts = numAttempts;
+    }
+
 }
 
 enum PuzzleType{

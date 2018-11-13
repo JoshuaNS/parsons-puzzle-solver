@@ -31,6 +31,8 @@ public class DragNDropPuzzle extends Puzzle {
      */
     @Override
     Object checkSolution(List<Block> providedSolution) {
+        this.incAttempts();
+
         if (getSolutionSet().size() != providedSolution.size()) {
             return false;
         }
@@ -39,6 +41,7 @@ public class DragNDropPuzzle extends Puzzle {
                 return false;
             }
         }
+        this.setCompleted(true);
         return true;
     }
 

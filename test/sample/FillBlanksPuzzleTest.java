@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
- * MultipleChoicePuzzleTest: Test class for MultipleChoicePuzzle
+ * FillBlanksPuzzleTest: Test class for FillBlanksPuzzle
  * @author Joshua Seguin, Iain Davidson
  * @since November 6th 2018
  *
@@ -57,17 +57,36 @@ class FillBlanksPuzzleTest {
      * Checking the solution of the provided puzzle
      */
     @Test
-    void checkSolutionMultipleChoice() {
+    void checkSolutionFillInBlanks() {
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
 
         assertTrue((boolean) p.checkSolution(answers));
     }
 
     /**
+     * Checking various feedback
+     */
+    @Test
+    void checkFeedback() {
+        List<Block> answers = new ArrayList<>(p.getSolutionSet());
+
+        long startTime = System.currentTimeMillis();
+        assertEquals(p.getNumAttempts(), 0);
+        assertFalse(p.isCompleted());
+
+        assertTrue((boolean) p.checkSolution(answers));
+
+        assertEquals(p.getNumAttempts(), 1);
+        assertTrue(p.isCompleted());
+        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        assertTrue(p.getTimeElapsed() > 0);
+    }
+
+    /**
      * Checking invalid solution of the provided puzzle
      */
     @Test
-    void checkBadSolutionMultipleChoice() {
+    void checkBadSolutionFillInBlanks() {
         ArrayList<Block> answers = new ArrayList<>(p.getSolutionSet());
 
         // Replace one of the answers with a distractor
@@ -76,7 +95,11 @@ class FillBlanksPuzzleTest {
         answers.add(1, distractorForLineTwo);
 
         assertEquals(new Block("2X1", "if num % 3 == 0:", p), distractorForLineTwo);
+        assertEquals(p.getNumAttempts(), 0);
+        assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(answers));
+        assertEquals(p.getNumAttempts(), 1);
+        assertFalse(p.isCompleted());
     }
 
 

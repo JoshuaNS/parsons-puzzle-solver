@@ -36,6 +36,7 @@ public class FillBlanksPuzzle extends Puzzle {
      */
     @Override
     Object checkSolution(List<Block> providedSolution) {
+        this.incAttempts();
 
         if (providedSolution.size() != getSolutionSet().size()) {
             return false;
@@ -45,6 +46,7 @@ public class FillBlanksPuzzle extends Puzzle {
                 return false;
             }
         }
+        this.setCompleted(true);
         return true;
     }
 
