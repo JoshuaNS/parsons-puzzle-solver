@@ -83,7 +83,7 @@ public class PuzzleScreenController {
                 answer.add((Block)solution.getUserData());
             }
         }
-        else if (currentPuzzle.getType().equals(PuzzleType.MC)){
+        else {
             Toggle selectedAnswer = puzzleAnswerToggles.getSelectedToggle();
             if(selectedAnswer != null){
                 answer = (List<Block>)selectedAnswer.getUserData();
