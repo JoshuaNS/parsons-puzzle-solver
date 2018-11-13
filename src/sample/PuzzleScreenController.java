@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class for the PuzzleScreen GUI
@@ -20,10 +21,10 @@ public class PuzzleScreenController {
     private PuzzleSet currentPuzzleSet;
     private int puzzleIndex;
     private Puzzle currentPuzzle;
-    private ArrayList<String> puzzleFragments;
-    private ArrayList<ArrayList<String>> puzzleAnswers; //currently only used by MC
+    private List<Block> puzzleFragments;
+    private List<List<Block>> puzzleAnswers; //currently only used by MC
     private ToggleGroup puzzleAnswerToggles; //holds MC selection
-    private ArrayList<Label> puzzleAnswerLabels; //holds DnD answer
+    private List<Label> puzzleAnswerLabels; //holds DnD answer
 
     @FXML
     private GridPane CodeFragmentGrid;
@@ -49,14 +50,10 @@ public class PuzzleScreenController {
     @FXML
     public void NextPuzzle(ActionEvent event) {
 
-        if(puzzleIndexValid(puzzleIndex+1)) {
-            setCurrentPuzzle(puzzleIndex+1);
-        }
-        else{
-            try {
-                rootController.openPuzzleSelect();
-            }
-            catch (Exception e) {}
+        if (puzzleIndexValid(puzzleIndex + 1)) {
+            setCurrentPuzzle(puzzleIndex + 1);
+        } else {
+            rootController.openPuzzleSelect();
         }
     }
 
@@ -79,18 +76,17 @@ public class PuzzleScreenController {
      */
     @FXML
     public void CheckAnswer(ActionEvent event) {
-        Object answer = null;
+        List<Block> answer = null;
         if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
-            ArrayList<String> answerList = new ArrayList<>();
+            answer = new ArrayList<>();
             for (Label solution : puzzleAnswerLabels) {
-                answerList.add(solution.getText());
+                answer.add((Block)solution.getUserData());
             }
-            answer = answerList;
         }
         else if (currentPuzzle.getType().equals(PuzzleType.MC)){
             Toggle selectedAnswer = puzzleAnswerToggles.getSelectedToggle();
             if(selectedAnswer != null){
-                answer = selectedAnswer.getUserData();
+                answer = (List<Block>)selectedAnswer.getUserData();
             }
             else{
                 FeedbackText.setText("Error: No answer selected");
@@ -138,8 +134,8 @@ public class PuzzleScreenController {
      * Sets a new puzzle and loads it into the GUI.
      * @param newPuzzleIndex The index of the new puzzle within the puzzle set.
      */
-    private void setCurrentPuzzle(int newPuzzleIndex){
-        if(!puzzleIndexValid(newPuzzleIndex)){
+    private void setCurrentPuzzle(int newPuzzleIndex) {
+        if (!puzzleIndexValid(newPuzzleIndex)) {
             throw new IllegalArgumentException("newPuzzleIndex: " + newPuzzleIndex);
         }
 
@@ -147,10 +143,8 @@ public class PuzzleScreenController {
         currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
         ProblemName.setText(currentPuzzle.getName());
         ProblemDescription.setText(currentPuzzle.getDescription());
-        puzzleFragments = currentPuzzle.buildChoices();
-        if(currentPuzzle.getType() == PuzzleType.MC){
-            puzzleAnswers = (((MultipleChoicePuzzle)currentPuzzle).buildAnswers());
-        }
+        puzzleFragments = currentPuzzle.getBlocksSet();
+        puzzleAnswers = currentPuzzle.getChoices();
         loadPuzzleData();
 
     }
@@ -192,18 +186,19 @@ public class PuzzleScreenController {
 
             PuzzleLabel newFragment;
             if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
-                newFragment = new PuzzleFragmentLabel(puzzleFragments.get(i));
+                newFragment = new PuzzleFragmentLabel(puzzleFragments.get(i).getLines());
             }
             else{
-                newFragment = new PuzzleLabel(puzzleFragments.get(i));
+                newFragment = new PuzzleLabel(puzzleFragments.get(i).getLines());
             }
+            newFragment.setUserData(puzzleFragments.get(i));
             CodeFragmentGrid.add(newFragment,1, i);
             GridPane.setMargin(newFragment,fragmentMargins);
         }
 
         //Set the solution data
         if (currentPuzzle.getType().equals(PuzzleType.DnD)) {
-            for(int i = 0; i < currentPuzzle.getSolutions().size(); i++) {
+            for(int i = 0; i < currentPuzzle.getSolutionSet().size(); i++) {
                 SolutionGrid.getRowConstraints().add(rowConstraint);
 
                 PuzzleLabel newLabel = new PuzzleLabel("" + (i + 1), false);
@@ -226,8 +221,28 @@ public class PuzzleScreenController {
                 SolutionGrid.add(newLabel,0, i);
                 GridPane.setMargin(newLabel,labelMargins);
 
-                RadioButton newAnswer = new RadioButton(puzzleAnswers.get(i).toString()); //TODO: replace with proper answer text
-                newAnswer.setTooltip(new Tooltip(puzzleAnswers.get(i).toString()));
+                RadioButton newAnswer = new RadioButton(generateMCAnswerText(i));
+                newAnswer.setTooltip(new Tooltip(generateMCAnswerText(i)));
+                newAnswer.setUserData(puzzleAnswers.get(i));
+                newAnswer.setToggleGroup(puzzleAnswerToggles);
+                newAnswer.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
+                newAnswer.setPadding(paddings);
+                newAnswer.setMaxWidth(Double.MAX_VALUE);
+                SolutionGrid.add(newAnswer,1, i);
+                GridPane.setMargin(newAnswer,fragmentMargins);
+            }
+        }
+        else if (currentPuzzle.getType().equals(PuzzleType.FiB)){
+            for(int i = 0; i < puzzleAnswers.size(); i++){
+                SolutionGrid.getRowConstraints().add(rowConstraint);
+
+                PuzzleLabel newLabel = new PuzzleLabel("" + (i+1),false);
+                newLabel.setAlignment(Pos.CENTER);
+                SolutionGrid.add(newLabel,0, i);
+                GridPane.setMargin(newLabel,labelMargins);
+
+                RadioButton newAnswer = new RadioButton(generateMCAnswerText(i));
+                newAnswer.setTooltip(new Tooltip(generateMCAnswerText(i)));
                 newAnswer.setUserData(puzzleAnswers.get(i));
                 newAnswer.setToggleGroup(puzzleAnswerToggles);
                 newAnswer.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
@@ -246,5 +261,33 @@ public class PuzzleScreenController {
      */
     private boolean puzzleIndexValid(int index){
         return (index <= currentPuzzleSet.getPuzzles().size() && index >= 1);
+    }
+
+    private String generateMCAnswerText(int index){
+        if(index >= puzzleAnswers.size()){
+            return null;
+        }
+
+        List<Block> answerList = puzzleAnswers.get(index);
+
+        String toReturn = "[ ";
+        if(answerList != null && !answerList.isEmpty()){
+            toReturn += getFragmentIdLabel(answerList.get(0));
+            for(int i = 1; i < answerList.size(); i++){
+                toReturn += ", " + getFragmentIdLabel(answerList.get(i));
+            }
+        }
+        toReturn += " ]";
+
+        return toReturn;
+    }
+
+    private String getFragmentIdLabel(Block b){
+        for(int i = 0; i < puzzleFragments.size(); i++){
+            if(puzzleFragments.get(i).getID().equals(b.getID())){
+                return ("" + (char)('A' + i));
+            }
+        }
+        return null;
     }
 }

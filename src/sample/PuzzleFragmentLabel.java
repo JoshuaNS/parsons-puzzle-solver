@@ -43,10 +43,14 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
         setOnDragDropped(event -> {
             PuzzleLabel source = (PuzzleLabel) event.getGestureSource();
             PuzzleLabel target = (PuzzleLabel) event.getGestureTarget();
-            String temp = target.getText();
 
+            String tempText = target.getText();
             target.setLabelText(source.getText());
-            source.setLabelText(temp);
+            source.setLabelText(tempText);
+
+            Object tempUserData = target.getUserData();
+            target.setUserData(source.getUserData());
+            source.setUserData(tempUserData);
 
             event.setDropCompleted(true);
             event.consume();

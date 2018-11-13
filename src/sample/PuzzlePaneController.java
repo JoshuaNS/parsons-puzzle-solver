@@ -3,8 +3,11 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -16,8 +19,15 @@ import java.io.IOException;
  */
 public class PuzzlePaneController {
     private PuzzleSet currentPuzzleSet;
-
     private Pane currentView;
+
+    private static final boolean IS_TEST_MODE = true; //Enables demo options in GUI
+
+    @FXML
+    private MenuItem NavPuzzleSelect;
+
+    @FXML
+    private VBox TitlePane;
 
     @FXML
     private BorderPane PuzzlePane;
@@ -42,8 +52,17 @@ public class PuzzlePaneController {
      */
     @FXML
     public void initialize(){
-        File f = new File("testfiles/puzzlesamp.xml");
-        setPuzzleSet(f);
+        currentView = TitlePane;
+
+        //TEST MODE OPTIONS
+        if(IS_TEST_MODE){
+            //Only allow demo if demo file exists
+            if(new File("testfiles/puzzlesamp.xml").exists()) {
+                Button demoButton = new Button("Puzzle Demo");
+                demoButton.setOnAction(this::LoadDemo);
+                TitlePane.getChildren().add(demoButton);
+            }
+        }
     }
 
     /**
@@ -56,14 +75,31 @@ public class PuzzlePaneController {
     }
 
     /**
+     * Opens the sample file
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
+    @FXML
+    public void LoadDemo(ActionEvent event){
+        File f = new File("testfiles/puzzlesamp.xml");
+        setPuzzleSet(f);
+    }
+
+    /**
      * Loads a new puzzle set from a file.
      * @param f The file containing the new puzzle set.
      */
     private void setPuzzleSet(File f){
         try {
             currentPuzzleSet = new PuzzleSet(f);
+
+            if(NavPuzzleSelect.isDisable()) {
+                NavPuzzleSelect.setDisable(false);
+                Button demoButton = new Button("Go to Puzzle Select");
+                demoButton.setOnAction(this::openPuzzleSelect);
+                TitlePane.getChildren().add(demoButton);
+            }
+
             openPuzzleSelect();
-            //openPuzzleSolver(1);
         }
         catch(Exception e) {
             System.err.println(e.toString());
@@ -72,6 +108,27 @@ public class PuzzlePaneController {
                 System.err.println(se.toString());
             }
         }
+    }
+
+    /**
+     * Opens the title screen
+     */
+    @FXML
+    public void openTitleScreen(ActionEvent event){
+        //Remove currently open view if applicable
+        if(currentView != null){
+            PuzzlePane.getChildren().remove(currentView);
+        }
+
+        PuzzlePane.setCenter(TitlePane);
+    }
+
+    /**
+     * Opens the puzzle select for the selected puzzle set
+     */
+    @FXML
+    public void openPuzzleSelect(ActionEvent event) {
+        openPuzzleSelect();
     }
 
     /**
