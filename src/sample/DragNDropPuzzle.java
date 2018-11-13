@@ -3,29 +3,61 @@ package sample;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
-
+import java.util.Collections;
+import java.util.List;
+/**
+ * Child class for Drag and Drop Puzzles
+ *
+ * @author Joshua Seguin, Iain Davidson
+ * @since November 6th 2018
+ *
+ */
 public class DragNDropPuzzle extends Puzzle {
 
+    /**
+     * Constructor which takes puzzle uml data as input
+     * Sets the DnD solution set from the solution lines
+     * @param puzzleXML
+     */
     public DragNDropPuzzle(Element puzzleXML) {
         super(puzzleXML);
+        this.setSolutionSet(Collections.unmodifiableList(this.getLines()));
     }
 
+    /**
+     * Method that defines the method of checking if a solution is correct
+     * @param providedSolution
+     * @return
+     */
     @Override
-    Object checkSolution(Object providedSolution) {
-        if (!(providedSolution instanceof ArrayList)) {
-            System.err.println("Solution wasn't provided as ArrayList");
-            return null;
-        }
-        ArrayList<String> givenSolution = (ArrayList<String>)providedSolution;
+    Object checkSolution(List<Block> providedSolution) {
+        this.incAttempts();
 
-        if (getSolutions().size() != givenSolution.size()) {
+        if (getSolutionSet().size() != providedSolution.size()) {
             return false;
         }
-        for (int i = 0; i < getSolutions().size(); i++) {
-            if (!givenSolution.get(i).equals(getSolutions().get(i))) {
+        for (int i = 0; i < getLines().size(); i++) {
+            if (!providedSolution.get(i).equals(getSolutionSet().get(i))) {
                 return false;
             }
         }
+        this.setCompleted(true);
         return true;
+    }
+
+    @Override
+    public List<List<Block>> getChoices() {
+        List<Block> choices = new ArrayList<>();
+        for (int i = 0; i < this.getLines().size(); i++){
+            choices.add(this.getLines().get(i));
+        }
+        for (int i = 0; i < this.getDistractors().size(); i++){
+            choices.add(this.getDistractors().get(i));
+        }
+        Collections.shuffle(choices);
+	    // There is only one possible "choice" for this type of test
+        List<List<Block>> arr = new ArrayList<>();
+        arr.add(choices);
+        return arr;
     }
 }
