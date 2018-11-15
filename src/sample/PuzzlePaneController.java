@@ -34,15 +34,16 @@ public class PuzzlePaneController {
 
     /**
      * Selects a new PuzzleSet file to be used, and loads the file if valid.
+     *
      * @param event The ActionEvent sent by PuzzleScreen
      */
     @FXML
-    public void LoadPuzzleSet(ActionEvent event){
+    public void LoadPuzzleSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         File f = fileChooser.showOpenDialog(null);
 
-        if(f != null && f.exists()){ //if null no file was selected
+        if (f != null && f.exists()) { //if null no file was selected
             setPuzzleSet(f);
         }
     }
@@ -51,13 +52,13 @@ public class PuzzlePaneController {
      * Initializes the puzzle screen.
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
         currentView = TitlePane;
 
         //TEST MODE OPTIONS
-        if(IS_TEST_MODE){
+        if (IS_TEST_MODE) {
             //Only allow demo if demo file exists
-            if(new File("testfiles/puzzlesamp.xml").exists()) {
+            if (new File("testfiles/puzzlesamp.xml").exists()) {
                 Button demoButton = new Button("Puzzle Demo");
                 demoButton.setOnAction(this::LoadDemo);
                 TitlePane.getChildren().add(demoButton);
@@ -67,32 +68,35 @@ public class PuzzlePaneController {
 
     /**
      * Exits the application
+     *
      * @param event The ActionEvent sent by PuzzleScreen
      */
     @FXML
-    public void Exit(ActionEvent event){
+    public void Exit(ActionEvent event) {
         System.exit(0);
     }
 
     /**
      * Opens the sample file
+     *
      * @param event The ActionEvent sent by PuzzleScreen
      */
     @FXML
-    public void LoadDemo(ActionEvent event){
+    public void LoadDemo(ActionEvent event) {
         File f = new File("testfiles/puzzlesamp.xml");
         setPuzzleSet(f);
     }
 
     /**
      * Loads a new puzzle set from a file.
+     *
      * @param f The file containing the new puzzle set.
      */
-    private void setPuzzleSet(File f){
+    private void setPuzzleSet(File f) {
         try {
             currentPuzzleSet = new PuzzleSet(f);
 
-            if(NavPuzzleSelect.isDisable()) {
+            if (NavPuzzleSelect.isDisable()) {
                 NavPuzzleSelect.setDisable(false);
                 Button demoButton = new Button("Go to Puzzle Select");
                 demoButton.setOnAction(this::openPuzzleSelect);
@@ -100,11 +104,10 @@ public class PuzzlePaneController {
             }
 
             openPuzzleSelect();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             System.err.println(e.toString());
             System.err.println(e.getMessage());
-            for(StackTraceElement se : e.getStackTrace()){
+            for (StackTraceElement se : e.getStackTrace()) {
                 System.err.println(se.toString());
             }
         }
@@ -114,9 +117,9 @@ public class PuzzlePaneController {
      * Opens the title screen
      */
     @FXML
-    public void openTitleScreen(ActionEvent event){
+    public void openTitleScreen(ActionEvent event) {
         //Remove currently open view if applicable
-        if(currentView != null){
+        if (currentView != null) {
             PuzzlePane.getChildren().remove(currentView);
         }
 
@@ -141,14 +144,13 @@ public class PuzzlePaneController {
                     "PuzzleSelect.fxml"));
             currentView = loader.load();
             controller = loader.getController();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.err.println("PuzzleSelect could not be loaded.");
             return;
         }
 
         //Remove currently open view if applicable
-        if(currentView != null){
+        if (currentView != null) {
             PuzzlePane.getChildren().remove(currentView);
         }
 
@@ -160,10 +162,11 @@ public class PuzzlePaneController {
 
     /**
      * Opens the puzzle solver for the selected puzzle
+     *
      * @param index The index of the puzzle within the puzzle set
      */
     public void openPuzzleSolver(int index) {
-        if(!puzzleIndexValid(index)){
+        if (!puzzleIndexValid(index)) {
             throw new IllegalArgumentException("Puzzle Index: " + index);
         }
 
@@ -173,14 +176,13 @@ public class PuzzlePaneController {
                     "PuzzleScreen.fxml"));
             currentView = loader.load();
             controller = loader.getController();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.err.println("PuzzleScreen could not be loaded.");
             return;
         }
 
         //Remove currently open view if applicable
-        if(currentView != null){
+        if (currentView != null) {
             PuzzlePane.getChildren().remove(currentView);
         }
 
@@ -192,10 +194,11 @@ public class PuzzlePaneController {
 
     /**
      * Determines whether a given integer value is a valid puzzle index for the current puzzle set.
+     *
      * @param index The index of the puzzle to be checked
      * @return A boolean value of it the puzzle index is valid
      */
-    private boolean puzzleIndexValid(int index){
+    private boolean puzzleIndexValid(int index) {
         return (index <= currentPuzzleSet.getPuzzles().size() && index >= 1);
     }
 }
