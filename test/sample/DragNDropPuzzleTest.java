@@ -84,7 +84,7 @@ class DragNDropPuzzleTest {
         assertTrue((boolean) p.checkSolution(providedSolution));
         assertEquals(p.getNumAttempts(), 1);
         assertTrue(p.isCompleted());
-        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        p.setTimeElapsed(p.getTimeElapsed() + (System.currentTimeMillis() - startTime));
         assertTrue(p.getTimeElapsed() > 0);
     }
 
@@ -92,7 +92,8 @@ class DragNDropPuzzleTest {
      * Checking incorrect solution to predefined puzzle
      */
     @Test
-    void checkBadSolutionDragNDrop() {
+    void checkBadSolutionDragNDrop() throws InterruptedException{
+        setupSamplePuzzle();
         List<Block> providedSolution = new ArrayList<>();
         providedSolution.add(new Block("1","for num in range(1, 21):", p));
         providedSolution.add(new Block("2","if num % 3 == 0 and num % 5 == 0:", p));
@@ -104,10 +105,14 @@ class DragNDropPuzzleTest {
         providedSolution.add(new Block("4", "elif num % 3 == 0:", p));
         providedSolution.add(new Block("5", "print('Fizz')", p));
 
+        p.startPuzzle();
+        Thread.sleep(2000); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(providedSolution));
         assertEquals(p.getNumAttempts(), 1);
         assertFalse(p.isCompleted());
+        p.endPuzzle();
+        assertTrue(p.getTimeElapsed() > 0);
     }
 }

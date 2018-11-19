@@ -125,14 +125,19 @@ class MultipleChoicePuzzleTest {
      * Checking invalid solution of the provided puzzle
      */
     @Test
-    void checkBadSolutionMultipleChoice() {
+    void checkBadSolutionMultipleChoice() throws InterruptedException{
+        setupSamplePuzzle();
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
         answers.remove(0);
 
+        p.startPuzzle();
+        Thread.sleep(2000); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertFalse((boolean)p.checkSolution(answers));
         assertEquals(p.getNumAttempts(), 1);
         assertFalse(p.isCompleted());
+        p.endPuzzle();
+        assertTrue(p.getTimeElapsed() > 0);
     }
 }

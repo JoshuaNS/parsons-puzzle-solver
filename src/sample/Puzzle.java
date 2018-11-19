@@ -28,6 +28,7 @@ public abstract class Puzzle {
     private static Pattern distractorPattern = Pattern.compile("(\\d+)X(\\d+)");
 
     //statistics parameters
+    private long puzzleStartTime = -1;
     private long timeElapsed = 0; //time elapsed in milliseconds
     private boolean isCompleted = false;
     private int numAttempts = 0;
@@ -165,6 +166,26 @@ public abstract class Puzzle {
                     .orElse(null);
         }
         return b;
+    }
+
+    /**
+     * Invoke this method when a puzzle starts execution to set the start time
+     */
+    public void startPuzzle(){
+        if(!isCompleted){   //we only count time if they are still working on the puzzle
+            puzzleStartTime = System.currentTimeMillis();
+        } else {
+            puzzleStartTime = -1;//if it's been completed, then we dont add any time
+        }
+    }
+
+    /**
+     * Invoke this method when a puzzle is exited to stop the time
+     */
+    public void endPuzzle(){
+        if (puzzleStartTime >= 0) {
+            timeElapsed = timeElapsed + (System.currentTimeMillis() - puzzleStartTime);
+        }
     }
 
     /**
