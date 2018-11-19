@@ -260,6 +260,18 @@ public abstract class Puzzle {
         this.solutionSet = solutionSet;
     }
 
+    /**
+     * Gets a randomized list of all solution lines and distractors
+     * @return A shuffled List containing all Blocks in the puzzle
+     */
+    public List<Block> getBlocksSet() {
+        List<Block> choices = new ArrayList<>();
+        choices.addAll(this.getLines());
+        choices.addAll(this.getDistractors());
+        Collections.shuffle(choices);
+        return choices;
+    }
+
     public long getTimeElapsed() {
         return timeElapsed;
     }
