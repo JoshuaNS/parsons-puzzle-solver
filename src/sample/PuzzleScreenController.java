@@ -106,8 +106,7 @@ public class PuzzleScreenController {
             if (selectedAnswer != null) {
                 answer = (List<Block>) selectedAnswer.getUserData();
             } else {
-                FeedbackText.setText("Error: No answer selected");
-                return;
+                answer = new ArrayList<>();
             }
         }
 
