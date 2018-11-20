@@ -43,7 +43,8 @@ public class PuzzleSelectPanel extends GridPane {
         columnPuzzle2.setMinWidth(100);
         puzzleInfo.getColumnConstraints().add(columnPuzzle1);
         puzzleInfo.getColumnConstraints().add(columnPuzzle2);
-        String typeText = "";
+        
+        String typeText;
         switch(puzzle.getType()){
             case DnD:
                 typeText = "Drag and Drop";
@@ -54,11 +55,16 @@ public class PuzzleSelectPanel extends GridPane {
             case MC:
                 typeText = "Multiple Choice";
                 break;
+            default:
+                typeText = puzzle.getType().toString();
+
         }
-        String completedText = "Not Completed";
-        if(puzzle.isCompleted()) {
+        String completedText;
+        if(puzzle.isCompleted())
             completedText = "Complete";
-        }
+        else
+            completedText = "Not Completed";
+
         puzzleInfo.add(new Label("Type: " + typeText),0,0);
         puzzleInfo.add(new Label("Language: " + puzzle.getLanguage()),0,1);
         puzzleInfo.add(new Label("Attempts: " + puzzle.getNumAttempts()),1,0);
