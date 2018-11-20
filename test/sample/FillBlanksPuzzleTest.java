@@ -67,7 +67,7 @@ class FillBlanksPuzzleTest {
      * Checking various feedback
      */
     @Test
-    void checkFeedback() {
+    void checkFeedback()  throws InterruptedException{
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
 
         long startTime = System.currentTimeMillis();
@@ -78,7 +78,8 @@ class FillBlanksPuzzleTest {
 
         assertEquals(p.getNumAttempts(), 1);
         assertTrue(p.isCompleted());
-        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        Thread.sleep(50);
+        p.setTimeElapsed(p.getTimeElapsed() + (System.currentTimeMillis() - startTime));
         assertTrue(p.getTimeElapsed() > 0);
     }
 
@@ -86,7 +87,8 @@ class FillBlanksPuzzleTest {
      * Checking invalid solution of the provided puzzle
      */
     @Test
-    void checkBadSolutionFillInBlanks() {
+    void checkBadSolutionFillInBlanks() throws InterruptedException{
+        setupSamplePuzzle();
         ArrayList<Block> answers = new ArrayList<>(p.getSolutionSet());
 
         // Replace one of the answers with a distractor
@@ -94,12 +96,16 @@ class FillBlanksPuzzleTest {
         answers.remove(1);
         answers.add(1, distractorForLineTwo);
 
+        p.startPuzzle();
+        Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(new Block("2X1", "if num % 3 == 0:", p), distractorForLineTwo);
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(answers));
         assertEquals(p.getNumAttempts(), 1);
         assertFalse(p.isCompleted());
+        p.endPuzzle();
+        assertTrue(p.getTimeElapsed() > 0);
     }
 
 

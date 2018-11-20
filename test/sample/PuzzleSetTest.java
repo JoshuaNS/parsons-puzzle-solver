@@ -50,7 +50,7 @@ class PuzzleSetTest {
      * Operates a simulation of a puzzle import and solve for DnD and MC
      */
     @Test
-    void operationTest(){
+    void operationTest() throws InterruptedException{
         System.out.print("Welcome to the puzzle solver. Please import a puzzle.\n");
         File f = new File("testfiles/puzzlesamp.xml");
         System.out.print("Importing file......\n");
@@ -64,7 +64,7 @@ class PuzzleSetTest {
         System.out.print("Loading puzzle with index " +input +"...\n");
         Puzzle currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
-        long currentTime = System.currentTimeMillis();
+        currentPuzz.startPuzzle();
 
         if (currentPuzz.getType().equals(PuzzleType.DnD)){
             System.out.print("Drag into the correct order:\n");
@@ -88,7 +88,8 @@ class PuzzleSetTest {
             boolean result = (boolean) currentPuzz.checkSolution(providedSolution);
 
             assertTrue(result);
-            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
+            Thread.sleep(20);
+            currentPuzz.endPuzzle();
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }
@@ -97,7 +98,7 @@ class PuzzleSetTest {
         System.out.print("Loading puzzle with index " +input +"...\n");
         currentPuzz = ps.getPuzzle(input);
         System.out.print("Puzzle loaded.\n\n");
-        currentTime = System.currentTimeMillis();
+        currentPuzz.startPuzzle();
 
         if (currentPuzz.getType().equals(PuzzleType.FiB)){
             FillBlanksPuzzle fbPuzz = (FillBlanksPuzzle) currentPuzz;
@@ -138,7 +139,8 @@ class PuzzleSetTest {
             boolean result = (boolean) fbPuzz.checkSolution(answers.get(choice));
 
             assertTrue(result);
-            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
+            Thread.sleep(70);
+            currentPuzz.endPuzzle();
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }
@@ -148,7 +150,7 @@ class PuzzleSetTest {
         currentPuzz = ps.getPuzzle(input);
 
         System.out.print("Puzzle loaded.\n\n");
-        currentTime = System.currentTimeMillis();
+        currentPuzz.startPuzzle();
         if (currentPuzz.getType().equals(PuzzleType.MC)){
             MultipleChoicePuzzle mcPuzz = (MultipleChoicePuzzle) currentPuzz;
             System.out.print("Choose the correct choice:\n");
@@ -168,12 +170,17 @@ class PuzzleSetTest {
             boolean result = (boolean) mcPuzz.checkSolution(answers.get(choice));
 
             assertTrue(result);
-            currentPuzz.setTimeElapsed(currentPuzz.getTimeElapsed() + currentTime);
+            Thread.sleep(100);
+            currentPuzz.endPuzzle();
             System.out.print("Congratulations! Puzzle solved.\n");
             System.out.print("Returning to menu...\n");
         }
 
         System.out.print("Enter an index to open a puzzle:\n");
+        ArrayList<String> result = ps.exportResults();
+        for(int i = 0; i<result.size(); i++){
+            System.out.print(result.get(i));
+        }
         input = 0;
         System.out.print("Exiting program.\n");
     }
