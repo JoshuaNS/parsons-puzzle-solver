@@ -133,6 +133,24 @@ public class PuzzleSet {
         }
     }
 
+    public ArrayList<String> exportResults(){
+        ArrayList<String> results = new ArrayList<>();
+        results.add("Puzzle Set '" +name +"' results:\n");
+        for (int i = 0; i<getPuzzles().size(); i++){
+            Puzzle puzz = getPuzzle(i+1);
+            results.add("\n\t" +puzz.getName());
+            if (puzz.isCompleted()) {
+                results.add("\tPuzzle Status: Completed\n");
+            } else {
+                results.add("\tPuzzle Status: Incomplete\n");
+            }
+            results.add("\tNumber of Attempts: " +puzz.getNumAttempts() +"\n");
+            double time = (double)puzz.getTimeElapsed()/1000;
+            results.add("\tElapsed Time: " +time +" seconds\n");
+        }
+        return results;
+    }
+
     /**
      * Returns the puzzle with the given index
      * @param index
