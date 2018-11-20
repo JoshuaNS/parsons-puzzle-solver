@@ -144,7 +144,7 @@ class MultipleChoicePuzzleTest {
 
         p.startPuzzle();
         Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
-        aassertEquals(0, p.getNumAttempts());
+        assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
         assertFalse((boolean)p.checkSolution(answers));
         assertEquals(1, p.getNumAttempts());

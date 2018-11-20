@@ -93,38 +93,45 @@ public abstract class Puzzle {
         }
 
         // Keep indentation setting
-        try{
-            this.setIndentRequired(puzzleXML.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
-        } catch (NullPointerException e){
+        NodeList indentNL = puzzleXML.getElementsByTagName("indent");
+        if (indentNL.getLength() > 0) {
+            this.setIndentRequired(indentNL.item(0).getTextContent().equals("true"));
+        }
+        else {
             this.setIndentRequired(false);
         }
 
         // Description
-        try{
-            this.setDescription(puzzleXML.getElementsByTagName("description").item(0).getTextContent());
-        } catch (NullPointerException e){
+        NodeList descNL = puzzleXML.getElementsByTagName("description");
+        if (descNL.getLength() > 0) {
+            this.setDescription(descNL.item(0).getTextContent());
+        }
+        else {
             //if no description provided, initialize but keep blank
             this.setDescription("");
         }
 
         // Solution
-        try {
-            Element solutionNodes = (Element)puzzleXML.getElementsByTagName("solution").item(0);
+        NodeList solnNL = puzzleXML.getElementsByTagName("solution");
+        if (solnNL.getLength() > 0) {
+            Element solutionNodes = (Element)solnNL.item(0);
             NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
+
             for (int i = 0; i < solutionBlocks.getLength(); i++) {
                 String id = solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
                 int index = Integer.parseInt(id);
                 this.lines.add(index-1, new Block(id, solutionBlocks.item(i).getTextContent(), this));
             }
-        } catch (NullPointerException e) {
-            // No solution, bad XML
+        }
+        else {
             throw new InvalidInputFileException();
         }
 
 
         // Distractors
-        try {
-            Element distractorNodes = (Element)puzzleXML.getElementsByTagName("distractors").item(0);
+        NodeList distNL = puzzleXML.getElementsByTagName("distractors");
+        if (distNL.getLength() > 0) {
+            Element distractorNodes = (Element)distNL.item(0);
             NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
             for (int i = 0; i < distractorBlocks.getLength(); i++) {
                 String id = distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
@@ -150,10 +157,8 @@ public abstract class Puzzle {
 
                 this.distractors.add(b);
             }
-
-        } catch (NullPointerException e) {
-            // There may not be any distractors, acceptable XML
         }
+        // There may not be any distractors, acceptable XML if not included
 
         // Assume tabWidth (in space characters) is 4 for now.
         this.setTabWidth(4);
