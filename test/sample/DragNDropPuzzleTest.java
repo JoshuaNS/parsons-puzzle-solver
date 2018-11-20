@@ -49,7 +49,11 @@ class DragNDropPuzzleTest {
             e.printStackTrace();
         }
 
-        p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        try {
+            p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -47,7 +47,11 @@ class MultipleChoicePuzzleTest {
             e.printStackTrace();
         }
 
-        p = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
+        try {
+            p = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

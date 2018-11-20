@@ -50,7 +50,11 @@ class FillBlanksPuzzleTest {
             e.printStackTrace();
         }
 
-        p = new FillBlanksPuzzle((Element)document.getElementsByTagName("puzzle").item(2));
+        try {
+            p = new FillBlanksPuzzle((Element)document.getElementsByTagName("puzzle").item(2));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
