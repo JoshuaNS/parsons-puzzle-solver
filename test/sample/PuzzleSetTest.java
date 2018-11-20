@@ -42,14 +42,12 @@ class PuzzleSetTest {
      * Test of import with Name, sequential, random all not specified
      */
     @Test
-    void importSamplePuzzleInvalid() {
+    void importSamplePuzzleInvalid() throws InvalidInputFileException {
         PuzzleSet ps = new PuzzleSet();
         File f = new File("testfiles/puzzlesamperror2.xml");
-        try {
-            ps.importPuzzleSet(f);
-        } catch (InvalidInputFileException e) {
-            assertTrue(false);
-        }
+
+        ps.importPuzzleSet(f);
+
         assertEquals("Puzzle Set", ps.getName());
         assertFalse(ps.isRandomOrder());
         assertFalse(ps.isSequentialCompletion());
