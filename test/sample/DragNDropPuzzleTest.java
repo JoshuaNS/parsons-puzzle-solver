@@ -75,7 +75,7 @@ class DragNDropPuzzleTest {
      * Check various puzzle feedback
      */
     @Test
-    void checkFeedback() {
+    void checkFeedback() throws InterruptedException{
         List<Block> providedSolution = p.getSolutionSet();
 
         long startTime = System.currentTimeMillis();
@@ -84,6 +84,7 @@ class DragNDropPuzzleTest {
         assertTrue((boolean) p.checkSolution(providedSolution));
         assertEquals(p.getNumAttempts(), 1);
         assertTrue(p.isCompleted());
+        Thread.sleep(50);
         p.setTimeElapsed(p.getTimeElapsed() + (System.currentTimeMillis() - startTime));
         assertTrue(p.getTimeElapsed() > 0);
     }
@@ -106,7 +107,7 @@ class DragNDropPuzzleTest {
         providedSolution.add(new Block("5", "print('Fizz')", p));
 
         p.startPuzzle();
-        Thread.sleep(2000); //wait because we want to ensure that the elapsed time is not 0
+        Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(providedSolution));

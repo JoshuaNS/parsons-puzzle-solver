@@ -108,7 +108,7 @@ class MultipleChoicePuzzleTest {
      * Check various feedback
      */
     @Test
-    public void checkFeedback() {
+    public void checkFeedback()  throws InterruptedException{
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
 
         long startTime = System.currentTimeMillis();
@@ -117,7 +117,8 @@ class MultipleChoicePuzzleTest {
         assertTrue((boolean)p.checkSolution(answers));
         assertEquals(p.getNumAttempts(), 1);
         assertTrue(p.isCompleted());
-        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        Thread.sleep(50);
+        p.setTimeElapsed(p.getTimeElapsed() + (System.currentTimeMillis() - startTime));
         assertTrue(p.getTimeElapsed() > 0);
     }
 
@@ -131,7 +132,7 @@ class MultipleChoicePuzzleTest {
         answers.remove(0);
 
         p.startPuzzle();
-        Thread.sleep(2000); //wait because we want to ensure that the elapsed time is not 0
+        Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(p.getNumAttempts(), 0);
         assertFalse(p.isCompleted());
         assertFalse((boolean)p.checkSolution(answers));
