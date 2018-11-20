@@ -12,7 +12,7 @@ import javafx.scene.control.Tooltip;
 public class PuzzleLabel extends Label {
     public static final String DEFAULT_STYLE = "-fx-background-color: aliceblue; -fx-border-color: black;"; //The default component style
 
-    private static Insets padding = new Insets(5, 5, 5, 5);
+    private static Insets padding = new Insets(5);
 
 
     public PuzzleLabel(String text) {
