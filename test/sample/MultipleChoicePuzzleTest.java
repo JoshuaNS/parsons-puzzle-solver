@@ -6,6 +6,7 @@ package sample;
  *
  */
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -54,6 +55,12 @@ class MultipleChoicePuzzleTest {
         }
     }
 
+    @BeforeEach
+    void resetPuzzle() {
+        p.resetAttempts();
+        p.setCompleted(false);
+        p.setTimeElapsed(0);
+    }
     /**
      * Test of importing false answers
      */
@@ -133,10 +140,10 @@ class MultipleChoicePuzzleTest {
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
         answers.remove(0);
 
-        assertEquals(p.getNumAttempts(), 0);
+        assertEquals(0,p.getNumAttempts());
         assertFalse(p.isCompleted());
         assertFalse((boolean)p.checkSolution(answers));
-        assertEquals(p.getNumAttempts(), 1);
+        assertEquals(1, p.getNumAttempts());
         assertFalse(p.isCompleted());
     }
 }

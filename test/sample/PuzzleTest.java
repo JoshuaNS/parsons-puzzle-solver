@@ -127,7 +127,7 @@ public class PuzzleTest {
         try {
             p2 = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
         } catch (InvalidInputFileException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
         assertEquals(PuzzleType.MC, p2.getType());
         assertEquals(false, p2.isIndentRequired());
