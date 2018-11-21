@@ -104,6 +104,8 @@ public class PuzzlePaneController {
             }
 
             openPuzzleSelect();
+        } catch (InvalidInputFileException e){
+            //TODO Add feedback that input file was invalid.
         } catch (Exception e) {
             System.err.println(e.toString());
             System.err.println(e.getMessage());

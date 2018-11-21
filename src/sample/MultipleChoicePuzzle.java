@@ -19,12 +19,13 @@ public class MultipleChoicePuzzle extends Puzzle {
      * Sets the solution which is the list of blocks that have associated distractors
      * @param puzzleAtIndex
      */
-    public MultipleChoicePuzzle(Element puzzleAtIndex) {
+    public MultipleChoicePuzzle(Element puzzleAtIndex) throws InvalidInputFileException{
         super(puzzleAtIndex);
         falseAnswers = new ArrayList<>();
         // Get falseAnswers specific to MultipleChoice
-	    if (puzzleAtIndex.getElementsByTagName("falseAnswers").item(0) != null) {
-            Element falseSolutionNodes = (Element)puzzleAtIndex.getElementsByTagName("falseAnswers").item(0);
+        NodeList falseAnsNL = puzzleAtIndex.getElementsByTagName("falseAnswers");
+        if (falseAnsNL.getLength() > 0) {
+            Element falseSolutionNodes = (Element)falseAnsNL.item(0);
             NodeList falseSolutionBlocks =  falseSolutionNodes.getElementsByTagName("answer");
 
             for (int i = 0; i < falseSolutionBlocks.getLength(); i++) {
@@ -44,9 +45,11 @@ public class MultipleChoicePuzzle extends Puzzle {
                     falseAnswers.get(i).add(j, blockToAdd);
                 }
             }
+            this.setSolutionSet(Collections.unmodifiableList(getLines()));
         }
-	
-        this.setSolutionSet(Collections.unmodifiableList(getLines()));
+        else {
+            throw new InvalidInputFileException();
+        }
     }
 
     /**

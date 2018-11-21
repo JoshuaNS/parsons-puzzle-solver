@@ -46,7 +46,12 @@ public class PuzzleTest {
             e.printStackTrace();
         }
 
-        Puzzle p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        Puzzle p = null;
+        try {
+            p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
 
         List<String> expectedSolution = new ArrayList<>();
         expectedSolution.add("for num in range(1, 21):");
@@ -87,7 +92,7 @@ public class PuzzleTest {
      * Test of puzzle import with no indent, no name, no language, no description, and ensures it functions as desired
      */
     @Test
-    void importSamplePuzzleMissingParams() {
+    void importSamplePuzzleMissingParams() throws InvalidInputFileException {
         File f = new File("testfiles/puzzlesamperror1.xml");
         assertTrue(f.exists());
 
@@ -107,13 +112,20 @@ public class PuzzleTest {
             e.printStackTrace();
         }
 
-        Puzzle p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        Puzzle p = null;
+        try {
+            p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
         assertEquals(PuzzleType.DnD, p.getType());
         assertEquals(false, p.isIndentRequired());
         assertEquals("Puzzle 1", p.getName());
         assertEquals("None Specified", p.getLanguage());
         assertEquals("", p.getDescription());
-        Puzzle p2 = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
+        Puzzle p2 = null;
+        p2 = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
+
         assertEquals(PuzzleType.MC, p2.getType());
         assertEquals(false, p2.isIndentRequired());
         assertEquals("Puzzle 2", p2.getName());

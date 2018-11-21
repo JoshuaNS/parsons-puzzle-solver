@@ -49,5 +49,29 @@
          <block id="4X3">elif num % 5 == 0:</block>
          <block id="6X4">elif num % 3 == 0 and num % 5 == 0</block>
       </distractors>
+      <falseAnswers>
+         <answer>
+            <id>0X1</id>
+            <id>2</id>
+            <id>3</id>
+            <id>4</id>
+            <id>5</id>
+            <id>6</id>
+            <id>7</id>
+            <id>8</id>
+            <id>9</id>
+         </answer>
+         <answer>
+            <id>1</id>
+            <id>0X2</id>
+            <id>3</id>
+            <id>0X3</id>
+            <id>5</id>
+            <id>0X4</id>
+            <id>7</id>
+            <id>8</id>
+            <id>9</id>
+         </answer>
+      </falseAnswers>
    </puzzle>
 </puzzleset>

@@ -6,6 +6,7 @@ package sample;
  *
  */
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,9 +48,19 @@ class MultipleChoicePuzzleTest {
             e.printStackTrace();
         }
 
-        p = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
+        try {
+            p = new MultipleChoicePuzzle((Element)document.getElementsByTagName("puzzle").item(1));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
     }
 
+    @BeforeEach
+    void resetPuzzle() {
+        p.resetAttempts();
+        p.setCompleted(false);
+        p.setTimeElapsed(0);
+    }
     /**
      * Test of importing false answers
      */
@@ -108,7 +119,7 @@ class MultipleChoicePuzzleTest {
      * Check various feedback
      */
     @Test
-    public void checkFeedback() {
+    public void checkFeedback()  throws InterruptedException{
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
 
         long startTime = System.currentTimeMillis();
@@ -117,7 +128,8 @@ class MultipleChoicePuzzleTest {
         assertTrue((boolean)p.checkSolution(answers));
         assertEquals(p.getNumAttempts(), 1);
         assertTrue(p.isCompleted());
-        p.setTimeElapsed(p.getTimeElapsed() + startTime);
+        Thread.sleep(50);
+        p.setTimeElapsed(p.getTimeElapsed() + (System.currentTimeMillis() - startTime));
         assertTrue(p.getTimeElapsed() > 0);
     }
 
@@ -125,14 +137,19 @@ class MultipleChoicePuzzleTest {
      * Checking invalid solution of the provided puzzle
      */
     @Test
-    void checkBadSolutionMultipleChoice() {
+    void checkBadSolutionMultipleChoice() throws InterruptedException{
+        setupSamplePuzzle();
         List<Block> answers = new ArrayList<>(p.getSolutionSet());
         answers.remove(0);
 
-        assertEquals(p.getNumAttempts(), 0);
+        p.startPuzzle();
+        Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
+        assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
         assertFalse((boolean)p.checkSolution(answers));
-        assertEquals(p.getNumAttempts(), 1);
+        assertEquals(1, p.getNumAttempts());
         assertFalse(p.isCompleted());
+        p.endPuzzle();
+        assertTrue(p.getTimeElapsed() > 0);
     }
 }
