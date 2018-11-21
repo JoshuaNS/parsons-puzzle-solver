@@ -145,7 +145,7 @@ public class PuzzleSet {
                 results.add("\tPuzzle Status: Incomplete\n");
             }
             results.add("\tNumber of Attempts: " + puzz.getNumAttempts() + "\n");
-            long time = puzz.getTimeElapsed();
+            long time = puzz.getTimeElapsed() / 1000;
             if (time < 60)
                 results.add("\tElapsed Time: " + time + " second(s)\n");
             else if (time < 3600)
