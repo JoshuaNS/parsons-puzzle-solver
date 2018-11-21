@@ -37,105 +37,128 @@ public abstract class Puzzle {
      * Puzzle constructor which takes the UML data as an input and converts it to a puzzle object
      * @param puzzleXML
      */
-    public Puzzle(Element puzzleXML){
+    public Puzzle(Element puzzleXML) throws InvalidInputFileException {
         lines = new ArrayList<>();
         distractors = new ArrayList<>();
 
         // Index
-        try{
-            this.setIndex(Integer.parseInt(puzzleXML.getElementsByTagName("index").item(0).getTextContent()));
-        } catch (NullPointerException e) {
-            // Error state, considered bad XML
-            System.err.println("Puzzle index not specified");
-            // TODO: have this throw an exception that we deal with
+        NodeList indexNL = puzzleXML.getElementsByTagName("index");
+        if (indexNL.getLength() > 0) {
+            this.setIndex(Integer.parseInt(indexNL.item(0).getTextContent()));
         }
+        else {
+            throw new InvalidInputFileException();
+        }
+
         // Name
-        try{
-            this.setName(puzzleXML.getElementsByTagName("name").item(0).getTextContent());
-        } catch (NullPointerException e){
+        NodeList nameNL = puzzleXML.getElementsByTagName("name");
+        if (nameNL.getLength() > 0) {
+            this.setName(nameNL.item(0).getTextContent());
+        }
+        else {
             //if the name is not provided, just use the index
             this.setName("Puzzle "+Integer.toString(this.getIndex()));
         }
 
         // Language
-        try{
-            this.setLanguage(puzzleXML.getElementsByTagName("lang").item(0).getTextContent());
-        } catch (NullPointerException e){
-            //default string if no language is specified
+        NodeList languageNL = puzzleXML.getElementsByTagName("lang");
+        if (languageNL.getLength() > 0) {
+            this.setLanguage(languageNL.item(0).getTextContent());
+        }
+        else {
             this.setLanguage("None Specified");
         }
 
         // Puzzle Type
-        String ptype = puzzleXML.getElementsByTagName("format").item(0).getTextContent();
-
-        switch (ptype) {
-            case "DnD":
-                this.setType(PuzzleType.DnD);
-                break;
-            case "MC":
-                this.setType((PuzzleType.MC));
-                break;
-            case "FiB":
-                this.setType((PuzzleType.FiB));
-                break;
-            default:
-                // Error state, considered bad XML
-                System.err.println("Puzzle type not specified");
-                // TODO: have this throw an exception that we deal with
+        NodeList typeNL = puzzleXML.getElementsByTagName("format");
+        if (typeNL.getLength() > 0) {
+            String ptype = typeNL.item(0).getTextContent();
+            switch (ptype) {
+                case "DnD":
+                    this.setType(PuzzleType.DnD);
+                    break;
+                case "MC":
+                    this.setType((PuzzleType.MC));
+                    break;
+                case "FiB":
+                    this.setType((PuzzleType.FiB));
+                    break;
+                default:
+                    // Error state, considered bad XML
+                    throw new InvalidInputFileException();
+            }
+        }
+        else {
+            throw new InvalidInputFileException();
         }
 
-
         // Keep indentation setting
-        try{
-            this.setIndentRequired(puzzleXML.getElementsByTagName("indent").item(0).getTextContent().equals("true"));
-        } catch (NullPointerException e){
+        NodeList indentNL = puzzleXML.getElementsByTagName("indent");
+        if (indentNL.getLength() > 0) {
+            this.setIndentRequired(indentNL.item(0).getTextContent().equals("true"));
+        }
+        else {
             this.setIndentRequired(false);
         }
 
         // Description
-        try{
-            this.setDescription(puzzleXML.getElementsByTagName("description").item(0).getTextContent());
-        } catch (NullPointerException e){
+        NodeList descNL = puzzleXML.getElementsByTagName("description");
+        if (descNL.getLength() > 0) {
+            this.setDescription(descNL.item(0).getTextContent());
+        }
+        else {
             //if no description provided, initialize but keep blank
             this.setDescription("");
         }
 
         // Solution
-        Element solutionNodes = (Element)puzzleXML.getElementsByTagName("solution").item(0);
-        NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
-        for (int i = 0; i < solutionBlocks.getLength(); i++) {
-            String id = solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
-            int index = Integer.parseInt(id);
-            this.lines.add(index-1, new Block(id, solutionBlocks.item(i).getTextContent(), this));
+        NodeList solnNL = puzzleXML.getElementsByTagName("solution");
+        if (solnNL.getLength() > 0) {
+            Element solutionNodes = (Element)solnNL.item(0);
+            NodeList solutionBlocks = solutionNodes.getElementsByTagName("block");
+
+            for (int i = 0; i < solutionBlocks.getLength(); i++) {
+                String id = solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
+                int index = Integer.parseInt(id);
+                this.lines.add(index-1, new Block(id, solutionBlocks.item(i).getTextContent(), this));
+            }
         }
+        else {
+            throw new InvalidInputFileException();
+        }
+
 
         // Distractors
-        Element distractorNodes = (Element)puzzleXML.getElementsByTagName("distractors").item(0);
-        NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
-        for (int i = 0; i < distractorBlocks.getLength(); i++) {
-            String id = distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
+        NodeList distNL = puzzleXML.getElementsByTagName("distractors");
+        if (distNL.getLength() > 0) {
+            Element distractorNodes = (Element)distNL.item(0);
+            NodeList distractorBlocks = distractorNodes.getElementsByTagName("block");
+            for (int i = 0; i < distractorBlocks.getLength(); i++) {
+                String id = distractorBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
 
-            Matcher m = distractorPattern.matcher(id);
-            int associatedID;
-            if (m.find()) {
-                associatedID = Integer.parseInt(m.group(1));
+                Matcher m = distractorPattern.matcher(id);
+                int associatedID;
+                if (m.find()) {
+                    associatedID = Integer.parseInt(m.group(1));
+                }
+                // If the pattern doesn't match, it should be a non-distractor block, with no need for association.
+                else {
+                    associatedID = -1;
+                }
+
+                Block b = new Block(id, distractorBlocks.item(i).getTextContent(), this);
+
+                // Add associated between both blocks
+                // associatedID of 0 means no association
+                if (associatedID > 0) {
+                    b.addAssociatedBlock(this.lines.get(associatedID - 1));
+                    this.lines.get(associatedID - 1).addAssociatedBlock(b);
+                }
+
+                this.distractors.add(b);
             }
-            // If the pattern doesn't match, it should be a non-distractor block, with no need for association.
-            else {
-                associatedID = -1;
-            }
-
-            Block b = new Block(id, distractorBlocks.item(i).getTextContent(), this);
-
-            // Add associated between both blocks
-            // associatedID of 0 means no association
-            if (associatedID > 0) {
-                b.addAssociatedBlock(this.lines.get(associatedID - 1));
-                this.lines.get(associatedID - 1).addAssociatedBlock(b);
-            }
-
-            this.distractors.add(b);
         }
+        // There may not be any distractors, acceptable XML if not included
 
         // Assume tabWidth (in space characters) is 4 for now.
         this.setTabWidth(4);

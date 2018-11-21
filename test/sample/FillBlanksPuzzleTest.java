@@ -1,6 +1,7 @@
 package sample;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,7 +51,18 @@ class FillBlanksPuzzleTest {
             e.printStackTrace();
         }
 
-        p = new FillBlanksPuzzle((Element)document.getElementsByTagName("puzzle").item(2));
+        try {
+            p = new FillBlanksPuzzle((Element)document.getElementsByTagName("puzzle").item(2));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @BeforeEach
+    void resetPuzzle() {
+        p.resetAttempts();
+        p.setCompleted(false);
+        p.setTimeElapsed(0);
     }
 
     /**
@@ -99,10 +111,10 @@ class FillBlanksPuzzleTest {
         p.startPuzzle();
         Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(new Block("2X1", "if num % 3 == 0:", p), distractorForLineTwo);
-        assertEquals(p.getNumAttempts(), 0);
+        assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(answers));
-        assertEquals(p.getNumAttempts(), 1);
+        assertEquals(1, p.getNumAttempts());
         assertFalse(p.isCompleted());
         p.endPuzzle();
         assertTrue(p.getTimeElapsed() > 0);

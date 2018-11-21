@@ -18,7 +18,7 @@ public class FillBlanksPuzzle extends Puzzle {
      * Sets the solution which is the list of blocks that have associated distractors
      * @param puzzleAtIndex
      */
-    public FillBlanksPuzzle(Element puzzleAtIndex) {
+    public FillBlanksPuzzle(Element puzzleAtIndex) throws InvalidInputFileException {
         super(puzzleAtIndex);
         List<Block> solution = new ArrayList<>();
         for (Block b : this.getLines()) {

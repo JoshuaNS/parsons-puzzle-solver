@@ -1,6 +1,7 @@
 package sample;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,9 +50,19 @@ class DragNDropPuzzleTest {
             e.printStackTrace();
         }
 
-        p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        try {
+            p = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(0));
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
     }
 
+    @BeforeEach
+    void resetPuzzle() {
+        p.resetAttempts();
+        p.setCompleted(false);
+        p.setTimeElapsed(0);
+    }
     /**
      * Checking a provided solution to the predefined puzzle
      */
@@ -79,10 +90,10 @@ class DragNDropPuzzleTest {
         List<Block> providedSolution = p.getSolutionSet();
 
         long startTime = System.currentTimeMillis();
-        assertEquals(p.getNumAttempts(), 0);
+        assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
         assertTrue((boolean) p.checkSolution(providedSolution));
-        assertEquals(p.getNumAttempts(), 1);
+        assertEquals(1, p.getNumAttempts());
         assertTrue(p.isCompleted());
         Thread.sleep(50);
         p.setTimeElapsed(p.getTimeElapsed() + (System.currentTimeMillis() - startTime));
@@ -108,10 +119,10 @@ class DragNDropPuzzleTest {
 
         p.startPuzzle();
         Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
-        assertEquals(p.getNumAttempts(), 0);
+        assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
         assertFalse((boolean) p.checkSolution(providedSolution));
-        assertEquals(p.getNumAttempts(), 1);
+        assertEquals(1, p.getNumAttempts());
         assertFalse(p.isCompleted());
         p.endPuzzle();
         assertTrue(p.getTimeElapsed() > 0);

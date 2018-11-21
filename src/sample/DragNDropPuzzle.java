@@ -19,7 +19,7 @@ public class DragNDropPuzzle extends Puzzle {
      * Sets the DnD solution set from the solution lines
      * @param puzzleXML
      */
-    public DragNDropPuzzle(Element puzzleXML) {
+    public DragNDropPuzzle(Element puzzleXML) throws InvalidInputFileException{
         super(puzzleXML);
         this.setSolutionSet(Collections.unmodifiableList(this.getLines()));
     }

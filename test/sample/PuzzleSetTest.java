@@ -1,6 +1,8 @@
 package sample;
 
 import org.junit.jupiter.api.Test;
+
+import java.awt.dnd.InvalidDnDOperationException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +24,11 @@ class PuzzleSetTest {
     void importSamplePuzzle1() {
         PuzzleSet ps = new PuzzleSet("Lab 1");
         File f = new File("testfiles/puzzlesamp.xml");
-        ps.importPuzzleSet(f);
+        try {
+            ps.importPuzzleSet(f);
+        } catch (InvalidInputFileException e) {
+            assertTrue(false);
+        }
         ArrayList<Puzzle> puzzles = ps.getPuzzles();
         assertNotNull(puzzles.get(0));
         assertEquals("Lab 1 - Puzzle 1", puzzles.get(0).getName());
@@ -36,10 +42,12 @@ class PuzzleSetTest {
      * Test of import with Name, sequential, random all not specified
      */
     @Test
-    void importSamplePuzzleInvalid() {
+    void importSamplePuzzleInvalid() throws InvalidInputFileException {
         PuzzleSet ps = new PuzzleSet();
         File f = new File("testfiles/puzzlesamperror2.xml");
+
         ps.importPuzzleSet(f);
+
         assertEquals("Puzzle Set", ps.getName());
         assertFalse(ps.isRandomOrder());
         assertFalse(ps.isSequentialCompletion());
@@ -54,7 +62,12 @@ class PuzzleSetTest {
         System.out.print("Welcome to the puzzle solver. Please import a puzzle.\n");
         File f = new File("testfiles/puzzlesamp.xml");
         System.out.print("Importing file......\n");
-        PuzzleSet ps = new PuzzleSet(f);
+        PuzzleSet ps = null;
+        try {
+            ps = new PuzzleSet(f);
+        } catch (InvalidInputFileException e) {
+            e.printStackTrace();
+        }
         System.out.print("Import successful.\nPuzzles found:\n");
         for (int i = 0; i < ps.getPuzzles().size(); i++){
             System.out.print(ps.getPuzzles().get(i).getName() +", index " +ps.getPuzzles().get(i).getIndex() +"\n");
