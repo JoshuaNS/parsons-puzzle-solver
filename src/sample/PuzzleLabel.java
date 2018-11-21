@@ -17,6 +17,7 @@ public class PuzzleLabel extends Label {
 
     /**
      * Creates a PuzzleLabel for a given text
+     *
      * @param text The text to be displayed in the label and tooltip
      */
     public PuzzleLabel(String text) {
@@ -25,7 +26,8 @@ public class PuzzleLabel extends Label {
 
     /**
      * Creates a PuzzleLabel for a given text with Tooltip optional
-     * @param text The text to be displayed
+     *
+     * @param text        The text to be displayed
      * @param showTooltip If a tooltip should be displayed for the label
      */
     public PuzzleLabel(String text, boolean showTooltip) {
@@ -41,6 +43,7 @@ public class PuzzleLabel extends Label {
 
     /**
      * A method to set the text and tooltip of the label at the same time
+     *
      * @param text The text to be displayed
      */
     public void setLabelText(String text) {

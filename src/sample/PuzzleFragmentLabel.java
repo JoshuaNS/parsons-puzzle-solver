@@ -15,7 +15,8 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
 
     /**
      * Creates a PuzzleLabel with a series of mouse events added
-     * @param text
+     *
+     * @param text The text to be displayed in the label and tooltip
      */
     public PuzzleFragmentLabel(String text) {
         super(text);
