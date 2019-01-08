@@ -23,23 +23,25 @@ public class PuzzleSelectController {
      * Initializes the puzzle select.
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
 
     }
 
     /**
      * Sets the root controller of the puzzle screen
+     *
      * @param controller The PuzzlePane controller
      */
-    public void setRootController(PuzzlePaneController controller){
+    public void setRootController(PuzzlePaneController controller) {
         rootController = controller;
     }
 
     /**
      * Sets a new puzzle set, and loads the puzzle set data to the GUI.
+     *
      * @param p The set of the puzzles to be loaded
      */
-    public void setPuzzleSet(PuzzleSet p){
+    public void setPuzzleSet(PuzzleSet p) {
         puzzleSet = p;
 
         displayPuzzleSet();
@@ -48,18 +50,17 @@ public class PuzzleSelectController {
     /**
      * Displays the current puzzle set in the GUI
      */
-    private void displayPuzzleSet(){
+    private void displayPuzzleSet() {
         //Check that a puzzle has actually been loaded first
-        if(puzzleSet == null){
+        if (puzzleSet == null) {
             throw new IllegalStateException("No puzzle selected.");
         }
 
         PuzzleList.getChildren().clear();
 
         ProblemName.setText(puzzleSet.getName());
-        for(Puzzle p : puzzleSet.getPuzzles()){
-            PuzzleLabel newFragment = new PuzzleLabel(p.getName());
-            newFragment.setUserData(p.getIndex());
+        for (Puzzle p : puzzleSet.getPuzzles()) {
+            PuzzleSelectPanel newFragment = new PuzzleSelectPanel(p);
             newFragment.setOnMouseClicked(event -> {
                 if (rootController != null) {
                     rootController.openPuzzleSolver((int) newFragment.getUserData());

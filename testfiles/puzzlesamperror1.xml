@@ -18,10 +18,10 @@
          <block id="9">print(num)</block>
       </solution>
       <distractors>
-         <block id="X1">for num in range(0, 21):</block>
-         <block id="X2">if num % 3 == 0:</block>
-         <block id="X3">elif num % 5 == 0:</block>
-         <block id="X4">elif num % 3 == 0 and num % 5 == 0</block>
+         <block id="0X1">for num in range(0, 21):</block>
+         <block id="0X2">if num % 3 == 0:</block>
+         <block id="0X3">elif num % 5 == 0:</block>
+         <block id="0X4">elif num % 3 == 0 and num % 5 == 0</block>
       </distractors>
    </puzzle>
    <puzzle>
@@ -39,14 +39,34 @@
          <block id="9">print(num)</block>
       </solution>
       <distractors>
-         <block id="X1">for num in range(0, 21):</block>
-         <block id="X2">if num % 3 == 0:</block>
-         <block id="X3">elif num % 5 == 0:</block>
-         <block id="X4">elif num % 3 == 0 and num % 5 == 0</block>
+         <block id="1X1">for num in range(0, 21):</block>
+         <block id="2X2">if num % 3 == 0:</block>
+         <block id="4X3">elif num % 5 == 0:</block>
+         <block id="6X4">elif num % 3 == 0 and num % 5 == 0</block>
       </distractors>
       <falseAnswers>
-         <answer id="1">X1, 2, 3, 4, 5, 6, 7, 8, 9</answer>
-         <answer id="1">1, X2, 3, X3, 5, X4, 7, 8, 9</answer>
+         <answer>
+            <id>0X1</id>
+            <id>2</id>
+            <id>3</id>
+            <id>4</id>
+            <id>5</id>
+            <id>6</id>
+            <id>7</id>
+            <id>8</id>
+            <id>9</id>
+         </answer>
+         <answer>
+            <id>1</id>
+            <id>0X2</id>
+            <id>3</id>
+            <id>0X3</id>
+            <id>5</id>
+            <id>0X4</id>
+            <id>7</id>
+            <id>8</id>
+            <id>9</id>
+         </answer>
       </falseAnswers>
    </puzzle>
 </puzzleset>

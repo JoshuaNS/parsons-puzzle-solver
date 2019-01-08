@@ -19,6 +19,11 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
     private double dragStartY;
     private int tab = 0;
 
+    /**
+     * Creates a PuzzleLabel with a series of mouse events added
+     *
+     * @param text The text to be displayed in the label and tooltip
+     */
     public PuzzleFragmentLabel(String text) {
         super(text);
 
@@ -56,12 +61,16 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
         });
         setOnDragDropped(event -> {
             if (event.getGestureSource() != this) {
-                PuzzleFragmentLabel source = (PuzzleFragmentLabel) event.getGestureSource();
-                PuzzleFragmentLabel target = (PuzzleFragmentLabel) event.getGestureTarget();
-                String temp = target.getText();
+                PuzzleLabel source = (PuzzleLabel) event.getGestureSource();
+                PuzzleLabel target = (PuzzleLabel) event.getGestureTarget();
 
+                String tempText = target.getText();
                 target.setLabelText(source.getText());
-                source.setLabelText(temp);
+                source.setLabelText(tempText);
+
+                Object tempUserData = target.getUserData();
+                target.setUserData(source.getUserData());
+                source.setUserData(tempUserData);
             }
             else {
                 setTab(Math.max(tab - (int) ((dragStartX - event.getX()) / 20), 0));
@@ -86,13 +95,7 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
     }
 
     public void setLabelText(String text){
-        setText(text);
-        if(text != null && !text.isEmpty()) {
-            setTooltip(new Tooltip(text));
-        }
-        else{
-            setTooltip(null);
-        }
+        super.setLabelText(text);
         setTab(0);
     }
 
