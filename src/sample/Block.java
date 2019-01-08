@@ -17,6 +17,7 @@ public class Block {
     private String id;
     private List<Block> associatedBlocks;
     private int tab;
+    private int tabGuess;
     private String[] lines;
 
     /**
@@ -28,7 +29,7 @@ public class Block {
     public Block(String id, String textInput, Puzzle associatedPuzzle) {
         this.associatedPuzzle = associatedPuzzle;
         int tabWidth;
-        if (this.associatedPuzzle == null) {
+        if (this.associatedPuzzle == null || associatedPuzzle.getTabWidth() == 0) {
             tabWidth = 4;
         }
         else {
@@ -47,6 +48,7 @@ public class Block {
 
         this.lines = new String[lines.length];
         this.tab = minTab;
+        this.tabGuess = 0;
         this.id = id;
         this.associatedBlocks = new ArrayList<>();
 
@@ -179,4 +181,9 @@ public class Block {
     public boolean hasAssociatedBlocks() {
         return associatedBlocks.size() != 0;
     }
+
+    public int getSolutionTab() {
+        return tabGuess;
+    }
+    public void setSolutionTab(int newTab) { tabGuess = newTab; };
 }

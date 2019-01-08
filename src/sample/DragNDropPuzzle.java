@@ -40,6 +40,9 @@ public class DragNDropPuzzle extends Puzzle {
             if (!providedSolution.get(i).equals(getSolutionSet().get(i))) {
                 return false;
             }
+            if(isIndentRequired() && providedSolution.get(i).getSolutionTab() != getSolutionSet().get(i).getTab()){
+                return false;
+            }
         }
         this.setCompleted(true);
         return true;

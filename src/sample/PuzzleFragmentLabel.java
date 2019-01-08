@@ -16,8 +16,6 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
     public static final String DRAG_TARGET_STYLE = "-fx-background-color: steelblue; -fx-border-color: black;"; //The default component style
 
     private double dragStartX;
-    private double dragStartY;
-    private int tab = 0;
 
     /**
      * Creates a PuzzleLabel with a series of mouse events added
@@ -42,27 +40,25 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
                 setStyle(DRAG_SOURCE_STYLE);
 
                 dragStartX = event.getX();
-                dragStartY = event.getY();
             }
             event.consume();
         });
         setOnDragDone(event -> setStyle(DEFAULT_STYLE));
         setOnDragOver(event -> {
-            //if (event.getGestureSource() != this) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            //}
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+
             if (event.getGestureSource() == this) {
-                int tempTab = Math.max(tab - (int) ((dragStartX - event.getX()) / 20), 0);
+                //temporarily change displayed tab without changing tab value
+                int tempTab = Math.max(getTabs() - (int) ((dragStartX - event.getX()) / 20), 0);
                 setPadding(new Insets(5,5,5,5 + 20 * tempTab));
             }
 
-            System.out.println((dragStartX - event.getX()));
             event.consume();
         });
         setOnDragDropped(event -> {
             if (event.getGestureSource() != this) {
-                PuzzleLabel source = (PuzzleLabel) event.getGestureSource();
-                PuzzleLabel target = (PuzzleLabel) event.getGestureTarget();
+                PuzzleFragmentLabel source = (PuzzleFragmentLabel) event.getGestureSource();
+                PuzzleFragmentLabel target = (PuzzleFragmentLabel) event.getGestureTarget();
 
                 String tempText = target.getText();
                 target.setLabelText(source.getText());
@@ -71,9 +67,12 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
                 Object tempUserData = target.getUserData();
                 target.setUserData(source.getUserData());
                 source.setUserData(tempUserData);
+
+                target.refreshTabs();
+                source.refreshTabs();
             }
             else {
-                setTab(Math.max(tab - (int) ((dragStartX - event.getX()) / 20), 0));
+                setTabs(getTabs() - (int) ((dragStartX - event.getX()) / 20));
             }
 
             event.setDropCompleted(true);
@@ -89,18 +88,31 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
                 setStyle(DEFAULT_STYLE);
             }
             else{
-                setTab(tab);
+                setTabs(getTabs());
             }
         });
     }
 
-    public void setLabelText(String text){
-        super.setLabelText(text);
-        setTab(0);
+    public int getTabs() {
+        if(getUserData() instanceof Block) {
+            return ((Block)getUserData()).getSolutionTab();
+        }
+        return 0;
     }
 
-    public void setTab(int newTabs){
-        tab = newTabs;
-        setPadding(new Insets(5,5,5,5 + 20 * tab));
+    public void setTabs(int newTabs){
+        if(getUserData() instanceof Block) {
+            //prevent negative tab
+            newTabs = Math.max(newTabs,0);
+            ((Block)getUserData()).setSolutionTab(newTabs);
+        }
+        refreshTabs();
+    }
+
+    /**
+     * Refreshes tab display
+     */
+    public void refreshTabs(){
+        setPadding(new Insets(5, 5, 5, 5 + 20 * getTabs()));
     }
 }
