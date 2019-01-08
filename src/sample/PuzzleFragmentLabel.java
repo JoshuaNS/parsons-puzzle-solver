@@ -43,14 +43,14 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
             }
             event.consume();
         });
-        setOnDragDone(event -> setStyle(DEFAULT_STYLE));
+        setOnDragDone(event -> setStyle(CURRENT_STYLE));
         setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 
             if (event.getGestureSource() == this) {
                 //temporarily change displayed tab without changing tab value
                 int tempTab = Math.max(getTabs() - (int) ((dragStartX - event.getX()) / 20), 0);
-                setPadding(new Insets(5,5,5,5 + 20 * tempTab));
+                setPadding(new Insets(5, 5, 5, 5 + 20 * tempTab));
             }
 
             event.consume();
@@ -70,8 +70,8 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
 
                 target.refreshTabs();
                 source.refreshTabs();
-            }
-            else {
+
+            } else {
                 setTabs(getTabs() - (int) ((dragStartX - event.getX()) / 20));
             }
 
@@ -85,26 +85,25 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
         });
         setOnDragExited(event -> {
             if (event.getGestureSource() != this) {
-                setStyle(DEFAULT_STYLE);
-            }
-            else{
+                setStyle(CURRENT_STYLE);
+            } else {
                 setTabs(getTabs());
             }
         });
     }
 
     public int getTabs() {
-        if(getUserData() instanceof Block) {
-            return ((Block)getUserData()).getSolutionTab();
+        if (getUserData() instanceof Block) {
+            return ((Block) getUserData()).getSolutionTab();
         }
         return 0;
     }
 
-    public void setTabs(int newTabs){
-        if(getUserData() instanceof Block) {
+    public void setTabs(int newTabs) {
+        if (getUserData() instanceof Block) {
             //prevent negative tab
-            newTabs = Math.max(newTabs,0);
-            ((Block)getUserData()).setSolutionTab(newTabs);
+            newTabs = Math.max(newTabs, 0);
+            ((Block) getUserData()).setSolutionTab(newTabs);
         }
         refreshTabs();
     }
@@ -112,7 +111,7 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
     /**
      * Refreshes tab display
      */
-    public void refreshTabs(){
+    public void refreshTabs() {
         setPadding(new Insets(5, 5, 5, 5 + 20 * getTabs()));
     }
 }

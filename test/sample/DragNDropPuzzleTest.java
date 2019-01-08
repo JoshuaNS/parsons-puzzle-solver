@@ -121,7 +121,8 @@ class DragNDropPuzzleTest {
         Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
-        assertFalse((boolean) p.checkSolution(providedSolution));
+        //assertFalse((boolean) p.checkSolution(providedSolution));
+        assertNotEquals(true, p.checkSolution(providedSolution));
         assertEquals(1, p.getNumAttempts());
         assertFalse(p.isCompleted());
         p.endPuzzle();

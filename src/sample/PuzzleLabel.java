@@ -11,8 +11,10 @@ import javafx.scene.control.Tooltip;
  */
 public class PuzzleLabel extends Label {
     public static final String DEFAULT_STYLE = "-fx-background-color: aliceblue; -fx-border-color: black;"; //The default component style
+    public static final String INCORRECT_STYLE = "-fx-background-color: steelblue; -fx-border-color: black; -fx-text-fill: white;"; //The default component style
     private static final Insets padding = new Insets(5);
 
+    protected String CURRENT_STYLE = DEFAULT_STYLE;
     private boolean useTooltip;
 
     /**
@@ -36,7 +38,7 @@ public class PuzzleLabel extends Label {
         if (showTooltip && text != null && !text.isEmpty()) {
             setTooltip(new Tooltip(text));
         }
-        setStyle(DEFAULT_STYLE);
+        setStyle(CURRENT_STYLE);
         setPadding(padding);
         setMaxWidth(Double.MAX_VALUE);
     }
@@ -53,5 +55,15 @@ public class PuzzleLabel extends Label {
         } else {
             setTooltip(null);
         }
+    }
+
+    /**
+     * Sets the style that will be displayed in the default state
+     *
+     * @param style
+     */
+    public void setCurrentSyle(String style) {
+        CURRENT_STYLE = style;
+        setStyle(CURRENT_STYLE);
     }
 }

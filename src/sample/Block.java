@@ -22,6 +22,7 @@ public class Block {
 
     /**
      * Block constructor which takes block ID, the block text and associated puzzle
+     *
      * @param id
      * @param textInput
      * @param associatedPuzzle
@@ -31,8 +32,7 @@ public class Block {
         int tabWidth;
         if (this.associatedPuzzle == null || associatedPuzzle.getTabWidth() == 0) {
             tabWidth = 4;
-        }
-        else {
+        } else {
             tabWidth = associatedPuzzle.getTabWidth();
         }
         String[] lines = textInput.split("\n", -1);
@@ -61,6 +61,7 @@ public class Block {
 
     /**
      * Constructor with no associated puzzle
+     *
      * @param id
      * @param textInput
      */
@@ -76,6 +77,7 @@ public class Block {
         Block b = (Block) o;
         return this.id.equals(b.id) && this.associatedPuzzle == b.associatedPuzzle;
     }
+
     @Override
     public int hashCode() {
         return id.hashCode();
@@ -83,6 +85,7 @@ public class Block {
 
     /**
      * Converts the lines into a single string with newLine characters
+     *
      * @return
      */
     public String getLines() {
@@ -98,6 +101,7 @@ public class Block {
 
     /**
      * Converts space in line to tabs
+     *
      * @param line
      * @param tabWidth
      * @return
@@ -109,14 +113,12 @@ public class Block {
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] == '\t') {
                 sb.append(characters[i]);
-            }
-            else if (characters[i] == ' ') {
+            } else if (characters[i] == ' ') {
                 spaceCount++;
                 if (spaceCount % tabWidth == 0) {
                     sb.append('\t');
                 }
-            }
-            else {
+            } else {
                 sb.append(line.substring(i));
                 break;
             }
@@ -126,6 +128,7 @@ public class Block {
 
     /**
      * Counts the number of tabs in a line
+     *
      * @param line
      * @return
      */
@@ -135,8 +138,7 @@ public class Block {
         for (char c : line.toCharArray()) {
             if (c == '\t') {
                 tabCount++;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -145,6 +147,7 @@ public class Block {
 
     /**
      * Remove leading tabs from a line up to the number defined by count
+     *
      * @param line
      * @param count
      * @return
@@ -156,8 +159,7 @@ public class Block {
         for (int i = 0; tabIndex < count && i < characters.length; i++) {
             if (characters[i] == '\t') {
                 tabIndex++;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -172,12 +174,15 @@ public class Block {
     public String getID() {
         return id;
     }
+
     public List<Block> getAssociatedBlocks() {
         return associatedBlocks;
     }
+
     public void addAssociatedBlock(Block b) {
         associatedBlocks.add(b);
     }
+
     public boolean hasAssociatedBlocks() {
         return associatedBlocks.size() != 0;
     }
@@ -185,5 +190,10 @@ public class Block {
     public int getSolutionTab() {
         return tabGuess;
     }
-    public void setSolutionTab(int newTab) { tabGuess = newTab; };
+
+    public void setSolutionTab(int newTab) {
+        tabGuess = newTab;
+    }
+
+    ;
 }
