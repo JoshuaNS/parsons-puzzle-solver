@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;

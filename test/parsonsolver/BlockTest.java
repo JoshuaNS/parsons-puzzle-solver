@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import org.junit.jupiter.api.Test;
 
