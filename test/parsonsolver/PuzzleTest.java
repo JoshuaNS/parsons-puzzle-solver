@@ -140,9 +140,25 @@ public class PuzzleTest {
 
         Puzzle mixedPuzzle = null;
         try {
-            spacePuzzle = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(2));
+            mixedPuzzle = new DragNDropPuzzle((Element)document.getElementsByTagName("puzzle").item(2));
         } catch (InvalidInputFileException e) {
             e.printStackTrace();
         }
+        for (Block b : tabPuzzle.getSolutionSet()) {
+            Block otherBlock = spacePuzzle.getBlock(b.getID());
+            assertEquals(b.getLines(), otherBlock.getLines());
+            assertEquals(b.getTab(), otherBlock.getTab());
+        }
+        for (Block b : spacePuzzle.getSolutionSet()) {
+            Block otherBlock = mixedPuzzle.getBlock(b.getID());
+            assertEquals(b.getLines(), otherBlock.getLines());
+            assertEquals(b.getTab(), otherBlock.getTab());
+        }
+        for (Block b : mixedPuzzle.getSolutionSet()) {
+            Block otherBlock = tabPuzzle.getBlock(b.getID());
+            assertEquals(b.getLines(), otherBlock.getLines());
+            assertEquals(b.getTab(), otherBlock.getTab());
+        }
+
     }
 }
