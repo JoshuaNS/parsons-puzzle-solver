@@ -122,7 +122,7 @@ public class PuzzleTest {
 
     @Test
     void importPuzzleTabsSpaces() {
-       Document document = setup_document("testfiles/puzzle_spaces_and_tabs_separate.xml");
+       Document document = setup_document("testfiles/puzzle_spaces_and_tabs.xml");
 
         Puzzle tabPuzzle = null;
         try {
