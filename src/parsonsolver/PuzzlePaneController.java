@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

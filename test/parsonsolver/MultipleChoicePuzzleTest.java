@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 /**
  * MultipleChoicePuzzleTest: Test class for MultipleChoicePuzzle
  * @author Joshua Seguin, Iain Davidson

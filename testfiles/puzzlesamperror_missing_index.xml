@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<puzzleset>
+   <setName>Lab1</setName>
+   <randomOrder>false</randomOrder>
+   <sequentialComp>false</sequentialComp>
+   <puzzle>
+      <index>1</index>
+      <format>DnD</format>
+      <solution>
+         <block id="1">simple1</block>
+      </solution>
+   </puzzle>
+   
+   <puzzle>
+      <index>3</index>
+      <format>DnD</format>
+      <solution>
+         <block id="1">simple3</block>
+      </solution>
+   </puzzle>
+</puzzleset>
