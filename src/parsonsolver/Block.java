@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 
 import java.util.ArrayList;
@@ -35,7 +35,9 @@ public class Block {
             tabWidth = associatedPuzzle.getTabWidth();
         }
         String[] lines = textInput.split("\n", -1);
-
+        for (int i = 0; i < lines.length; i++) {
+            lines[i] = spaceToTab(lines[i], tabWidth);
+        }
         // Calculate tab
         int minTab = calculateTab(lines[0]);
         for (int i = 1; i < lines.length; i++) {
@@ -52,8 +54,7 @@ public class Block {
 
         // Reduce tabs
         for (int i = 0; i < lines.length; i++) {
-            String line = spaceToTab(lines[i], tabWidth);
-            this.lines[i] = reduceTab(line, minTab);
+            this.lines[i] = reduceTab(lines[i], minTab);
         }
     }
 

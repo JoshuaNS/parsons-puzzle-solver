@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -111,6 +111,9 @@ public abstract class Puzzle {
             this.setDescription("");
         }
 
+        // Assume tabWidth (in space characters) is 4 for now.
+        this.setTabWidth(4);
+
         // Solution
         NodeList solnNL = puzzleXML.getElementsByTagName("solution");
         if (solnNL.getLength() > 0) {
@@ -159,9 +162,6 @@ public abstract class Puzzle {
             }
         }
         // There may not be any distractors, acceptable XML if not included
-
-        // Assume tabWidth (in space characters) is 4 for now.
-        this.setTabWidth(4);
     }
 
     /**

@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;

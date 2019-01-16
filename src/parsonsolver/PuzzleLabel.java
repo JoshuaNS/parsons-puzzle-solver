@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
