@@ -80,7 +80,7 @@ public class PuzzleTest {
         assertEquals("Lab 1 - Puzzle 1", p.getName());
         assertEquals("Python", p.getLanguage());
         assertEquals(PuzzleType.DnD, p.getType());
-        assertEquals(false, p.isIndentRequired());
+        assertEquals(true, p.isIndentRequired());
 
         assertNotNull(p.getLines());
         for (int i = 0; i < p.getLines().size(); i++) {

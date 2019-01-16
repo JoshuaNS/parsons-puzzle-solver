@@ -25,9 +25,10 @@ public class Block {
      *
      * @param id
      * @param textInput
+     * @param guessedTabs
      * @param associatedPuzzle
      */
-    public Block(String id, String textInput, Puzzle associatedPuzzle) {
+    public Block(String id, String textInput, int guessedTabs, Puzzle associatedPuzzle) {
         this.associatedPuzzle = associatedPuzzle;
         int tabWidth;
         if (this.associatedPuzzle == null || associatedPuzzle.getTabWidth() == 0) {
@@ -50,7 +51,7 @@ public class Block {
 
         this.lines = new String[lines.length];
         this.tab = minTab;
-        this.tabGuess = 0;
+        this.tabGuess = guessedTabs;
         this.id = id;
         this.associatedBlocks = new ArrayList<>();
 
@@ -61,13 +62,24 @@ public class Block {
     }
 
     /**
+     * Block constructor which takes block ID, the block text and associated puzzle
+     *
+     * @param id
+     * @param textInput
+     * @param associatedPuzzle
+     */
+    public Block(String id, String textInput, Puzzle associatedPuzzle) {
+        this(id, textInput, 0, associatedPuzzle);
+    }
+
+    /**
      * Constructor with no associated puzzle
      *
      * @param id
      * @param textInput
      */
     public Block(String id, String textInput) {
-        this(id, textInput, null);
+        this(id, textInput, 0, null);
     }
 
     @Override
@@ -188,6 +200,7 @@ public class Block {
         return associatedBlocks.size() != 0;
     }
 
+    //TODO: More elegant handling of the solution tabs.
     public int getSolutionTab() {
         return tabGuess;
     }
