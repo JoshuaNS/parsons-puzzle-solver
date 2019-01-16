@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;
@@ -13,6 +13,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A PuzzleSet Object is an object that contains multiple puzzle objects
@@ -115,17 +117,30 @@ public class PuzzleSet {
                 Element puzzleAtIndex = (Element)puzzleXMLNodes.item(i).getParentNode();
                 switch (puzzleAtIndex.getElementsByTagName("format").item(0).getTextContent()) {
                     case "DnD":
-                        puzzles.add(index-1, new DragNDropPuzzle(puzzleAtIndex));
+                        puzzles.add(new DragNDropPuzzle(puzzleAtIndex));
                         break;
                     case "MC":
-                        puzzles.add(index-1, new MultipleChoicePuzzle(puzzleAtIndex));
+                        puzzles.add(new MultipleChoicePuzzle(puzzleAtIndex));
                         break;
                     case "FiB":
-                        puzzles.add(index-1, new FillBlanksPuzzle(puzzleAtIndex));
+                        puzzles.add(new FillBlanksPuzzle(puzzleAtIndex));
                         break;
                     default:
                         throw new InvalidInputFileException();
                 }
+            }
+            // Sort based on index as indicated in the puzzle set file.
+            puzzles.sort(Comparator.comparingInt(Puzzle::getIndex));
+
+            // No duplicate or missing indices
+            Set<Integer> indices = new HashSet<>();
+            for (Puzzle p : puzzles) {
+                indices.add(p.getIndex());
+            }
+            // Create a set of contigious integers, 1..puzzles.size() as the expected set of indices
+            Set<Integer> expected = IntStream.range(1, puzzles.size()+1).boxed().collect(Collectors.toSet());
+            if (!indices.containsAll(expected) || !expected.containsAll(indices)) {
+                throw new InvalidInputFileException();
             }
         }
         else {

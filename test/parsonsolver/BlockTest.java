@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,8 @@ class BlockTest {
     void importConvertSpaceToTab() {
         String s = "    if (X) {";
         Block b = new Block("1", s);
-        assertEquals("\tif (X) {", b.getLines());
+        assertEquals("if (X) {", b.getLines());
+        assertEquals(1, b.getTab());
     }
 
     /**

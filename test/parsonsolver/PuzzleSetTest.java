@@ -1,4 +1,4 @@
-package sample;
+package parsonsolver;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ class PuzzleSetTest {
         try {
             ps.importPuzzleSet(f);
         } catch (InvalidInputFileException e) {
-            assertTrue(false);
+            fail(e);
         }
         ArrayList<Puzzle> puzzles = ps.getPuzzles();
         assertNotNull(puzzles.get(0));
@@ -51,6 +51,30 @@ class PuzzleSetTest {
         assertEquals("Puzzle Set", ps.getName());
         assertFalse(ps.isRandomOrder());
         assertFalse(ps.isSequentialCompletion());
+    }
+
+    /**
+     * Test of importing a puzzle set with the indices out of order
+     * @throws InvalidInputFileException
+     */
+    @Test
+    void importOutOfOrderPuzzleIndices() throws InvalidInputFileException {
+        PuzzleSet ps = new PuzzleSet();
+        File f = new File("testfiles/puzzlesamp_out_of_order.xml");
+        assertTrue(f.exists());
+        ps.importPuzzleSet(f);
+        assertEquals(3, ps.getPuzzles().size());
+    }
+
+    /**
+     * Test of importing a puzzle set with a missing(skipped) puzzle index
+     */
+    @Test
+    void importMissingPuzzleIndex() {
+        PuzzleSet ps = new PuzzleSet();
+        File f = new File("testfiles/puzzlesamperror_missing_index.xml");
+        assertTrue(f.exists());
+        assertThrows(InvalidInputFileException.class, ()-> ps.importPuzzleSet(f));
     }
 
     /**
