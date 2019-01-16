@@ -60,8 +60,7 @@ public class PuzzleSelectController {
 
         ProblemName.setText(puzzleSet.getName());
         for (Puzzle p : puzzleSet.getPuzzles()) {
-            PuzzleLabel newFragment = new PuzzleLabel(p.getName());
-            newFragment.setUserData(p.getIndex());
+            PuzzleSelectPanel newFragment = new PuzzleSelectPanel(p);
             newFragment.setOnMouseClicked(event -> {
                 if (rootController != null) {
                     rootController.openPuzzleSolver((int) newFragment.getUserData());

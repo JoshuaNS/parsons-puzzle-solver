@@ -13,6 +13,11 @@ public class PuzzleFragmentLabel extends PuzzleLabel {
     public static final String DRAG_SOURCE_STYLE = "-fx-background-color: lightgray; -fx-border-color: black;"; //The default component style
     public static final String DRAG_TARGET_STYLE = "-fx-background-color: steelblue; -fx-border-color: black;"; //The default component style
 
+    /**
+     * Creates a PuzzleLabel with a series of mouse events added
+     *
+     * @param text The text to be displayed in the label and tooltip
+     */
     public PuzzleFragmentLabel(String text) {
         super(text);
 

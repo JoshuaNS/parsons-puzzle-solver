@@ -148,20 +148,25 @@ public class PuzzleSet {
         }
     }
 
-    public ArrayList<String> exportResults(){
+    public ArrayList<String> exportResults() {
         ArrayList<String> results = new ArrayList<>();
-        results.add("Puzzle Set '" +name +"' results:\n");
-        for (int i = 0; i<getPuzzles().size(); i++){
-            Puzzle puzz = getPuzzle(i+1);
-            results.add("\n\t" +puzz.getName());
+        results.add("Puzzle Set '" + name + "' results:\n");
+        for (int i = 0; i < getPuzzles().size(); i++) {
+            Puzzle puzz = getPuzzle(i + 1);
+            results.add("\n\t" + puzz.getName());
             if (puzz.isCompleted()) {
                 results.add("\tPuzzle Status: Completed\n");
             } else {
                 results.add("\tPuzzle Status: Incomplete\n");
             }
-            results.add("\tNumber of Attempts: " +puzz.getNumAttempts() +"\n");
-            double time = (double)puzz.getTimeElapsed()/1000;
-            results.add("\tElapsed Time: " +time +" seconds\n");
+            results.add("\tNumber of Attempts: " + puzz.getNumAttempts() + "\n");
+            long time = puzz.getTimeElapsed() / 1000;
+            if (time < 60)
+                results.add("\tElapsed Time: " + time + " second(s)\n");
+            else if (time < 3600)
+                results.add("\tElapsed Time: " + (time / 60) + " minute(s), " + (time % 60) + " second(s)\n");
+            else
+                results.add("\tElapsed Time: " + (time / 3600) + " hour(s), " + (time / 60 % 60) + " minute(s), " + (time % 60) + " second(s)\n");
         }
         return results;
     }

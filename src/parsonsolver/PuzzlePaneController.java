@@ -3,12 +3,15 @@ package parsonsolver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +23,7 @@ import java.io.IOException;
 public class PuzzlePaneController {
     private PuzzleSet currentPuzzleSet;
     private Pane currentView;
+    private PuzzleScreenController currentPuzzleSolver = null;
 
     private static final boolean IS_TEST_MODE = true; //Enables demo options in GUI
 
@@ -87,6 +91,28 @@ public class PuzzlePaneController {
         setPuzzleSet(f);
     }
 
+    @FXML
+    public void ExportResults(ActionEvent event) {
+        if (currentPuzzleSet == null) {
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ExportResults.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Parson's Programming Puzzles - Results");
+            stage.setScene(new Scene(root));
+
+            ExportResultsController controller = loader.getController();
+            controller.setExportResultsText(String.join("", currentPuzzleSet.exportResults()));
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Loads a new puzzle set from a file.
      *
@@ -104,7 +130,7 @@ public class PuzzlePaneController {
             }
 
             openPuzzleSelect();
-        } catch (InvalidInputFileException e){
+        } catch (InvalidInputFileException e) {
             //TODO Add feedback that input file was invalid.
         } catch (Exception e) {
             System.err.println(e.toString());
@@ -120,12 +146,7 @@ public class PuzzlePaneController {
      */
     @FXML
     public void openTitleScreen(ActionEvent event) {
-        //Remove currently open view if applicable
-        if (currentView != null) {
-            PuzzlePane.getChildren().remove(currentView);
-        }
-
-        PuzzlePane.setCenter(TitlePane);
+        setCurrentView(TitlePane);
     }
 
     /**
@@ -141,25 +162,20 @@ public class PuzzlePaneController {
      */
     public void openPuzzleSelect() {
         PuzzleSelectController controller;
+        Pane newView;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "PuzzleSelect.fxml"));
-            currentView = loader.load();
+            newView = loader.load();
             controller = loader.getController();
+            controller.setRootController(this);
+            controller.setPuzzleSet(currentPuzzleSet);
         } catch (IOException e) {
             System.err.println("PuzzleSelect could not be loaded.");
             return;
         }
 
-        //Remove currently open view if applicable
-        if (currentView != null) {
-            PuzzlePane.getChildren().remove(currentView);
-        }
-
-        controller.setRootController(this);
-        controller.setPuzzleSet(currentPuzzleSet);
-
-        PuzzlePane.setCenter(currentView);
+        setCurrentView(newView);
     }
 
     /**
@@ -173,24 +189,34 @@ public class PuzzlePaneController {
         }
 
         PuzzleScreenController controller;
+        Pane newView;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "PuzzleScreen.fxml"));
-            currentView = loader.load();
+            newView = loader.load();
             controller = loader.getController();
+            controller.setRootController(this);
+            controller.setPuzzleSet(currentPuzzleSet, index);
         } catch (IOException e) {
             System.err.println("PuzzleScreen could not be loaded.");
             return;
         }
 
+        setCurrentView(newView);
+        currentPuzzleSolver = controller;
+    }
+
+    public void setCurrentView(Pane newView) {
         //Remove currently open view if applicable
         if (currentView != null) {
             PuzzlePane.getChildren().remove(currentView);
+            if (currentPuzzleSolver != null) {
+                currentPuzzleSolver.endPuzzle();
+                currentPuzzleSolver = null;
+            }
         }
 
-        controller.setRootController(this);
-        controller.setPuzzleSet(currentPuzzleSet, index);
-
+        currentView = newView;
         PuzzlePane.setCenter(currentView);
     }
 

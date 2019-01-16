@@ -106,16 +106,18 @@ public class PuzzleScreenController {
             if (selectedAnswer != null) {
                 answer = (List<Block>) selectedAnswer.getUserData();
             } else {
-                FeedbackText.setText("Error: No answer selected");
-                return;
+                answer = new ArrayList<>();
             }
         }
 
         Object result = currentPuzzle.checkSolution(answer);
         if (result == null)
             FeedbackText.setText("Error: Invalid answer");
-        else if (result.equals(true))
+        else if (result.equals(true)) {
             FeedbackText.setText("Solution is Correct!");
+            currentPuzzle.endPuzzle();
+            currentPuzzle.startPuzzle();
+        }
         else
             FeedbackText.setText("Incorrect Answer!");
     }
@@ -150,6 +152,13 @@ public class PuzzleScreenController {
     }
 
     /**
+     * Stops the timer on the current puzzle
+     */
+    public void endPuzzle(){
+        currentPuzzle.endPuzzle();
+    }
+
+    /**
      * Sets a new puzzle and loads it into the GUI.
      *
      * @param newPuzzleIndex The index of the new puzzle within the puzzle set.
@@ -158,16 +167,19 @@ public class PuzzleScreenController {
         if (!puzzleIndexValid(newPuzzleIndex)) {
             throw new IllegalArgumentException("newPuzzleIndex: " + newPuzzleIndex);
         }
+        if(currentPuzzle != null){
+            currentPuzzle.endPuzzle();
+        }
 
         puzzleIndex = newPuzzleIndex;
         currentPuzzle = currentPuzzleSet.getPuzzle(puzzleIndex);
+        currentPuzzle.startPuzzle();
         ProblemName.setText(currentPuzzle.getName());
         ProblemDescription.setText(currentPuzzle.getDescription());
         puzzleFragments = currentPuzzle.getBlocksSet();
         puzzleAnswers = currentPuzzle.getChoices();
         puzzleLines = currentPuzzle.getLines();
         loadPuzzleData();
-
     }
 
     /**
@@ -190,6 +202,7 @@ public class PuzzleScreenController {
         puzzleAnswerToggles = new ToggleGroup();
         puzzleAnswerLabels = new ArrayList<>();
         puzzleIdMapping = new HashMap<>();
+        FeedbackText.setText(null);
 
         //Set the code fragments
         loadFragmentGrid();
