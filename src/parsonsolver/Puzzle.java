@@ -34,6 +34,17 @@ public abstract class Puzzle {
     private int numAttempts = 0;
 
     /**
+     * Puzzle constructor for creating a new puzzle using the creator
+     * @param name
+     */
+    public Puzzle(String name, int index, PuzzleType type){
+        this.name = name;
+        this.index = index;
+        this.type = type;
+        this.setTabWidth(4);
+    }
+
+    /**
      * Puzzle constructor which takes the UML data as an input and converts it to a puzzle object
      * @param puzzleXML
      */

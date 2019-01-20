@@ -14,6 +14,14 @@ import java.util.*;
 public class FillBlanksPuzzle extends Puzzle {
 
     /**
+     * Puzzle constructor for creating a new puzzle using the creator
+     * @param name
+     */
+    public FillBlanksPuzzle(String name, int index){
+        super(name, index, PuzzleType.FiB);
+    }
+
+    /**
      * Constructor which takes in a puzzle xml object
      * Sets the solution which is the list of blocks that have associated distractors
      * @param puzzleAtIndex
