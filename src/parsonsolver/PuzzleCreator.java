@@ -82,7 +82,7 @@ public class PuzzleCreator {
      * @param index
      */
     public void openPuzzle (int index){
-        if (index+1 >= currentSet.getPuzzles().size()) {
+        if (currentSet.getPuzzles().size() >= index && index > 0) {
             this.setCurrentPuzzle(currentSet.getPuzzle(index));
         }
     }

@@ -100,6 +100,10 @@ class PuzzleSetTest {
         int input = 1;
         System.out.print("Loading puzzle with index " +input +"...\n");
         Puzzle currentPuzz = ps.getPuzzle(input);
+        //check that the puzzle is solvable before opening
+        if(!currentPuzz.isSolvable()){
+            System.out.print("Cannot open puzzle.\n\n");
+        }
         System.out.print("Puzzle loaded.\n\n");
         currentPuzz.startPuzzle();
 
@@ -134,6 +138,9 @@ class PuzzleSetTest {
         input = 3;
         System.out.print("Loading puzzle with index " +input +"...\n");
         currentPuzz = ps.getPuzzle(input);
+        if(!currentPuzz.isSolvable()){
+            System.out.print("Cannot open puzzle.\n\n");
+        }
         System.out.print("Puzzle loaded.\n\n");
         currentPuzz.startPuzzle();
 
@@ -185,7 +192,9 @@ class PuzzleSetTest {
         input = 2;
         System.out.print("Loading puzzle with index " +input +"...\n");
         currentPuzz = ps.getPuzzle(input);
-
+        if(!currentPuzz.isSolvable()){
+            System.out.print("Cannot open puzzle.\n\n");
+        }
         System.out.print("Puzzle loaded.\n\n");
         currentPuzz.startPuzzle();
         if (currentPuzz.getType().equals(PuzzleType.MC)){

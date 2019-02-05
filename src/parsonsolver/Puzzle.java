@@ -235,6 +235,16 @@ public abstract class Puzzle {
     public void resetAttempts(){
         this.setNumAttempts(0);
     }
+
+    /**
+     * Returns true if the puzzle is solvable, i.e. has enough information to allow a user to solve it
+     * This is so that we don't allow a puzzle to be opened in the solver if it is not solvable
+     * @return isSolvable
+     */
+    public boolean isSolvable(){
+        return (getLines() != null && getSolutionSet() != null && getType() != null);
+    }
+
     public String getName() {
         return name;
     }
