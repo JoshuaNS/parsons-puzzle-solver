@@ -74,6 +74,7 @@ public class PuzzleCreatorTest {
         creator.getCurrentSet().setRandomOrder(false);
         creator.getCurrentSet().setSequentialCompletion(true);
         System.out.println("Done editing, returning to Puzzle Select...");
+        creator.closeEdit();
 
         System.out.println("Puzzle Select Screen: Please create or select a puzzle to edit, edit properties, or export.");
         creator.exportSet();
@@ -98,6 +99,7 @@ public class PuzzleCreatorTest {
         System.out.println("Puzzle opened.");
         //Can now edit the properties of existing puzzles
         System.out.println("Done editing, returning to Puzzle Select...");
+        creator.closeEdit();
 
         System.out.println("Puzzle Select Screen: Please create or select a puzzle to edit, edit properties, or export.");
         creator.exportSet();

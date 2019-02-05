@@ -41,6 +41,13 @@ public class PuzzleCreator {
     }
 
     /**
+     * Removes current puzzle data when done editing
+     */
+    public void closeEdit(){
+        currentPuzzle = null;
+    }
+
+    /**
      * Create a new Puzzle in the current Puzzle Set
      * When a new Puzzle is created, it is automatically opened in the editor
      * @param name
@@ -63,7 +70,7 @@ public class PuzzleCreator {
     }
 
     /**
-     * Convert a block of lines to a list of blocks
+     * Convert a group of lines and their line numbers to a list of blocks
      * @param lines
      * @param ids
      * @return
