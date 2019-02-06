@@ -30,13 +30,11 @@ public class PuzzleCreatorTest {
         Scanner s;
         //get and convert solution code block
         ArrayList<String> list = new ArrayList<>();
-        ArrayList<String> list2 = new ArrayList<>();
         int index = 1;
         try {
             s = new Scanner(new File("testfiles/solutionCode.txt"));
             while (s.hasNextLine()){
                 list.add(s.nextLine());
-                list2.add(String.valueOf(index));
                 index++;
             }
             s.close();
@@ -44,24 +42,22 @@ public class PuzzleCreatorTest {
             e.printStackTrace();
         }
         //the result of the input should be list of indexes and a list of lines
-        creator.getCurrentPuzzle().setLines(creator.convertLines(list, list2));
-        creator.getCurrentPuzzle().setSolutionSet(creator.convertLines(list, list2));
+        creator.getCurrentPuzzle().setLines(creator.convertLines(list, false));
+        creator.getCurrentPuzzle().setSolutionSet(creator.convertLines(list, false));
         //get and convert distractor code block
         list = new ArrayList<>();
-        list2 = new ArrayList<>();
         index = 1;
         try {
             s = new Scanner(new File("testfiles/distractorCode.txt"));
             while (s.hasNextLine()){
                 list.add(s.nextLine());
-                list2.add("X" +String.valueOf(index));
                 index++;
             }
             s.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        creator.getCurrentPuzzle().setDistractors(creator.convertLines(list, list2));
+        creator.getCurrentPuzzle().setDistractors(creator.convertLines(list, true));
 
         System.out.println("Please set puzzle properties:");
         creator.getCurrentPuzzle().setDescription("Problem 1 of Assignment 2");

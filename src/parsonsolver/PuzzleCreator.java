@@ -70,15 +70,21 @@ public class PuzzleCreator {
     }
 
     /**
-     * Convert a group of lines and their line numbers to a list of blocks
+     * Convert a group of lines a list of blocks
+     * isDistractor indicates if we should prepend X to the block id
      * @param lines
-     * @param ids
+     * @param isDistractor
      * @return
      */
-    public List<Block> convertLines (List<String> lines, List<String> ids){
+    public List<Block> convertLines (List<String> lines, boolean isDistractor){
         List<Block> blocks = new ArrayList<>();
         for (int i = 0; i < lines.size(); i++){
-            Block b = new Block(ids.get(i), lines.get(i), currentPuzzle);
+            Block b;
+            if (isDistractor){
+                b = new Block("X" +(String.valueOf(i + 1)), lines.get(i), currentPuzzle);
+            } else {
+                b = new Block(String.valueOf(i + 1), lines.get(i), currentPuzzle);
+            }
             blocks.add(b);
         }
         return blocks;
