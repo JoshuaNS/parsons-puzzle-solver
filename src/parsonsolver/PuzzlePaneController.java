@@ -26,6 +26,7 @@ public class PuzzlePaneController {
     private PuzzleScreenController currentPuzzleSolver = null;
 
     private static final boolean IS_TEST_MODE = true; //Enables demo options in GUI
+    private static final boolean IS_TEACHER_MODE = true; //Enables teacher edition options (e.g. Puzzle Creator)
 
     @FXML
     private MenuItem NavPuzzleSelect;
@@ -58,6 +59,13 @@ public class PuzzlePaneController {
     @FXML
     public void initialize() {
         currentView = TitlePane;
+
+        //TEACHER MODE OPTIONS
+        if (IS_TEACHER_MODE) {
+            Button demoButton = new Button("Puzzle Creator");
+            demoButton.setOnAction(this::openPuzzleCreator);
+            TitlePane.getChildren().add(demoButton);
+        }
 
         //TEST MODE OPTIONS
         if (IS_TEST_MODE) {
@@ -158,6 +166,12 @@ public class PuzzlePaneController {
     }
 
     /**
+     * Opens the puzzle creator
+     */
+    @FXML
+    public void openPuzzleCreator(ActionEvent event){ openPuzzleCreator();}
+
+    /**
      * Opens the puzzle select for the selected puzzle set
      */
     public void openPuzzleSelect() {
@@ -204,6 +218,27 @@ public class PuzzlePaneController {
 
         setCurrentView(newView);
         currentPuzzleSolver = controller;
+    }
+
+    /**
+     * Opens the puzzle creator
+     */
+    @FXML
+    public void openPuzzleCreator() {
+        PuzzleCreatorController controller;
+        Pane newView;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleCreator.fxml"));
+            newView = loader.load();
+            controller = loader.getController();
+            controller.setRootController(this);
+        } catch (IOException e) {
+            System.err.println("PuzzleCreator could not be loaded.");
+            return;
+        }
+
+        setCurrentView(newView);
     }
 
     public void setCurrentView(Pane newView) {
