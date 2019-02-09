@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -38,7 +39,12 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextArea fx:id="SourceCodeEditor" onKeyPressed="#SourceCodeKeyEvent" onKeyReleased="#SourceCodeKeyEvent" onKeyTyped="#SourceCodeKeyEvent" prefHeight="200.0" prefWidth="200.0" />
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <TextArea fx:id="SourceCodeBlocks" editable="false" prefHeight="200.0" prefWidth="50.0" HBox.hgrow="NEVER" />
+                  <TextArea fx:id="SourceCodeEditor" onKeyPressed="#SourceCodeKeyEvent" onKeyReleased="#SourceCodeKeyEvent" onKeyTyped="#SourceCodeKeyEvent" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
             <Label text="Problem Distractors">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="5.0" />

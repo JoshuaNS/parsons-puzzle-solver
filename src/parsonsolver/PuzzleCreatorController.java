@@ -5,12 +5,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.InputMethodEvent;
@@ -35,8 +31,8 @@ public class PuzzleCreatorController {
     @FXML
     private ListView<String> MCAnswersList;
 
-    //@FXML
-    //private TableColumn<TableView, TextArea> SourceCodeColumn;
+    @FXML
+    private TextArea SourceCodeBlocks;
 
     @FXML
     private TextArea SourceCodeEditor;
@@ -69,28 +65,16 @@ public class PuzzleCreatorController {
                             break;
                     }
 
-                    //System.out.println("OLD LENGTH:            " + oldLength);
-                    //System.out.println("NEW LENGTH:            " + newLength);
-                    //System.out.println("START OFFSET:          " + startChangeOffset);
-                    if(startChangeOffset == oldLength){
-                        //System.out.println("TEXT APPENDED TO END:  \"" + newValue.substring(startChangeOffset) + "\"");
-                        if(shiftEnter){
-                            System.out.println("MULTI-LINE BLOCK");
-                            codeLines.add(codeLines.get(codeLines.size()-1));
-                            shiftEnter = false;
-                        }
-                        else {
-                            long lines = newValue.substring(startChangeOffset).chars().filter(ch -> ch == '\n').count();
-                            for(int i = 0; i < lines; i++){
-                                codeLines.add(nextLine++);
-                            }
+                    if(startChangeOffset == oldLength) {
+                        long lines = newValue.substring(startChangeOffset).chars().filter(ch -> ch == '\n').count();
+                        for (int i = 0; i < lines; i++) {
+                            codeLines.add(nextLine++);
                         }
                     }
-                    else if(startChangeOffset == newLength){
-                        //System.out.println("TEXT DELETED FROM END: " + oldValue.substring(startChangeOffset));
+                    else if(startChangeOffset == newLength) {
                         long lines = oldValue.substring(startChangeOffset).chars().filter(ch -> ch == '\n').count();
-                        for(int i = 0; i < lines; i++){
-                            codeLines.remove(codeLines.size()-1);
+                        for (int i = 0; i < lines; i++) {
+                            codeLines.remove(codeLines.size() - 1);
                         }
                     }
                     else {
@@ -100,43 +84,26 @@ public class PuzzleCreatorController {
                                 break;
                         }
                         endChangeOffset--;
-                        //System.out.println("TEXT CHANGED FROM:     \"" + oldValue.substring(startChangeOffset, oldLength - endChangeOffset) + "\"");
-                        //System.out.println("               TO:     \"" + newValue.substring(startChangeOffset, newLength - endChangeOffset) + "\"");
 
                         long startLine = newValue.substring(0, startChangeOffset).chars().filter(ch -> ch == '\n').count();
                         long addedLines = newValue.substring(startChangeOffset, newLength - endChangeOffset).chars().filter(ch -> ch == '\n').count();
                         long removedLines = oldValue.substring(startChangeOffset, oldLength - endChangeOffset).chars().filter(ch -> ch == '\n').count();
 
                         for (int i = 0; i < removedLines; i++) {
-                            codeLines.remove((int)startLine + 1);
+                            codeLines.remove((int) startLine + 1);
                         }
 
-                        if (shiftEnter) {
-                            System.out.println("MULTI-LINE BLOCK");
-                            codeLines.add((int) startLine + 1, codeLines.get((int)startLine));
-                            shiftEnter = false;
-                        } else {
-                            for (int i = 0; i < addedLines; i++) {
-                                codeLines.add((int) startLine + i, nextLine++);
-                            }
+                        for (int i = 0; i < addedLines; i++) {
+                            codeLines.add((int) startLine + i, nextLine++);
                         }
                     }
-
-                    /*System.out.println("Old Text:       " + oldValue);
-                    System.out.println("New Text:       " + newValue);
-                    System.out.println("Start index:    " + startChangeOffset);
-                    System.out.println("End offset:     " + endChangeOffset);
-                    System.out.println("Old end index:  " + (oldLength - endChangeOffset));
-                    System.out.println("New end index:  " + (newLength - endChangeOffset));
-                    System.out.println("Caret Position: " + SourceCodeEditor.getCaretPosition());
-                    System.out.println("Old value:      \"" + oldValue.substring(startChangeOffset, oldLength - endChangeOffset) + "\"");
-                    System.out.println("New value:      \"" + newValue.substring(startChangeOffset, newLength - endChangeOffset) + "\"");
-                    System.out.println();*/
 
                     printLineNums();
                 }
             }
         });
+
+        printLineNums();
     }
 
     /**
@@ -154,13 +121,11 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void SourceCodeKeyEvent(KeyEvent event) {
-        //System.out.println(event.getEventType() + "\t" + event.getCode() + "\t" + event.getCharacter() + "\t" + event.isControlDown() + "\t" + event.isShiftDown());
         if(event.getEventType() == KeyEvent.KEY_RELEASED && event.getCode() == KeyCode.ENTER && event.isShiftDown()){
             int index = SourceCodeEditor.getCaretPosition();
             shiftEnter = true;
 
             long startLine = SourceCodeEditor.getText(0,index).chars().filter(ch -> ch == '\n').count();
-            //System.out.println("MULTI-LINE BLOCK");
             codeLines.add((int) startLine + 1, codeLines.get((int)startLine));
 
             String newText = SourceCodeEditor.getText(0,index) + "\n" + SourceCodeEditor.getText().substring(index);
@@ -201,7 +166,6 @@ public class PuzzleCreatorController {
 
     @FXML
     public void KeyReleased(KeyEvent event) {
-        //System.out.println(event.getEventType() + "\t" + event.getCode() + "\t" + event.getCharacter() + "\t" + event.isControlDown() + "\t" + event.isShiftDown());
         if(event.getCode() == KeyCode.ENTER && MCAnswerSelectedIndex != -1){
             MCAnswersList.getItems().add(MCAnswerSelectedIndex + 1,"New Answer");
         }
@@ -214,19 +178,15 @@ public class PuzzleCreatorController {
 
     private void printLineNums(){
         int lineNum = 1;
-        String[] lines = SourceCodeEditor.getText().split("\n");
-        System.out.println(lineNum++ + "\t" + lines[0]);
+        String codeColumns = "" + lineNum++;
         for(int i = 1; i < codeLines.size(); i++) {
             if (codeLines.get(i) == codeLines.get(i - 1)) {
-                System.out.println("-\t" + lines[i]);
-            }
-            else if(i >= lines.length){ //Some weirdness with trailing newlines
-                System.out.println(lineNum++);
+                codeColumns += "\n-";
             }
             else {
-                System.out.println(lineNum++ + "\t" + lines[i]);
+                codeColumns += "\n" + lineNum++;
             }
         }
-        System.out.println();
+        SourceCodeBlocks.setText(codeColumns);
     }
 }
