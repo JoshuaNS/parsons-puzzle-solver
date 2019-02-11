@@ -34,6 +34,17 @@ public abstract class Puzzle {
     private int numAttempts = 0;
 
     /**
+     * Puzzle constructor for creating a new puzzle using the creator
+     * @param name
+     */
+    public Puzzle(String name, int index, PuzzleType type){
+        this.name = name;
+        this.index = index;
+        this.type = type;
+        this.setTabWidth(4);
+    }
+
+    /**
      * Puzzle constructor which takes the UML data as an input and converts it to a puzzle object
      * @param puzzleXML
      */
@@ -224,6 +235,16 @@ public abstract class Puzzle {
     public void resetAttempts(){
         this.setNumAttempts(0);
     }
+
+    /**
+     * Returns true if the puzzle is solvable, i.e. has enough information to allow a user to solve it
+     * This is so that we don't allow a puzzle to be opened in the solver if it is not solvable
+     * @return isSolvable
+     */
+    public boolean isSolvable(){
+        return (getLines() != null && getSolutionSet() != null && getType() != null);
+    }
+
     public String getName() {
         return name;
     }

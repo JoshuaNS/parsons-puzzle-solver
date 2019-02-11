@@ -14,6 +14,15 @@ import java.util.*;
  */
 public class MultipleChoicePuzzle extends Puzzle {
     List<List<Block>> falseAnswers;
+
+    /**
+     * Puzzle constructor for creating a new puzzle using the creator
+     * @param name
+     */
+    public MultipleChoicePuzzle(String name, int index){
+        super(name, index, PuzzleType.MC);
+    }
+
     /**
      * Constructor which takes in a puzzle xml object
      * Sets the solution which is the list of blocks that have associated distractors

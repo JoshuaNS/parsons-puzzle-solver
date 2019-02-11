@@ -15,6 +15,14 @@ import java.util.List;
 public class DragNDropPuzzle extends Puzzle {
 
     /**
+     * Puzzle constructor for creating a new puzzle using the creator
+     * @param name
+     */
+    public DragNDropPuzzle(String name, int index){
+        super(name, index, PuzzleType.DnD);
+    }
+
+    /**
      * Constructor which takes puzzle uml data as input
      * Sets the DnD solution set from the solution lines
      *
