@@ -169,7 +169,9 @@ public class PuzzlePaneController {
      * Opens the puzzle creator
      */
     @FXML
-    public void openPuzzleCreator(ActionEvent event){ openPuzzleCreator();}
+    public void openPuzzleCreator(ActionEvent event) {
+        openPuzzleCreator();
+    }
 
     /**
      * Opens the puzzle select for the selected puzzle set
@@ -233,6 +235,11 @@ public class PuzzlePaneController {
             newView = loader.load();
             controller = loader.getController();
             controller.setRootController(this);
+
+            //Temporary until proper puzzle set creation handled
+            PuzzleCreator puzzleCreator = new PuzzleCreator();
+            puzzleCreator.createNewSet("Test Set");
+            controller.setPuzzleCreator(puzzleCreator);
         } catch (IOException e) {
             System.err.println("PuzzleCreator could not be loaded.");
             return;

@@ -363,6 +363,17 @@ public abstract class Puzzle {
 
 }
 
-enum PuzzleType{
-    DnD, MC, FiB;
+enum PuzzleType {
+    DnD("Drag and Drop"), MC("Multiple Choice"), FiB("Fill in the Blanks");
+
+    private String text;
+
+    PuzzleType(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }
