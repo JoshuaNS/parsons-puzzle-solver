@@ -238,8 +238,12 @@ public class PuzzlePaneController {
 
             //Temporary until proper puzzle set creation handled
             PuzzleCreator puzzleCreator = new PuzzleCreator();
-            puzzleCreator.createNewSet("Test Set");
-            controller.setPuzzleCreator(puzzleCreator);
+            //puzzleCreator.createNewSet("Test Set");
+            File f = new File("testfiles/puzzlesamp.xml");
+            setPuzzleSet(f);
+            puzzleCreator.openSet(currentPuzzleSet);
+            puzzleCreator.openPuzzle(1);
+            controller.setPuzzleCreator(puzzleCreator,false);
         } catch (IOException e) {
             System.err.println("PuzzleCreator could not be loaded.");
             return;

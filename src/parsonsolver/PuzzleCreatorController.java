@@ -25,7 +25,11 @@ public class PuzzleCreatorController {
     private int nextLine = 1;
     private List<Integer> codeLines = new ArrayList<>();
     private List<Integer> distractorLines = new ArrayList<>();
-    private boolean shiftEnter = false;
+
+    //Flags
+    private boolean shiftEnter = false; //Set during a shift-enter edit
+    private boolean isNewPuzzle = false; //Set if the puzzle is new, and must be created before saving
+    private boolean unsavedChanges = false; //Set if unsaved changes exist in the puzzle
 
     //PUZZLE DEFINITIONS
     @FXML
@@ -84,6 +88,13 @@ public class PuzzleCreatorController {
         SourceCodeEditor.textProperty().addListener(this::SourceCodeChanged);
         DistractorEditor.textProperty().addListener(this::DistractorChanged);
 
+        ProblemName.textProperty().addListener(this::PuzzlePropertyTextChanged);
+        ProblemDescription.textProperty().addListener(this::PuzzlePropertyTextChanged);
+        Language.textProperty().addListener(this::PuzzlePropertyTextChanged);
+        SourceCodeEditor.textProperty().addListener(this::PuzzlePropertyTextChanged);
+        DistractorEditor.textProperty().addListener(this::PuzzlePropertyTextChanged);
+        ProblemName.textProperty().addListener(this::PuzzlePropertyTextChanged);
+
         SetSourceCodeLines();
         SetDistractorLines();
     }
@@ -101,13 +112,86 @@ public class PuzzleCreatorController {
      * Sets the puzzle creator instance
      *
      * @param creator The PuzzleCreator instance
+     * @param isNewPuzzle Set true if it is a new puzzle, false is editing puzzle already in set
      */
-    public void setPuzzleCreator(PuzzleCreator creator) {
+    public void setPuzzleCreator(PuzzleCreator creator, boolean isNewPuzzle) {
         puzzleCreator = creator;
+        this.isNewPuzzle = isNewPuzzle;
 
         PuzzleSet currentSet = puzzleCreator.getCurrentSet();
         if (currentSet != null) {
             HeaderText.setText("Editing PuzzleSet \"" + currentSet.getName() + "\"");
+
+            if(!isNewPuzzle){
+                loadCurrentPuzzle();
+            }
+        }
+    }
+
+    private void loadCurrentPuzzle(){
+        if(puzzleCreator != null && puzzleCreator.getCurrentSet() != null){
+            Puzzle currentPuzzle = puzzleCreator.getCurrentPuzzle();
+            if(currentPuzzle != null){
+                ProblemName.setText(currentPuzzle.getName());
+                ProblemDescription.setText(currentPuzzle.getDescription());
+                Language.setText(currentPuzzle.getLanguage());
+                RequireIndentation.setSelected(currentPuzzle.isIndentRequired());
+                ProblemType.setValue(currentPuzzle.getType());
+
+                //Puzzle Lines
+                if(currentPuzzle.getLines().size() > 0) {
+                    List<Block> lines  = currentPuzzle.getLines();
+                    List<Integer> newColumns = new ArrayList<>();
+                    String newText = "";
+
+                    for(int i = 0; i < lines.size(); i++) {
+                        if (i != 0)
+                            newText = newText.concat("\n");
+
+                        if (lines.get(i).getTab() > 0)
+                            newText = newText.concat(new String(new char[lines.get(i).getTab()]).replace("\0", "\t")).concat(lines.get(i).getLines());
+                        else
+                            newText = newText.concat(lines.get(i).getLines());
+
+                        long newlines = lines.get(i).getLines().chars().filter(ch -> ch == '\n').count();
+                        int nextNum = nextLine++;
+                        for (long j = 0; j <= newlines; j++) {
+                            newColumns.add(nextNum);
+                        }
+                    }
+
+                    SourceCodeEditor.setText(newText);
+                    codeLines = newColumns;
+                    SetSourceCodeLines();
+                }
+
+                //Distractors
+                if(currentPuzzle.getDistractors().size() > 0) {
+                    List<Block> lines  = currentPuzzle.getDistractors();
+                    List<Integer> newColumns = new ArrayList<>();
+                    String newText = "";
+
+                    for(int i = 0; i < lines.size(); i++) {
+                        if (i != 0)
+                            newText = newText.concat("\n");
+
+                        if (lines.get(i).getTab() > 0)
+                            newText = newText.concat(new String(new char[lines.get(i).getTab()]).replace("\0", "\t")).concat(lines.get(i).getLines());
+                        else
+                            newText = newText.concat(lines.get(i).getLines());
+
+                        long newlines = lines.get(i).getLines().chars().filter(ch -> ch == '\n').count();
+                        int nextNum = nextLine++;
+                        for (long j = 0; j <= newlines; j++) {
+                            newColumns.add(nextNum);
+                        }
+                    }
+
+                    DistractorEditor.setText(newText);
+                    distractorLines = newColumns;
+                    SetDistractorLines();
+                }
+            }
         }
     }
 
@@ -120,7 +204,9 @@ public class PuzzleCreatorController {
      */
     public void SourceCodeChanged(ObservableValue<? extends String> observable,
                                   String oldValue, String newValue) {
-        if (shiftEnter) { //Shift-enter change propagates to here
+        //Shift-enter change propagates to here
+        //Already handled by the method triggering this event
+        if (shiftEnter) {
             shiftEnter = false;
             return;
         }
@@ -180,7 +266,9 @@ public class PuzzleCreatorController {
      */
     public void DistractorChanged(ObservableValue<? extends String> observable,
                                   String oldValue, String newValue) {
-        if (shiftEnter) { //Shift-enter change propagates to here
+        //Shift-enter change propagates to here
+        //Already handled by the method triggering this event
+        if (shiftEnter) {
             shiftEnter = false;
             return;
         }
@@ -229,6 +317,29 @@ public class PuzzleCreatorController {
 
             SetDistractorLines();
         }
+    }
+
+    /**
+     * Sets the unsaved changes flag to indicate and edit has occurred
+     *
+     * @param observable The {@code ObservableValue} which value changed
+     * @param oldValue   The old value
+     * @param newValue   The new value
+     */
+    @FXML
+    public void PuzzlePropertyTextChanged(ObservableValue<? extends String> observable,
+                                          String oldValue, String newValue) {
+        unsavedChanges = true;
+    }
+
+    /**
+     * Sets the unsaved changes flag to indicate and edit has occurred
+     *
+     * @param event The triggered event
+     */
+    @FXML
+    public void PuzzlePropertyChanged(ActionEvent event) {
+        unsavedChanges = true;
     }
 
     /**
@@ -286,17 +397,7 @@ public class PuzzleCreatorController {
         MCAnswersList.getItems().set(event.getIndex(), event.getNewValue());
         //Convert new text to usable output here?
 
-        MCAnswerEdit(event);
-    }
-
-    /**
-     * Debugging event for editing of the MC Answers list
-     *
-     * @param event EditEvent from the ListView
-     */
-    @FXML
-    public void MCAnswerEdit(ListView.EditEvent<String> event) {
-        System.out.println(event.getEventType() + "\t" + event.getIndex() + "\t" + event.getNewValue());
+        unsavedChanges = true;
     }
 
     /**
@@ -307,6 +408,7 @@ public class PuzzleCreatorController {
     @FXML
     public void AddMCAnswer(ActionEvent event) {
         MCAnswersList.getItems().add("New Answer");
+        unsavedChanges = true;
     }
 
     /**
@@ -317,6 +419,7 @@ public class PuzzleCreatorController {
     @FXML
     public void RemoveMCAnswer(ActionEvent event) {
         MCAnswersList.getItems().remove(MCAnswersList.getItems().size() - 1);
+        unsavedChanges = true;
     }
 
     /**

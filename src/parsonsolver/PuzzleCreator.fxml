@@ -122,7 +122,7 @@
                   <RowConstraints vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <ListView fx:id="MCAnswersList" editable="true" onEditCancel="#MCAnswerEdit" onEditCommit="#CommitMCAnswerEdit" onEditStart="#MCAnswerEdit" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="3" />
+                  <ListView fx:id="MCAnswersList" editable="true" onEditCommit="#CommitMCAnswerEdit" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="3" />
                   <Button maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#AddMCAnswer" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" top="5.0" />
@@ -177,14 +177,14 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <CheckBox fx:id="RequireIndentation" mnemonicParsing="false" text="Require exact indentation?" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <CheckBox fx:id="RequireIndentation" mnemonicParsing="false" onAction="#PuzzlePropertyChanged" text="Require exact indentation?" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </CheckBox>
                   <Label text="Language:" GridPane.rowIndex="1" />
                   <Label text="Problem Type:" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="ProblemType" prefWidth="150.0" promptText="Select Puzzle Type" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <ComboBox fx:id="ProblemType" onAction="#PuzzlePropertyChanged" prefWidth="150.0" promptText="Select Puzzle Type" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
