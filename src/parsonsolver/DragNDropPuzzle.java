@@ -1,6 +1,8 @@
 package parsonsolver;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,5 +61,10 @@ public class DragNDropPuzzle extends Puzzle {
         List<List<Block>> arr = new ArrayList<>();
         arr.add(this.getBlocksSet());
         return arr;
+    }
+
+    @Override
+    protected List<Node> exportExtraToXML(Document document) {
+        return null;
     }
 }

@@ -100,4 +100,16 @@ class BlockTest {
         Block b = new Block("1", "");
         assertEquals("", b.getLines());
     }
+
+    @Test
+    void getLinesTabbed() {
+        String blockText = "for i in range(100):" +
+                "\tfor j in range(10):" +
+                "\t\tprint(i * j)" +
+                "print ('QWERTY')";
+        Block b = new Block("1", blockText);
+
+        assertEquals(blockText, b.getLinesTabbed());
+
+    }
 }

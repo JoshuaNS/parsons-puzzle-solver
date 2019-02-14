@@ -1,18 +1,24 @@
 package parsonsolver;
 
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,8 +32,8 @@ import java.util.stream.IntStream;
  */
 public class PuzzleSet {
     private String name;
-    private boolean sequentialCompletion;
-    private boolean randomOrder;
+    private Boolean sequentialCompletion;
+    private Boolean randomOrder;
     private ArrayList<Puzzle> puzzles;
 
     /**
@@ -169,6 +175,43 @@ public class PuzzleSet {
                 results.add("\tElapsed Time: " + (time / 3600) + " hour(s), " + (time / 60 % 60) + " minute(s), " + (time % 60) + " second(s)\n");
         }
         return results;
+    }
+
+    public void exportToXML(String path) throws Exception {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = null;
+        Document document = null;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            document = documentBuilder.newDocument();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        Element root = document.createElement("puzzleset");
+
+        Element setNameN = document.createElement("setName");
+        setNameN.appendChild(document.createTextNode(getName()));
+
+        Element randomOrderN = document.createElement("randomOrder");
+        randomOrderN.appendChild(document.createTextNode(randomOrder.toString()));
+
+        Element sequentialCompN = document.createElement("sequentialComp");
+        sequentialCompN.appendChild(document.createTextNode(sequentialCompletion.toString()));
+        root.appendChild(setNameN);
+        root.appendChild(randomOrderN);
+        root.appendChild(sequentialCompN);
+
+        for (Puzzle p : puzzles) {
+            root.appendChild(p.exportToXML(document));
+        }
+        document.appendChild(root);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        DOMSource source = new DOMSource(document);
+        File outFile = new File(path);
+        StreamResult target = new StreamResult(outFile);
+        transformer.transform(source,target);
     }
 
     /**
