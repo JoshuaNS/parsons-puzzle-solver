@@ -69,24 +69,25 @@ class DragNDropPuzzleTest {
     @Test
     void checkSolutionDragNDrop() {
         List<Block> providedSolution = new ArrayList<>();
-        providedSolution.add(new Block("1","for num in range(1, 21):", p));
-        providedSolution.add(new Block("2","if num % 3 == 0 and num % 5 == 0:", p));
-        providedSolution.add(new Block("3", "print('FizzBuzz')", p));
-        providedSolution.add(new Block("4", "elif num % 3 == 0:", p));
-        providedSolution.add(new Block("5", "print('Fizz')", p));
-        providedSolution.add(new Block("6", "elif num % 5 == 0:", p));
-        providedSolution.add(new Block("7", "print('Buzz')", p));
-        providedSolution.add(new Block("8", "else:", p));
-        providedSolution.add(new Block("9", "print(num)", p));
+        providedSolution.add(new Block("1", "for num in range(1, 21):", 0, p));
+        providedSolution.add(new Block("2", "if num % 3 == 0 and num % 5 == 0:", 1, p));
+        providedSolution.add(new Block("3", "print('FizzBuzz')", 1, p));
+        providedSolution.add(new Block("4", "elif num % 3 == 0:", 1, p));
+        providedSolution.add(new Block("5", "print('Fizz')", 2, p));
+        providedSolution.add(new Block("6", "elif num % 5 == 0:", 1, p));
+        providedSolution.add(new Block("7", "print('Buzz')", 2, p));
+        providedSolution.add(new Block("8", "else:", 1, p));
+        providedSolution.add(new Block("9", "print(num)", 2, p));
 
-        assertTrue((boolean) p.checkSolution(providedSolution));
+        assertNotEquals(true, p.checkSolution(providedSolution));
     }
 
     /**
      * Check various puzzle feedback
      */
     @Test
-    void checkFeedback() throws InterruptedException{
+    void checkFeedback() throws InterruptedException {
+        p.setIndentRequired(false);
         List<Block> providedSolution = p.getSolutionSet();
 
         long startTime = System.currentTimeMillis();
@@ -121,7 +122,8 @@ class DragNDropPuzzleTest {
         Thread.sleep(50); //wait because we want to ensure that the elapsed time is not 0
         assertEquals(0, p.getNumAttempts());
         assertFalse(p.isCompleted());
-        assertFalse((boolean) p.checkSolution(providedSolution));
+        //assertFalse((boolean) p.checkSolution(providedSolution));
+        assertNotEquals(true, p.checkSolution(providedSolution));
         assertEquals(1, p.getNumAttempts());
         assertFalse(p.isCompleted());
         p.endPuzzle();
