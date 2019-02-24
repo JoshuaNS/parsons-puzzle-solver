@@ -27,7 +27,7 @@
          </BorderPane.margin></Label>
    </top>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="15.0" layoutY="15.0" text="Problem Name">
                <font>
@@ -100,7 +100,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </VBox.margin>
             </HBox>
-            <Label text="Incorrect Multiple Choice Answers">
+            <Label fx:id="MCAnswerHeader" text="Incorrect Multiple Choice Answers">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -108,7 +108,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <GridPane>
+            <GridPane fx:id="MCAnswerGrid">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </VBox.margin>
@@ -184,7 +184,7 @@
                   </CheckBox>
                   <Label text="Language:" GridPane.rowIndex="1" />
                   <Label text="Problem Type:" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="ProblemType" onAction="#PuzzlePropertyChanged" prefWidth="150.0" promptText="Select Puzzle Type" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <ComboBox fx:id="ProblemType" onAction="#PuzzleTypePropertyChanged" prefWidth="150.0" promptText="Select Puzzle Type" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>

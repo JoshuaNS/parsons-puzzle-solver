@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,12 @@ public class PuzzleCreatorController {
 
     @FXML
     private ListView<String> MCAnswersList;
+
+    @FXML
+    private GridPane MCAnswerGrid;
+
+    @FXML
+    private Label MCAnswerHeader;
 
     /**
      * Initialize the Creator screen
@@ -137,6 +144,7 @@ public class PuzzleCreatorController {
                 Language.setText(currentPuzzle.getLanguage());
                 RequireIndentation.setSelected(currentPuzzle.isIndentRequired());
                 ProblemType.setValue(currentPuzzle.getType());
+                PuzzleTypePropertyChanged(new ActionEvent()); //Trigger the MC answer display update
 
                 //Puzzle Lines
                 if(currentPuzzle.getLines().size() > 0) {
@@ -343,6 +351,27 @@ public class PuzzleCreatorController {
     }
 
     /**
+     * Sets the unsaved changes flag to indicate and edit has occurred
+     *
+     * @param event The triggered event
+     */
+    @FXML
+    public void PuzzleTypePropertyChanged(ActionEvent event) {
+        if (ProblemType.getValue() == PuzzleType.DnD) {
+            MCAnswerGrid.setVisible(false);
+            MCAnswerHeader.setVisible(false);
+            MCAnswerGrid.setManaged(false);
+            MCAnswerHeader.setManaged(false);
+        } else {
+            MCAnswerGrid.setVisible(true);
+            MCAnswerHeader.setVisible(true);
+            MCAnswerGrid.setManaged(true);
+            MCAnswerHeader.setManaged(true);
+        }
+        PuzzlePropertyChanged(event);
+    }
+
+    /**
      * Get key events in the source code editor, and sets flags as needed
      *
      * @param event
@@ -429,7 +458,47 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void SavePuzzle(ActionEvent event) {
+        if (puzzleCreator != null && puzzleCreator.getCurrentSet() != null) {
+            Puzzle currentPuzzle = puzzleCreator.getCurrentPuzzle();
+            if (currentPuzzle != null) {
+                currentPuzzle.setName(ProblemName.getText());
+                currentPuzzle.setDescription(ProblemDescription.getText());
+                currentPuzzle.setLanguage(Language.getText());
+                currentPuzzle.setIndentRequired(RequireIndentation.isSelected());
+                currentPuzzle.setType(ProblemType.getValue());
 
+                //Create code blocks
+                String currentBlock = "";
+                List<String> blockStrings = new ArrayList<>();
+                String[] lines = SourceCodeEditor.getText().split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    currentBlock = currentBlock.concat(lines[i]);
+
+                    if (i != lines.length - 1 && codeLines.get(i) == codeLines.get(i + 1)) {
+                        currentBlock = currentBlock.concat("\n");
+                    } else {
+                        blockStrings.add(currentBlock);
+                        currentBlock = "";
+                    }
+                }
+                currentPuzzle.setLines(puzzleCreator.convertLines(blockStrings, false));
+
+                currentBlock = "";
+                blockStrings = new ArrayList<>();
+                lines = DistractorEditor.getText().split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    currentBlock = currentBlock.concat(lines[i]);
+
+                    if (i != lines.length - 1 && distractorLines.get(i) == distractorLines.get(i + 1)) {
+                        currentBlock = currentBlock.concat("\n");
+                    } else {
+                        blockStrings.add(currentBlock);
+                        currentBlock = "";
+                    }
+                }
+                currentPuzzle.setLines(puzzleCreator.convertLines(blockStrings, true));
+            }
+        }
     }
 
     /**
