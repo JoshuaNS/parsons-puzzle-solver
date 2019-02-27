@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public class PuzzlePaneController {
     private PuzzleSet currentPuzzleSet;
-    private PuzzleCreator currentPuzzleCreator;
+    private PuzzleCreator currentPuzzleCreator = new PuzzleCreator();
     private Pane currentView;
     private PuzzleScreenController currentPuzzleSolver = null;
 
@@ -237,14 +237,14 @@ public class PuzzlePaneController {
             controller = loader.getController();
             controller.setRootController(this);
 
-            //Temporary until proper puzzle set creation handled
-            if (currentPuzzleCreator == null) {
-                currentPuzzleCreator = new PuzzleCreator();
+            //Temporary until proper puzzle set creation/loading added
+            if(currentPuzzleCreator.getCurrentSet() == null) {
+                //TODO: Close existing session when new set loaded
                 File f = new File("testfiles/puzzlesamp.xml");
                 currentPuzzleCreator.openSet(new PuzzleSet(f));
             }
 
-            controller.setPuzzleCreator(currentPuzzleCreator, false);
+            controller.setPuzzleCreator(currentPuzzleCreator);
             setCurrentView(newView);
         } catch (IOException e) {
             System.err.println("PuzzleCreator could not be loaded.");

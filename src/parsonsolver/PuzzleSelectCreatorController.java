@@ -1,8 +1,8 @@
 package parsonsolver;
 
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -26,6 +26,16 @@ public class PuzzleSelectCreatorController {
     }
 
     /**
+     * Opens the editor with a new puzzle
+     */
+    @FXML
+    public void addNewPuzzle(ActionEvent event){
+        if (rootController != null) {
+            rootController.openPuzzleEditor();
+        }
+    }
+
+    /**
      * Sets the root controller of the puzzle screen
      *
      * @param controller The PuzzlePane controller
@@ -38,9 +48,8 @@ public class PuzzleSelectCreatorController {
      * Sets the puzzle creator instance
      *
      * @param creator The PuzzleCreator instance
-     * @param isNewPuzzle Set true if it is a new puzzle, false is editing puzzle already in set
      */
-    public void setPuzzleCreator(PuzzleCreator creator, boolean isNewPuzzle) {
+    public void setPuzzleCreator(PuzzleCreator creator) {
         puzzleCreator = creator;
 
         PuzzleSet currentSet = puzzleCreator.getCurrentSet();

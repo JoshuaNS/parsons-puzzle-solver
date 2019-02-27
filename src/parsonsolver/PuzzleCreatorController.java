@@ -459,6 +459,10 @@ public class PuzzleCreatorController {
     @FXML
     public void SavePuzzle(ActionEvent event) {
         if (puzzleCreator != null && puzzleCreator.getCurrentSet() != null) {
+            if(isNewPuzzle){
+                puzzleCreator.createNewPuzzle(ProblemName.getText(),ProblemType.getValue());
+            }
+
             Puzzle currentPuzzle = puzzleCreator.getCurrentPuzzle();
             if (currentPuzzle != null) {
                 currentPuzzle.setName(ProblemName.getText());
