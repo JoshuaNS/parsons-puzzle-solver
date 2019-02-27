@@ -228,11 +228,11 @@ public class PuzzlePaneController {
      */
     @FXML
     public void openPuzzleCreator() {
-        PuzzleCreatorController controller;
+        PuzzleSelectCreatorController controller;
         Pane newView;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "PuzzleCreator.fxml"));
+                    "PuzzleSelectCreator.fxml"));
             newView = loader.load();
             controller = loader.getController();
             controller.setRootController(this);
@@ -242,7 +242,6 @@ public class PuzzlePaneController {
                 currentPuzzleCreator = new PuzzleCreator();
                 File f = new File("testfiles/puzzlesamp.xml");
                 currentPuzzleCreator.openSet(new PuzzleSet(f));
-                currentPuzzleCreator.openPuzzle(1);
             }
 
             controller.setPuzzleCreator(currentPuzzleCreator, false);
@@ -252,6 +251,56 @@ public class PuzzlePaneController {
             return;
         } catch (InvalidInputFileException e) {
             //TODO Add feedback that input file was invalid.
+        }
+    }
+
+    /**
+     * Opens the puzzle creator for a selected puzzle
+     *
+     * @param index The index of the puzzle within the puzzle set
+     */
+    @FXML
+    public void openPuzzleEditor(int index) {
+        if (index > currentPuzzleCreator.getCurrentSet().getPuzzles().size() || index < 1) {
+            throw new IllegalArgumentException("Puzzle Creator Index: " + index);
+        }
+
+        PuzzleCreatorController controller;
+        Pane newView;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleCreator.fxml"));
+            newView = loader.load();
+            controller = loader.getController();
+            controller.setRootController(this);
+            currentPuzzleCreator.openPuzzle(index);
+            controller.setPuzzleCreator(currentPuzzleCreator, false);
+            setCurrentView(newView);
+        } catch (IOException e) {
+            System.err.println("PuzzleCreator could not be loaded.");
+            return;
+        }
+    }
+
+    /**
+     * Opens the puzzle creator for a new puzzle
+     */
+    @FXML
+    public void openPuzzleEditor() {
+        PuzzleCreatorController controller;
+        Pane newView;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleCreator.fxml"));
+            newView = loader.load();
+            controller = loader.getController();
+            controller.setRootController(this);
+            currentPuzzleCreator.closeEdit();
+            controller.setPuzzleCreator(currentPuzzleCreator, true);
+            setCurrentView(newView);
+        } catch (IOException e) {
+            System.err.println("PuzzleCreator could not be loaded.");
+            return;
         }
     }
 
