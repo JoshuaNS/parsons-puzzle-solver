@@ -22,6 +22,7 @@ import java.io.IOException;
  */
 public class PuzzlePaneController {
     private PuzzleSet currentPuzzleSet;
+    private PuzzleCreator currentPuzzleCreator;
     private Pane currentView;
     private PuzzleScreenController currentPuzzleSolver = null;
 
@@ -237,19 +238,21 @@ public class PuzzlePaneController {
             controller.setRootController(this);
 
             //Temporary until proper puzzle set creation handled
-            PuzzleCreator puzzleCreator = new PuzzleCreator();
-            //puzzleCreator.createNewSet("Test Set");
-            File f = new File("testfiles/puzzlesamp.xml");
-            setPuzzleSet(f);
-            puzzleCreator.openSet(currentPuzzleSet);
-            puzzleCreator.openPuzzle(1);
-            controller.setPuzzleCreator(puzzleCreator,false);
+            if (currentPuzzleCreator == null) {
+                currentPuzzleCreator = new PuzzleCreator();
+                File f = new File("testfiles/puzzlesamp.xml");
+                currentPuzzleCreator.openSet(new PuzzleSet(f));
+                currentPuzzleCreator.openPuzzle(1);
+            }
+
+            controller.setPuzzleCreator(currentPuzzleCreator, false);
+            setCurrentView(newView);
         } catch (IOException e) {
             System.err.println("PuzzleCreator could not be loaded.");
             return;
+        } catch (InvalidInputFileException e) {
+            //TODO Add feedback that input file was invalid.
         }
-
-        setCurrentView(newView);
     }
 
     public void setCurrentView(Pane newView) {

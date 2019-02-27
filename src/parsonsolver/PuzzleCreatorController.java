@@ -496,7 +496,7 @@ public class PuzzleCreatorController {
                         currentBlock = "";
                     }
                 }
-                currentPuzzle.setLines(puzzleCreator.convertLines(blockStrings, true));
+                currentPuzzle.setDistractors(puzzleCreator.convertLines(blockStrings, true));
             }
         }
     }
