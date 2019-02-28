@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -29,8 +30,13 @@ public class PuzzlePaneController {
     private static final boolean IS_TEST_MODE = true; //Enables demo options in GUI
     private static final boolean IS_TEACHER_MODE = true; //Enables teacher edition options (e.g. Puzzle Creator)
 
+    ///FXML COMPONENTS
+
     @FXML
     private MenuItem NavPuzzleSelect;
+
+    @FXML
+    private MenuItem NavPuzzleEditor;
 
     @FXML
     private VBox TitlePane;
@@ -38,21 +44,31 @@ public class PuzzlePaneController {
     @FXML
     private BorderPane PuzzlePane;
 
-    /**
-     * Selects a new PuzzleSet file to be used, and loads the file if valid.
-     *
-     * @param event The ActionEvent sent by PuzzleScreen
-     */
     @FXML
-    public void LoadPuzzleSet(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        File f = fileChooser.showOpenDialog(null);
+    private Button PuzzleSelectButton;
 
-        if (f != null && f.exists()) { //if null no file was selected
-            setPuzzleSet(f);
-        }
-    }
+    @FXML
+    private Button NewEditorButton;
+
+    @FXML
+    private Button LoadEditorButton;
+
+    @FXML
+    private Button PuzzleEditorButton;
+
+    @FXML
+    private Button PuzzleDemoButton;
+
+    @FXML
+    private Button CreatorDemoButton;
+
+    @FXML
+    private Separator EditorSeparator;
+
+    @FXML
+    private Separator DemoSeparator;
+
+    ///FXML METHODS
 
     /**
      * Initializes the puzzle screen.
@@ -62,21 +78,76 @@ public class PuzzlePaneController {
         currentView = TitlePane;
 
         //TEACHER MODE OPTIONS
-        if (IS_TEACHER_MODE) {
-            Button demoButton = new Button("Puzzle Creator");
-            demoButton.setOnAction(this::openPuzzleCreator);
-            TitlePane.getChildren().add(demoButton);
+        if (!IS_TEACHER_MODE) {
+            NavPuzzleEditor.setVisible(false);
+
+            EditorSeparator.setVisible(false);
+            NewEditorButton.setVisible(false);
+            LoadEditorButton.setVisible(false);
+            CreatorDemoButton.setVisible(false); //Will be hidden if either mode is false
+            EditorSeparator.setManaged(false);
+            NewEditorButton.setManaged(false);
+            LoadEditorButton.setManaged(false);
+            CreatorDemoButton.setManaged(false); //Will be hidden if either mode is false
         }
 
         //TEST MODE OPTIONS
-        if (IS_TEST_MODE) {
-            //Only allow demo if demo file exists
-            if (new File("testfiles/puzzlesamp.xml").exists()) {
-                Button demoButton = new Button("Puzzle Demo");
-                demoButton.setOnAction(this::LoadDemo);
-                TitlePane.getChildren().add(demoButton);
-            }
+        //Also validates that demo file exists
+        if (!IS_TEST_MODE || !new File("testfiles/puzzlesamp.xml").exists()) {
+            DemoSeparator.setVisible(false);
+            PuzzleDemoButton.setVisible(false);
+            CreatorDemoButton.setVisible(false); //Will be hidden if either mode is false
+            DemoSeparator.setManaged(false);
+            PuzzleDemoButton.setManaged(false);
+            CreatorDemoButton.setManaged(false); //Will be hidden if either mode is false
         }
+
+        PuzzleSelectButton.setVisible(false);
+        PuzzleEditorButton.setVisible(false);
+        PuzzleSelectButton.setManaged(false);
+        PuzzleEditorButton.setManaged(false);
+    }
+
+    /**
+     * Selects a new PuzzleSet file to be used, and loads the file if valid.
+     *
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
+    @FXML
+    public void LoadPuzzleSet(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Puzzle Set File");
+        File f = fileChooser.showOpenDialog(null);
+
+        if (f != null && f.exists()) { //if null no file was selected
+            setPuzzleSet(f);
+        }
+    }
+
+    /**
+     * Selects a new PuzzleSet file to be used by the editor, and loads the file if valid.
+     *
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
+    @FXML
+    public void LoadPuzzleCreatorSet(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Puzzle Set File");
+        File f = fileChooser.showOpenDialog(null);
+
+        if (f != null && f.exists()) { //if null no file was selected
+            setPuzzleCreatorSet(f);
+        }
+    }
+
+    /**
+     * Creates a new PuzzleSet to be used by the editor.
+     *
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
+    @FXML
+    public void NewPuzzleCreatorSet(ActionEvent event) {
+        setPuzzleCreatorSet();
     }
 
     /**
@@ -100,6 +171,11 @@ public class PuzzlePaneController {
         setPuzzleSet(f);
     }
 
+    /**
+     * Export the results of puzzle solving
+     *
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
     @FXML
     public void ExportResults(ActionEvent event) {
         if (currentPuzzleSet == null) {
@@ -119,34 +195,6 @@ public class PuzzlePaneController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads a new puzzle set from a file.
-     *
-     * @param f The file containing the new puzzle set.
-     */
-    private void setPuzzleSet(File f) {
-        try {
-            currentPuzzleSet = new PuzzleSet(f);
-
-            if (NavPuzzleSelect.isDisable()) {
-                NavPuzzleSelect.setDisable(false);
-                Button demoButton = new Button("Go to Puzzle Select");
-                demoButton.setOnAction(this::openPuzzleSelect);
-                TitlePane.getChildren().add(demoButton);
-            }
-
-            openPuzzleSelect();
-        } catch (InvalidInputFileException e) {
-            //TODO Add feedback that input file was invalid.
-        } catch (Exception e) {
-            System.err.println(e.toString());
-            System.err.println(e.getMessage());
-            for (StackTraceElement se : e.getStackTrace()) {
-                System.err.println(se.toString());
-            }
         }
     }
 
@@ -172,6 +220,105 @@ public class PuzzlePaneController {
     @FXML
     public void openPuzzleCreator(ActionEvent event) {
         openPuzzleCreator();
+    }
+
+    /**
+     * Opens the puzzle creator
+     */
+    @FXML
+    public void openPuzzleCreator() {
+        PuzzleSelectCreatorController controller;
+        Pane newView;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleSelectCreator.fxml"));
+            newView = loader.load();
+            controller = loader.getController();
+            controller.setRootController(this);
+
+            controller.setPuzzleCreator(currentPuzzleCreator);
+            setCurrentView(newView);
+        } catch (IOException e) {
+            System.err.println("PuzzleCreator could not be loaded.");
+            return;
+        }
+    }
+
+    /**
+     * Opens the puzzle creator for a selected puzzle
+     *
+     * @param index The index of the puzzle within the puzzle set
+     */
+    @FXML
+    public void openPuzzleEditor(int index) {
+        if (index > currentPuzzleCreator.getCurrentSet().getPuzzles().size() || index < 1) {
+            throw new IllegalArgumentException("Puzzle Creator Index: " + index);
+        }
+
+        PuzzleCreatorController controller;
+        Pane newView;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleCreator.fxml"));
+            newView = loader.load();
+            controller = loader.getController();
+            controller.setRootController(this);
+            currentPuzzleCreator.openPuzzle(index);
+            controller.setPuzzleCreator(currentPuzzleCreator, false);
+            setCurrentView(newView);
+        } catch (IOException e) {
+            System.err.println("PuzzleCreator could not be loaded.");
+            return;
+        }
+    }
+
+    /**
+     * Opens the puzzle creator for a new puzzle
+     */
+    @FXML
+    public void openPuzzleEditor() {
+        PuzzleCreatorController controller;
+        Pane newView;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "PuzzleCreator.fxml"));
+            newView = loader.load();
+            controller = loader.getController();
+            controller.setRootController(this);
+            controller.setPuzzleCreator(currentPuzzleCreator, true);
+            setCurrentView(newView);
+        } catch (IOException e) {
+            System.err.println("PuzzleCreator could not be loaded.");
+            return;
+        }
+    }
+
+    ///PUBLIC METHODS
+
+    /**
+     * Set the currently displayed view within the pane
+     *
+     * @param newView
+     */
+    public void setCurrentView(Pane newView) {
+        //Remove currently open view if applicable
+        if (currentView != null) {
+            //Leaving the puzzle solver
+            if (currentPuzzleSolver != null) {
+                currentPuzzleSolver.endPuzzle();
+                currentPuzzleSolver = null;
+            }
+            //Leaving the puzzle editor
+            else if(currentPuzzleCreator.getCurrentPuzzle() != null){
+                //TODO: Check for unsaved changes first, and prompt to cancel
+                currentPuzzleCreator.closeEdit();
+            }
+
+            PuzzlePane.getChildren().remove(currentView);
+        }
+
+        currentView = newView;
+        PuzzlePane.setCenter(currentView);
     }
 
     /**
@@ -223,99 +370,79 @@ public class PuzzlePaneController {
         currentPuzzleSolver = controller;
     }
 
+    ///PRIVATE METHODS
+
     /**
-     * Opens the puzzle creator
+     * Loads a new puzzle set from a file.
+     *
+     * @param f The file containing the new puzzle set.
      */
-    @FXML
-    public void openPuzzleCreator() {
-        PuzzleSelectCreatorController controller;
-        Pane newView;
+    private void setPuzzleSet(File f) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "PuzzleSelectCreator.fxml"));
-            newView = loader.load();
-            controller = loader.getController();
-            controller.setRootController(this);
+            currentPuzzleSet = new PuzzleSet(f);
 
-            //Temporary until proper puzzle set creation/loading added
-            if(currentPuzzleCreator.getCurrentSet() == null) {
-                //TODO: Close existing session when new set loaded
-                File f = new File("testfiles/puzzlesamp.xml");
-                currentPuzzleCreator.openSet(new PuzzleSet(f));
-            }
+            NavPuzzleSelect.setDisable(false);
+            PuzzleSelectButton.setVisible(true);
+            PuzzleSelectButton.setManaged(true);
 
-            controller.setPuzzleCreator(currentPuzzleCreator);
-            setCurrentView(newView);
-        } catch (IOException e) {
-            System.err.println("PuzzleCreator could not be loaded.");
-            return;
+            openPuzzleSelect();
         } catch (InvalidInputFileException e) {
             //TODO Add feedback that input file was invalid.
-        }
-    }
-
-    /**
-     * Opens the puzzle creator for a selected puzzle
-     *
-     * @param index The index of the puzzle within the puzzle set
-     */
-    @FXML
-    public void openPuzzleEditor(int index) {
-        if (index > currentPuzzleCreator.getCurrentSet().getPuzzles().size() || index < 1) {
-            throw new IllegalArgumentException("Puzzle Creator Index: " + index);
-        }
-
-        PuzzleCreatorController controller;
-        Pane newView;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "PuzzleCreator.fxml"));
-            newView = loader.load();
-            controller = loader.getController();
-            controller.setRootController(this);
-            currentPuzzleCreator.openPuzzle(index);
-            controller.setPuzzleCreator(currentPuzzleCreator, false);
-            setCurrentView(newView);
-        } catch (IOException e) {
-            System.err.println("PuzzleCreator could not be loaded.");
-            return;
-        }
-    }
-
-    /**
-     * Opens the puzzle creator for a new puzzle
-     */
-    @FXML
-    public void openPuzzleEditor() {
-        PuzzleCreatorController controller;
-        Pane newView;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "PuzzleCreator.fxml"));
-            newView = loader.load();
-            controller = loader.getController();
-            controller.setRootController(this);
-            currentPuzzleCreator.closeEdit();
-            controller.setPuzzleCreator(currentPuzzleCreator, true);
-            setCurrentView(newView);
-        } catch (IOException e) {
-            System.err.println("PuzzleCreator could not be loaded.");
-            return;
-        }
-    }
-
-    public void setCurrentView(Pane newView) {
-        //Remove currently open view if applicable
-        if (currentView != null) {
-            PuzzlePane.getChildren().remove(currentView);
-            if (currentPuzzleSolver != null) {
-                currentPuzzleSolver.endPuzzle();
-                currentPuzzleSolver = null;
+        } catch (Exception e) {
+            System.err.println(e.toString());
+            System.err.println(e.getMessage());
+            for (StackTraceElement se : e.getStackTrace()) {
+                System.err.println(se.toString());
             }
         }
+    }
 
-        currentView = newView;
-        PuzzlePane.setCenter(currentView);
+    /**
+     * Loads a new puzzle set into the editor.
+     */
+    private void setPuzzleCreatorSet() {
+        try {
+            currentPuzzleCreator.closeSession();
+            currentPuzzleCreator.createNewSet("");
+
+            NavPuzzleEditor.setDisable(false);
+            PuzzleEditorButton.setVisible(true);
+            PuzzleEditorButton.setManaged(true);
+
+            openPuzzleCreator();
+        } catch (Exception e) {
+            System.err.println(e.toString());
+            System.err.println(e.getMessage());
+            for (StackTraceElement se : e.getStackTrace()) {
+                System.err.println(se.toString());
+            }
+        }
+    }
+
+    /**
+     * Loads a puzzle set into the editor from a file.
+     *
+     * @param f The file containing the new puzzle set.
+     */
+    private void setPuzzleCreatorSet(File f) {
+        try {
+            currentPuzzleCreator.closeSession();
+            currentPuzzleCreator.setCurrentSet(new PuzzleSet(f));
+
+            NavPuzzleEditor.setDisable(false);
+            PuzzleEditorButton.setVisible(true);
+            PuzzleEditorButton.setManaged(true);
+
+            openPuzzleCreator();
+        } catch (InvalidInputFileException e) {
+            //TODO Add feedback that input file was invalid.
+        } catch (Exception e) {
+            System.err.println(e.toString());
+            System.err.println(e.getMessage());
+            for (StackTraceElement se : e.getStackTrace()) {
+                System.err.println(se.toString());
+            }
+        }
     }
 
     /**

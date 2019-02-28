@@ -125,6 +125,11 @@ public class PuzzleCreatorController {
         puzzleCreator = creator;
         this.isNewPuzzle = isNewPuzzle;
 
+        //TODO: Add some proper validation to puzzle creation
+        if(isNewPuzzle){
+            ProblemType.setValue(PuzzleType.DnD);
+        }
+
         PuzzleSet currentSet = puzzleCreator.getCurrentSet();
         if (currentSet != null) {
             HeaderText.setText("Editing PuzzleSet \"" + currentSet.getName() + "\"");
