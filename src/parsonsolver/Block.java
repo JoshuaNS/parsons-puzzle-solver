@@ -199,6 +199,17 @@ public class Block {
     public boolean hasAssociatedBlocks() {
         return associatedBlocks.size() != 0;
     }
+    
+    public String getLinesTabbed() {
+        StringBuilder sb = new StringBuilder();
+        for (String line : this.lines) {
+            for (int i = 0; i < this.getTab(); i++) {
+                sb.append('\t');
+            }
+            sb.append(line);
+        }
+        return sb.toString();
+    }
 
     //TODO: More elegant handling of the solution tabs.
     public int getSolutionTab() {

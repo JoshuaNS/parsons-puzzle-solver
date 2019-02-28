@@ -1,7 +1,10 @@
 package parsonsolver;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -359,6 +362,102 @@ public abstract class Puzzle {
 
     public void setNumAttempts(int numAttempts) {
         this.numAttempts = numAttempts;
+    }
+
+    protected abstract List<Node> exportExtraToXML(Document document) throws UnformedPuzzleException;
+
+    public Node exportToXML(Document document) throws UnformedPuzzleException{
+        Element root = document.createElement("puzzle");
+
+        // Export common puzzle stuff
+        Element nameN = document.createElement("name");
+        Element indexN = document.createElement("index");
+        Element langN = document.createElement("lang");
+        Element formatN = document.createElement("format");
+        Element indentN = document.createElement("indent");
+        Element descriptionN = document.createElement("description");
+
+        try {
+            nameN.appendChild(document.createTextNode(getName()));
+            root.appendChild(nameN);
+        } catch (NullPointerException e) {
+            nameN.appendChild(document.createTextNode("No Name"));
+        }
+
+        try {
+            indexN.appendChild(document.createTextNode(String.valueOf(getIndex())));
+            root.appendChild(indexN);
+        } catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No index");
+        }
+
+        try {
+            langN.appendChild(document.createTextNode(getLanguage()));
+            root.appendChild(langN);
+        } catch (NullPointerException e) {
+            // Lang is not necessary
+        }
+
+        try {
+            formatN.appendChild(document.createTextNode(getType().toString()));
+            root.appendChild(formatN);
+        } catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No format");
+        }
+
+        try {
+            indentN.appendChild(document.createTextNode(String.valueOf(isIndentRequired())));
+            root.appendChild(indentN);
+        } catch (NullPointerException e) {
+            // Indent not necessary;
+        }
+
+        try {
+            descriptionN.appendChild(document.createTextNode(getDescription()));
+            root.appendChild(descriptionN);
+        } catch (NullPointerException e) {
+            descriptionN.appendChild(document.createTextNode(""));
+        }
+
+        try {
+            // Solution
+            Node solutionN = document.createElement("solution");
+            for (Block b : getLines()) {
+                Element blockN = document.createElement("block");
+                blockN.setAttribute("id", b.getID());
+                //String escapedLines = StringEscapeUtils.escapeXml10(b.getLinesTabbed()); // Is this necessary now?
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
+                solutionN.appendChild(blockN);
+            }
+            root.appendChild(solutionN);
+        } catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No solution");
+        }
+
+        try {
+            // Distractors
+            Node distractorsN = document.createElement("distractors");
+
+            for (Block b : getDistractors()) {
+                Element blockN = document.createElement("block");
+                blockN.setAttribute("id", b.getID());
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
+                distractorsN.appendChild(blockN);
+            }
+            root.appendChild(distractorsN);
+        } catch (NullPointerException e) {
+            // Distractors not necessary
+        }
+
+        // Append the rest
+        List<Node> puzzleSpecificXML = this.exportExtraToXML(document);
+
+        if (puzzleSpecificXML != null) {
+            for (Node n : puzzleSpecificXML) {
+                root.appendChild(n);
+            }
+        }
+        return root;
     }
 
 }

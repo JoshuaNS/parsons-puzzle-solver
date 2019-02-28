@@ -1,6 +1,8 @@
 package parsonsolver;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.*;
@@ -94,5 +96,31 @@ public class MultipleChoicePuzzle extends Puzzle {
 	    choices.addAll(falseAnswers);
 	    Collections.shuffle(choices);
         return choices;
+    }
+
+    @Override
+    protected List<Node> exportExtraToXML(Document document) throws UnformedPuzzleException{
+        // False answers
+        Element root = document.createElement("falseAnswers");
+
+        try {
+            for (List<Block> answer : falseAnswers) {
+                Element answerN = document.createElement("answer");
+                root.appendChild(answerN);
+
+                for (Block b : answer) {
+                    Element idN = document.createElement("id");
+                    idN.appendChild(document.createTextNode(b.getID()));
+                    answerN.appendChild(idN);
+                }
+            }
+
+            ArrayList<Node> lst = new ArrayList<>();
+            lst.add(root);
+            return lst;
+        }
+        catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No falseAnswers");
+        }
     }
 }

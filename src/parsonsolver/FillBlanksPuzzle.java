@@ -1,6 +1,8 @@
 package parsonsolver;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import java.util.*;
 
@@ -111,6 +113,11 @@ public class FillBlanksPuzzle extends Puzzle {
         }
         Collections.shuffle(answers);
         return answers;
+    }
+
+    @Override
+    protected List<Node> exportExtraToXML(Document document) {
+        return null;
     }
 
 }
