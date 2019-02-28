@@ -5,6 +5,7 @@ import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -281,5 +282,14 @@ class PuzzleSetTest {
         }
 
         assertArrayEquals(lines1, lines2);
+    }
+
+    @Test
+    void exportBadPuzzle() throws ParserConfigurationException {
+        Puzzle p = new DragNDropPuzzle("BadPuzzle", 3); // Puzzle with no solutions
+        DocumentBuilder factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document d = factory.newDocument();
+
+        assertThrows(UnformedPuzzleException.class, ()-> p.exportToXML(d));
     }
 }

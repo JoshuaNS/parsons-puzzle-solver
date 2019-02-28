@@ -8,9 +8,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
@@ -177,7 +175,12 @@ public class PuzzleSet {
         return results;
     }
 
-    public void exportToXML(String path) throws Exception {
+    /**
+     * Exports a puzzle set to a .xml file
+     * @param path Path to output the puzzle file to.
+     * @throws UnformedPuzzleException Throws this exception if the puzzle cannot be exported as a valid puzzle
+     */
+    public void exportToXML(String path) throws UnformedPuzzleException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
         Document document = null;
@@ -206,12 +209,17 @@ public class PuzzleSet {
             root.appendChild(p.exportToXML(document));
         }
         document.appendChild(root);
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        DOMSource source = new DOMSource(document);
-        File outFile = new File(path);
-        StreamResult target = new StreamResult(outFile);
-        transformer.transform(source,target);
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(document);
+            File outFile = new File(path);
+            StreamResult target = new StreamResult(outFile);
+            transformer.transform(source,target);
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

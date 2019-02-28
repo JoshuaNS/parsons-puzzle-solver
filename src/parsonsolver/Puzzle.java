@@ -364,55 +364,93 @@ public abstract class Puzzle {
         this.numAttempts = numAttempts;
     }
 
-    protected abstract List<Node> exportExtraToXML(Document document);
+    protected abstract List<Node> exportExtraToXML(Document document) throws UnformedPuzzleException;
 
-    public Node exportToXML(Document document) {
+    public Node exportToXML(Document document) throws UnformedPuzzleException{
         Element root = document.createElement("puzzle");
 
         // Export common puzzle stuff
         Element nameN = document.createElement("name");
-        nameN.appendChild(document.createTextNode(getName()));
         Element indexN = document.createElement("index");
-        indexN.appendChild(document.createTextNode(String.valueOf(getIndex())));
         Element langN = document.createElement("lang");
-        langN.appendChild(document.createTextNode(getLanguage()));
         Element formatN = document.createElement("format");
-        formatN.appendChild(document.createTextNode(getType().toString()));
         Element indentN = document.createElement("indent");
-        indentN.appendChild(document.createTextNode(String.valueOf(isIndentRequired())));
         Element descriptionN = document.createElement("description");
-        descriptionN.appendChild(document.createTextNode(getDescription()));
 
-        // Solution
-        Node solutionN = document.createElement("solution");
-        for (Block b : getLines()) {
-            Element blockN = document.createElement("block");
-            blockN.setAttribute("id", b.getID());
-            //String escapedLines = StringEscapeUtils.escapeXml10(b.getLinesTabbed()); // Is this necessary now?
-            blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
-            solutionN.appendChild(blockN);
+        try {
+            nameN.appendChild(document.createTextNode(getName()));
+            root.appendChild(nameN);
+        } catch (NullPointerException e) {
+            nameN.appendChild(document.createTextNode("No Name"));
         }
-        // Distractors
-        Node distractorsN = document.createElement("distractors");
 
-        for (Block b : getDistractors()) {
-            Element blockN = document.createElement("block");
-            blockN.setAttribute("id", b.getID());
-            blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
-            distractorsN.appendChild(blockN);
+        try {
+            indexN.appendChild(document.createTextNode(String.valueOf(getIndex())));
+            root.appendChild(indexN);
+        } catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No index");
         }
+
+        try {
+            langN.appendChild(document.createTextNode(getLanguage()));
+            root.appendChild(langN);
+        } catch (NullPointerException e) {
+            // Lang is not necessary
+        }
+
+        try {
+            formatN.appendChild(document.createTextNode(getType().toString()));
+            root.appendChild(formatN);
+        } catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No format");
+        }
+
+        try {
+            indentN.appendChild(document.createTextNode(String.valueOf(isIndentRequired())));
+            root.appendChild(indentN);
+        } catch (NullPointerException e) {
+            // Indent not necessary;
+        }
+
+        try {
+            descriptionN.appendChild(document.createTextNode(getDescription()));
+            root.appendChild(descriptionN);
+        } catch (NullPointerException e) {
+            descriptionN.appendChild(document.createTextNode(""));
+        }
+
+        try {
+            // Solution
+            Node solutionN = document.createElement("solution");
+            for (Block b : getLines()) {
+                Element blockN = document.createElement("block");
+                blockN.setAttribute("id", b.getID());
+                //String escapedLines = StringEscapeUtils.escapeXml10(b.getLinesTabbed()); // Is this necessary now?
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
+                solutionN.appendChild(blockN);
+            }
+            root.appendChild(solutionN);
+        } catch (NullPointerException e) {
+            throw new UnformedPuzzleException("No solution");
+        }
+
+        try {
+            // Distractors
+            Node distractorsN = document.createElement("distractors");
+
+            for (Block b : getDistractors()) {
+                Element blockN = document.createElement("block");
+                blockN.setAttribute("id", b.getID());
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
+                distractorsN.appendChild(blockN);
+            }
+            root.appendChild(distractorsN);
+        } catch (NullPointerException e) {
+            // Distractors not necessary
+        }
+
         // Append the rest
         List<Node> puzzleSpecificXML = this.exportExtraToXML(document);
-
-        root.appendChild(nameN);
-        root.appendChild(indexN);
-        root.appendChild(langN);
-        root.appendChild(formatN);
-        root.appendChild(indentN);
-        root.appendChild(descriptionN);
-        root.appendChild(solutionN);
-        root.appendChild(distractorsN);
-
 
         if (puzzleSpecificXML != null) {
             for (Node n : puzzleSpecificXML) {
