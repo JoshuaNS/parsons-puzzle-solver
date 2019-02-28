@@ -111,14 +111,30 @@ public class PuzzleScreenController {
         }
 
         Object result = currentPuzzle.checkSolution(answer);
-        if (result == null)
+        if (result == null) {
             FeedbackText.setText("Error: Invalid answer");
-        else if (result.equals(true)) {
+        } else if (result.equals(true)) {
             FeedbackText.setText("Solution is Correct!");
+            for (Label label : puzzleAnswerLabels) {
+                ((PuzzleLabel) label).setCurrentSyle(PuzzleLabel.DEFAULT_STYLE);
+            }
             currentPuzzle.endPuzzle();
             currentPuzzle.startPuzzle();
-        } else
+        } else if (result.equals(false))
             FeedbackText.setText("Incorrect Answer!");
+        else if (result instanceof boolean[]) { //should only trigger on DnD
+            boolean[] feedback = (boolean[]) result;
+            int correct = 0;
+            for (int i = 0; i < feedback.length; i++) {
+                if (feedback[i]) {
+                    ((PuzzleLabel) puzzleAnswerLabels.get(i)).setCurrentSyle(PuzzleLabel.DEFAULT_STYLE);
+                    correct++;
+                } else
+                    ((PuzzleLabel) puzzleAnswerLabels.get(i)).setCurrentSyle(PuzzleLabel.INCORRECT_STYLE);
+            }
+            FeedbackText.setText("Incorrect Answer! (" + correct + "/" + feedback.length + ")");
+        } else
+            FeedbackText.setText("Error: Invalid answer");
     }
 
     /**
@@ -282,7 +298,7 @@ public class PuzzleScreenController {
                 newAnswer.setTooltip(new Tooltip(generateMCAnswerText(i)));
                 newAnswer.setUserData(puzzleAnswers.get(i));
                 newAnswer.setToggleGroup(puzzleAnswerToggles);
-                newAnswer.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
+                newAnswer.setStyle(PuzzleLabel.DEFAULT_STYLE);
                 newAnswer.setPadding(labelPadding);
                 newAnswer.setMaxWidth(Double.MAX_VALUE);
                 SolutionGrid.add(newAnswer, 1, i);

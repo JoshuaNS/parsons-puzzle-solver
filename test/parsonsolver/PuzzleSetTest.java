@@ -107,23 +107,23 @@ class PuzzleSetTest {
         System.out.print("Puzzle loaded.\n\n");
         currentPuzz.startPuzzle();
 
-        if (currentPuzz.getType().equals(PuzzleType.DnD)){
+        if (currentPuzz.getType().equals(PuzzleType.DnD)) {
             System.out.print("Drag into the correct order:\n");
             List<Block> choices = currentPuzz.getChoices().get(0);
-            for (int i = 0; i < choices.size(); i++){
-                System.out.print(choices.get(i).getLines() +"\n");
+            for (int i = 0; i < choices.size(); i++) {
+                System.out.print(choices.get(i).getLines() + "\n");
             }
 
             List<Block> providedSolution = new ArrayList<>();
-            providedSolution.add(new Block("1","for num in range(1, 21):", currentPuzz));
-            providedSolution.add(new Block("2","if num % 3 == 0 and num % 5 == 0:", currentPuzz));
-            providedSolution.add(new Block("3","print('FizzBuzz')", currentPuzz));
-            providedSolution.add(new Block("4","elif num % 3 == 0:", currentPuzz));
-            providedSolution.add(new Block("5","print('Fizz')", currentPuzz));
-            providedSolution.add(new Block("6","elif num % 5 == 0:", currentPuzz));
-            providedSolution.add(new Block("7","print('Buzz')", currentPuzz));
-            providedSolution.add(new Block("8","else:", currentPuzz));
-            providedSolution.add(new Block("9","print(num)", currentPuzz));
+            providedSolution.add(new Block("1", "for num in range(1, 21):", 0, currentPuzz));
+            providedSolution.add(new Block("2", "if num % 3 == 0 and num % 5 == 0:", 1, currentPuzz));
+            providedSolution.add(new Block("3", "print('FizzBuzz')", 2, currentPuzz));
+            providedSolution.add(new Block("4", "elif num % 3 == 0:", 1, currentPuzz));
+            providedSolution.add(new Block("5", "print('Fizz')", 2, currentPuzz));
+            providedSolution.add(new Block("6", "elif num % 5 == 0:", 1, currentPuzz));
+            providedSolution.add(new Block("7", "print('Buzz')", 2, currentPuzz));
+            providedSolution.add(new Block("8", "else:", 1, currentPuzz));
+            providedSolution.add(new Block("9", "print(num)", 2, currentPuzz));
 
             System.out.print("\nChecking solution...\n");
             boolean result = (boolean) currentPuzz.checkSolution(providedSolution);
