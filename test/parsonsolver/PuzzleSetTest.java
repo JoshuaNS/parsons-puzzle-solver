@@ -1,9 +1,18 @@
 package parsonsolver;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 
-import java.awt.dnd.InvalidDnDOperationException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -229,5 +238,58 @@ class PuzzleSetTest {
         }
         input = 0;
         System.out.print("Exiting program.\n");
+    }
+
+    @Test
+    void exportToXML() throws Exception {
+        PuzzleSet ps = new PuzzleSet("Lab 1");
+        File f1 = new File("testfiles/puzzlesamp.xml");
+        try {
+            ps.importPuzzleSet(f1);
+        } catch (InvalidInputFileException e) {
+            fail(e);
+        }
+
+        ps.exportToXML("exportTest.xml");
+        DocumentBuilder factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        File f2 = new File("exportTest.xml");
+
+        Document doc1 = factory.parse(f1);
+        Document doc2 = factory.parse(f2);
+
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        StringWriter writer1 = new StringWriter();
+        StringWriter writer2 = new StringWriter();
+        transformer.transform(new DOMSource(doc1), new StreamResult(writer1));
+        transformer.transform(new DOMSource(doc2), new StreamResult(writer2));
+        String output1 = writer1.getBuffer().toString();
+        String output2 = writer2.getBuffer().toString();
+
+
+        // Don't worry about leading or trailing whitespace in the xml
+        String[] lines1 = output1.split("\n");
+        String[] lines2 = output2.split("\n");
+
+        try {
+            for (int i = 0; i < lines1.length; i++) {
+                lines1[i] = lines1[i].trim();
+                lines2[i] = lines2[i].trim();
+            }
+        } catch (IndexOutOfBoundsException e) {
+            fail(e);
+        }
+
+        assertArrayEquals(lines1, lines2);
+    }
+
+    @Test
+    void exportBadPuzzle() throws ParserConfigurationException {
+        Puzzle p = new DragNDropPuzzle("BadPuzzle", 3); // Puzzle with no solutions
+        DocumentBuilder factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document d = factory.newDocument();
+
+        assertThrows(UnformedPuzzleException.class, ()-> p.exportToXML(d));
     }
 }
