@@ -35,6 +35,13 @@ public class PuzzleSelectCreatorController {
         }
     }
 
+    @FXML
+    public void exportPuzzleSet(ActionEvent event){
+        if (rootController != null) {
+            rootController.exportCreatorToXML();
+        }
+    }
+
     /**
      * Sets the root controller of the puzzle screen
      *

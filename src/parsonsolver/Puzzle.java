@@ -399,7 +399,7 @@ public abstract class Puzzle {
         }
 
         try {
-            formatN.appendChild(document.createTextNode(getType().toString()));
+            formatN.appendChild(document.createTextNode(getType().name()));
             root.appendChild(formatN);
         } catch (NullPointerException e) {
             throw new UnformedPuzzleException("No format");

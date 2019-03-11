@@ -27,6 +27,8 @@ public class PuzzlePaneController {
     private Pane currentView;
     private PuzzleScreenController currentPuzzleSolver = null;
 
+    private File puzzleCreatorFile = null;
+
     private static final boolean IS_TEST_MODE = true; //Enables demo options in GUI
     private static final boolean IS_TEACHER_MODE = true; //Enables teacher edition options (e.g. Puzzle Creator)
 
@@ -117,6 +119,7 @@ public class PuzzlePaneController {
     public void LoadPuzzleSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Puzzle Set File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
         File f = fileChooser.showOpenDialog(null);
 
         if (f != null && f.exists()) { //if null no file was selected
@@ -133,6 +136,7 @@ public class PuzzlePaneController {
     public void LoadPuzzleCreatorSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Puzzle Set File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
         File f = fileChooser.showOpenDialog(null);
 
         if (f != null && f.exists()) { //if null no file was selected
@@ -381,6 +385,33 @@ public class PuzzlePaneController {
         currentPuzzleSolver = controller;
     }
 
+    /**
+     * Export Puzzle Set to an XML file
+     */
+    public void exportCreatorToXML() {
+        if (currentPuzzleCreator != null && currentPuzzleCreator.getCurrentSet() != null) {
+            try {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Export Puzzle Set");
+                fileChooser.setInitialDirectory(puzzleCreatorFile.getParentFile());
+                fileChooser.setInitialFileName(puzzleCreatorFile.getName());
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
+
+                File f = fileChooser.showSaveDialog(null);
+                if (f != null) {
+                    currentPuzzleCreator.getCurrentSet().exportToXML(f);
+                    puzzleCreatorFile = f.getCanonicalFile();
+                }
+            } catch (Exception e) {
+                System.err.println(e.toString());
+                System.err.println(e.getMessage());
+                for (StackTraceElement se : e.getStackTrace()) {
+                    System.err.println(se.toString());
+                }
+            }
+        }
+    }
+
     ///PRIVATE METHODS
 
     /**
@@ -397,8 +428,6 @@ public class PuzzlePaneController {
             PuzzleSelectButton.setManaged(true);
 
             openPuzzleSelect();
-        } catch (InvalidInputFileException e) {
-            //TODO Add feedback that input file was invalid.
         } catch (Exception e) {
             System.err.println(e.toString());
             System.err.println(e.getMessage());
@@ -415,6 +444,7 @@ public class PuzzlePaneController {
         try {
             currentPuzzleCreator.closeSession();
             currentPuzzleCreator.createNewSet("");
+            puzzleCreatorFile = null;
 
             NavPuzzleEditor.setDisable(false);
             PuzzleEditorButton.setVisible(true);
@@ -439,6 +469,7 @@ public class PuzzlePaneController {
         try {
             currentPuzzleCreator.closeSession();
             currentPuzzleCreator.setCurrentSet(new PuzzleSet(f));
+            puzzleCreatorFile = f.getCanonicalFile();
 
             NavPuzzleEditor.setDisable(false);
             PuzzleEditorButton.setVisible(true);
