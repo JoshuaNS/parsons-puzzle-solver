@@ -172,6 +172,17 @@ public class PuzzlePaneController {
     }
 
     /**
+     * Opens the sample file
+     *
+     * @param event The ActionEvent sent by PuzzleScreen
+     */
+    @FXML
+    public void CreatorDemo(ActionEvent event) {
+        File f = new File("testfiles/puzzlesamp.xml");
+        setPuzzleCreatorSet(f);
+    }
+
+    /**
      * Export the results of puzzle solving
      *
      * @param event The ActionEvent sent by PuzzleScreen
@@ -263,9 +274,9 @@ public class PuzzlePaneController {
             newView = loader.load();
             controller = loader.getController();
             controller.setRootController(this);
+            setCurrentView(newView);
             currentPuzzleCreator.openPuzzle(index);
             controller.setPuzzleCreator(currentPuzzleCreator, false);
-            setCurrentView(newView);
         } catch (IOException e) {
             System.err.println("PuzzleCreator could not be loaded.");
             return;
@@ -285,8 +296,8 @@ public class PuzzlePaneController {
             newView = loader.load();
             controller = loader.getController();
             controller.setRootController(this);
-            controller.setPuzzleCreator(currentPuzzleCreator, true);
             setCurrentView(newView);
+            controller.setPuzzleCreator(currentPuzzleCreator, true);
         } catch (IOException e) {
             System.err.println("PuzzleCreator could not be loaded.");
             return;

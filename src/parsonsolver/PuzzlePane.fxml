@@ -55,7 +55,7 @@
             <Button fx:id="PuzzleEditorButton" layoutX="451.0" layoutY="501.0" mnemonicParsing="false" onAction="#openPuzzleCreator" prefWidth="140.0" text="Go to Puzzle Editor" />
             <Separator fx:id="DemoSeparator" layoutX="410.0" layoutY="407.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
             <Button fx:id="PuzzleDemoButton" layoutX="451.0" layoutY="519.0" mnemonicParsing="false" onAction="#LoadDemo" prefWidth="140.0" text="Puzzle Demo" />
-            <Button fx:id="CreatorDemoButton" layoutX="451.0" layoutY="536.0" mnemonicParsing="false" prefWidth="140.0" text="Creator Demo" />
+            <Button fx:id="CreatorDemoButton" layoutX="451.0" layoutY="536.0" mnemonicParsing="false" onAction="#CreatorDemo" prefWidth="140.0" text="Creator Demo" />
          </children>
       </VBox>
    </center>

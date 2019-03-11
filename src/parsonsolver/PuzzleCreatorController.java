@@ -52,6 +52,9 @@ public class PuzzleCreatorController {
     @FXML
     private ComboBox<PuzzleType> ProblemType;
 
+    @FXML
+    private Button SavePuzzleButton;
+
     //PUZZLE CODE
     @FXML
     private TextArea SourceCodeBlocks;
@@ -138,6 +141,7 @@ public class PuzzleCreatorController {
                 loadCurrentPuzzle();
             }
         }
+        RefreshCanSave();
     }
 
     private void loadCurrentPuzzle(){
@@ -206,6 +210,7 @@ public class PuzzleCreatorController {
                 }
             }
         }
+        RefreshCanSave();
     }
 
     /**
@@ -463,50 +468,55 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void SavePuzzle(ActionEvent event) {
-        if (puzzleCreator != null && puzzleCreator.getCurrentSet() != null) {
-            if(isNewPuzzle){
-                puzzleCreator.createNewPuzzle(ProblemName.getText(),ProblemType.getValue());
+        try {
+            if (isNewPuzzle) {
+                puzzleCreator.createNewPuzzle(ProblemName.getText(), ProblemType.getValue());
+                isNewPuzzle = false;
             }
 
             Puzzle currentPuzzle = puzzleCreator.getCurrentPuzzle();
-            if (currentPuzzle != null) {
-                currentPuzzle.setName(ProblemName.getText());
-                currentPuzzle.setDescription(ProblemDescription.getText());
-                currentPuzzle.setLanguage(Language.getText());
-                currentPuzzle.setIndentRequired(RequireIndentation.isSelected());
-                currentPuzzle.setType(ProblemType.getValue());
+            currentPuzzle.setName(ProblemName.getText());
+            currentPuzzle.setDescription(ProblemDescription.getText());
+            currentPuzzle.setLanguage(Language.getText());
+            currentPuzzle.setIndentRequired(RequireIndentation.isSelected());
+            currentPuzzle.setType(ProblemType.getValue());
 
-                //Create code blocks
-                String currentBlock = "";
-                List<String> blockStrings = new ArrayList<>();
-                String[] lines = SourceCodeEditor.getText().split("\n");
-                for (int i = 0; i < lines.length; i++) {
-                    currentBlock = currentBlock.concat(lines[i]);
+            //Create code blocks
+            String currentBlock = "";
+            List<String> blockStrings = new ArrayList<>();
+            String[] lines = SourceCodeEditor.getText().split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                currentBlock = currentBlock.concat(lines[i]);
 
-                    if (i != lines.length - 1 && codeLines.get(i) == codeLines.get(i + 1)) {
-                        currentBlock = currentBlock.concat("\n");
-                    } else {
-                        blockStrings.add(currentBlock);
-                        currentBlock = "";
-                    }
+                if (i != lines.length - 1 && codeLines.get(i) == codeLines.get(i + 1)) {
+                    currentBlock = currentBlock.concat("\n");
+                } else {
+                    blockStrings.add(currentBlock);
+                    currentBlock = "";
                 }
-                currentPuzzle.setLines(puzzleCreator.convertLines(blockStrings, false));
-
-                currentBlock = "";
-                blockStrings = new ArrayList<>();
-                lines = DistractorEditor.getText().split("\n");
-                for (int i = 0; i < lines.length; i++) {
-                    currentBlock = currentBlock.concat(lines[i]);
-
-                    if (i != lines.length - 1 && distractorLines.get(i) == distractorLines.get(i + 1)) {
-                        currentBlock = currentBlock.concat("\n");
-                    } else {
-                        blockStrings.add(currentBlock);
-                        currentBlock = "";
-                    }
-                }
-                currentPuzzle.setDistractors(puzzleCreator.convertLines(blockStrings, true));
             }
+            currentPuzzle.setLines(puzzleCreator.convertLines(blockStrings, false));
+
+            currentBlock = "";
+            blockStrings = new ArrayList<>();
+            lines = DistractorEditor.getText().split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                currentBlock = currentBlock.concat(lines[i]);
+
+                if (i != lines.length - 1 && distractorLines.get(i) == distractorLines.get(i + 1)) {
+                    currentBlock = currentBlock.concat("\n");
+                } else {
+                    blockStrings.add(currentBlock);
+                    currentBlock = "";
+                }
+            }
+            currentPuzzle.setDistractors(puzzleCreator.convertLines(blockStrings, true));
+
+            unsavedChanges = false;
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -538,5 +548,17 @@ public class PuzzleCreatorController {
                 codeColumns = codeColumns.concat("\nX" + lineNum++);
         }
         DistractorBlocks.setText(codeColumns);
+    }
+
+    /**
+     * Refresh if save button is available
+     */
+    private void RefreshCanSave() {
+        if (puzzleCreator != null && puzzleCreator.getCurrentSet() != null) {
+            SavePuzzleButton.setDisable(false);
+        }
+        else {
+            SavePuzzleButton.setDisable(true);
+        }
     }
 }
