@@ -30,8 +30,8 @@ import java.util.stream.IntStream;
  */
 public class PuzzleSet {
     private String name;
-    private Boolean sequentialCompletion;
-    private Boolean randomOrder;
+    private Boolean sequentialCompletion = false;
+    private Boolean randomOrder = false;
     private ArrayList<Puzzle> puzzles;
 
     /**
@@ -47,7 +47,7 @@ public class PuzzleSet {
      * Default Constructor
      */
     public PuzzleSet (){
-        puzzles = new ArrayList<>();
+        this("");
     }
 
     /**

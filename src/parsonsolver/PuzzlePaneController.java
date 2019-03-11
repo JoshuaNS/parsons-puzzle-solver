@@ -393,8 +393,10 @@ public class PuzzlePaneController {
             try {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Export Puzzle Set");
-                fileChooser.setInitialDirectory(puzzleCreatorFile.getParentFile());
-                fileChooser.setInitialFileName(puzzleCreatorFile.getName());
+                if(puzzleCreatorFile != null) {
+                    fileChooser.setInitialDirectory(puzzleCreatorFile.getParentFile());
+                    fileChooser.setInitialFileName(puzzleCreatorFile.getName());
+                }
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
 
                 File f = fileChooser.showSaveDialog(null);
