@@ -295,6 +295,7 @@ public class PuzzleScreenController {
                 GridPane.setMargin(newLabel, labelMargins);
 
                 RadioButton newAnswer = new RadioButton(generateCondensedMCAnswerText(i));
+                ToolTipDefaultsFixer.setTooltipTimers(1000, 50000, 200);
                 newAnswer.setTooltip(new Tooltip(generateMCAnswerText(i)));
                 newAnswer.setUserData(puzzleAnswers.get(i));
                 newAnswer.setToggleGroup(puzzleAnswerToggles);
