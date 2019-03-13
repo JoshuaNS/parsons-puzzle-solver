@@ -367,17 +367,17 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void PuzzleTypePropertyChanged(ActionEvent event) {
-        if (ProblemType.getValue() == PuzzleType.DnD) {
+        //if (ProblemType.getValue() == PuzzleType.DnD) {
             MCAnswerGrid.setVisible(false);
             MCAnswerHeader.setVisible(false);
             MCAnswerGrid.setManaged(false);
             MCAnswerHeader.setManaged(false);
-        } else {
-            MCAnswerGrid.setVisible(true);
-            MCAnswerHeader.setVisible(true);
-            MCAnswerGrid.setManaged(true);
-            MCAnswerHeader.setManaged(true);
-        }
+        //} else {
+        //    MCAnswerGrid.setVisible(true);
+        //    MCAnswerHeader.setVisible(true);
+        //    MCAnswerGrid.setManaged(true);
+        //    MCAnswerHeader.setManaged(true);
+        //}
         PuzzlePropertyChanged(event);
     }
 

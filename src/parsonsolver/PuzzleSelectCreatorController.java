@@ -81,7 +81,7 @@ public class PuzzleSelectCreatorController {
 
         ProblemName.setText(currentSet.getName());
         for (Puzzle p : currentSet.getPuzzles()) {
-            PuzzleSelectPanel newFragment = new PuzzleSelectPanel(p);
+            PuzzleSelectPanel newFragment = new PuzzleSelectPanel(p,false);
             newFragment.setOnMouseClicked(event -> {
                 if (rootController != null) {
                     rootController.openPuzzleEditor((int) newFragment.getUserData());

@@ -19,6 +19,16 @@ public class PuzzleSelectPanel extends GridPane {
      * @param puzzle The puzzle to be displayed
      */
     public PuzzleSelectPanel(Puzzle puzzle) {
+        this(puzzle,true);
+    }
+
+    /**
+     * Initialize the element with the data from a puzzle
+     *
+     * @param puzzle The puzzle to be displayed
+     * @param showSolver If puzzle solving data should be displayed
+     */
+    public PuzzleSelectPanel(Puzzle puzzle, boolean showSolver) {
         this.setStyle("-fx-background-color: aliceblue; -fx-border-color: black;");
         this.setUserData(puzzle.getIndex());
         this.setPadding(new Insets(5));
@@ -40,10 +50,12 @@ public class PuzzleSelectPanel extends GridPane {
         GridPane puzzleInfo = new GridPane();
         ColumnConstraints columnPuzzle1 = new ColumnConstraints();
         columnPuzzle1.setMinWidth(120);
-        ColumnConstraints columnPuzzle2 = new ColumnConstraints();
-        columnPuzzle2.setMinWidth(100);
         puzzleInfo.getColumnConstraints().add(columnPuzzle1);
-        puzzleInfo.getColumnConstraints().add(columnPuzzle2);
+        if (showSolver) {
+            ColumnConstraints columnPuzzle2 = new ColumnConstraints();
+            columnPuzzle2.setMinWidth(100);
+            puzzleInfo.getColumnConstraints().add(columnPuzzle2);
+        }
 
         String typeText;
         switch (puzzle.getType()) {
@@ -60,16 +72,19 @@ public class PuzzleSelectPanel extends GridPane {
                 typeText = puzzle.getType().toString();
 
         }
-        String completedText;
-        if (puzzle.isCompleted())
-            completedText = "Complete";
-        else
-            completedText = "Not Completed";
-
         puzzleInfo.add(new Label("Type: " + typeText), 0, 0);
         puzzleInfo.add(new Label("Language: " + puzzle.getLanguage()), 0, 1);
-        puzzleInfo.add(new Label("Attempts: " + puzzle.getNumAttempts()), 1, 0);
-        puzzleInfo.add(new Label(completedText), 1, 1);
+
+        if(showSolver) {
+            String completedText;
+            if (puzzle.isCompleted())
+                completedText = "Complete";
+            else
+                completedText = "Not Completed";
+            puzzleInfo.add(new Label("Attempts: " + puzzle.getNumAttempts()), 1, 0);
+            puzzleInfo.add(new Label(completedText), 1, 1);
+        }
+
         puzzleInfo.setHgap(5);
         puzzleInfo.setVgap(5);
         puzzleInfo.setPadding(new Insets(5));
