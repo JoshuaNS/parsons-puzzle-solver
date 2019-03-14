@@ -131,6 +131,7 @@ public class PuzzleCreatorController {
         //TODO: Add some proper validation to puzzle creation
         if(isNewPuzzle){
             ProblemType.setValue(PuzzleType.DnD);
+            PuzzleTypePropertyChanged(null);
         }
 
         PuzzleSet currentSet = puzzleCreator.getCurrentSet();
