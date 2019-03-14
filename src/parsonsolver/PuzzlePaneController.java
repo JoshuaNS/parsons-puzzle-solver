@@ -30,7 +30,7 @@ public class PuzzlePaneController {
     private File puzzleCreatorFile = null;
 
     private static final boolean IS_TEST_MODE = true; //Enables demo options in GUI
-    private static final boolean IS_TEACHER_MODE = true; //Enables teacher edition options (e.g. Puzzle Creator)
+    private static final boolean IS_TEACHER_MODE = false; //Enables teacher edition options (e.g. Puzzle Creator)
 
     ///FXML COMPONENTS
 
@@ -119,6 +119,7 @@ public class PuzzlePaneController {
     public void LoadPuzzleSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Puzzle Set File");
+        fileChooser.setInitialDirectory(new File("testFiles"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
         File f = fileChooser.showOpenDialog(null);
 
@@ -136,6 +137,7 @@ public class PuzzlePaneController {
     public void LoadPuzzleCreatorSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Puzzle Set File");
+        fileChooser.setInitialDirectory(new File("testFiles"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
         File f = fileChooser.showOpenDialog(null);
 
@@ -171,7 +173,7 @@ public class PuzzlePaneController {
      */
     @FXML
     public void LoadDemo(ActionEvent event) {
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/DemoFile.xml");
         setPuzzleSet(f);
     }
 
@@ -182,7 +184,7 @@ public class PuzzlePaneController {
      */
     @FXML
     public void CreatorDemo(ActionEvent event) {
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/DemoFile.xml");
         setPuzzleCreatorSet(f);
     }
 
