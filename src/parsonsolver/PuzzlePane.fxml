@@ -22,7 +22,6 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#LoadPuzzleSet" text="Load Data" />
                         <MenuItem mnemonicParsing="false" onAction="#ExportResults" text="Export Results" />
-                        <MenuItem mnemonicParsing="false" text="Preferences" />
                         <MenuItem mnemonicParsing="false" onAction="#Exit" text="Exit" />
                     </items>
                 </Menu>
