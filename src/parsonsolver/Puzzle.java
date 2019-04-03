@@ -399,7 +399,7 @@ public abstract class Puzzle {
         }
 
         try {
-            formatN.appendChild(document.createTextNode(getType().toString()));
+            formatN.appendChild(document.createTextNode(getType().name()));
             root.appendChild(formatN);
         } catch (NullPointerException e) {
             throw new UnformedPuzzleException("No format");
@@ -462,6 +462,17 @@ public abstract class Puzzle {
 
 }
 
-enum PuzzleType{
-    DnD, MC, FiB;
+enum PuzzleType {
+    DnD("Drag and Drop"), MC("Multiple Choice"), FiB("Fill in the Blanks");
+
+    private String text;
+
+    PuzzleType(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

@@ -264,6 +264,11 @@ public class PuzzleScreenController {
         }
     }
 
+    /**
+     * Generate the puzzle solution grid
+     * Default: Contains radio button list of answers
+     * DnD: Contains blank list to drag solution into
+     */
     private void loadSolutionGrid() {
         if (currentPuzzle.getType() == PuzzleType.DnD) {
             for (int i = 0; i < currentPuzzle.getSolutionSet().size(); i++) {
@@ -289,7 +294,8 @@ public class PuzzleScreenController {
                 SolutionGrid.add(newLabel, 0, i);
                 GridPane.setMargin(newLabel, labelMargins);
 
-                RadioButton newAnswer = new RadioButton(generateMCAnswerText(i));
+                RadioButton newAnswer = new RadioButton(generateCondensedMCAnswerText(i));
+                ToolTipDefaultsFixer.setTooltipTimers(1000, 50000, 200);
                 newAnswer.setTooltip(new Tooltip(generateMCAnswerText(i)));
                 newAnswer.setUserData(puzzleAnswers.get(i));
                 newAnswer.setToggleGroup(puzzleAnswerToggles);
@@ -346,7 +352,13 @@ public class PuzzleScreenController {
         return (index <= currentPuzzleSet.getPuzzles().size() && index >= 1);
     }
 
-    private String generateMCAnswerText(int index) {
+    /**
+     * Generate the condensed answer text for an MC answer
+     *
+     * @param index The index of the MC Answer
+     * @return The MC answer as a atring
+     */
+    private String generateCondensedMCAnswerText(int index) {
         if (index >= puzzleAnswers.size()) {
             return null;
         }
@@ -362,13 +374,51 @@ public class PuzzleScreenController {
         }
         toReturn = toReturn.concat(" ]");
 
+
         return toReturn;
     }
 
+    /**
+     * Generate the answer text for an MC answer
+     *
+     * @param index The index of the MC Answer
+     * @return The MC answer code as a string
+     */
+    private String generateMCAnswerText(int index) {
+        if (index >= puzzleAnswers.size()) {
+            return null;
+        }
+
+        List<Block> answerList = puzzleAnswers.get(index);
+
+        String toReturn = "";
+        if (answerList != null && !answerList.isEmpty()) {
+            for (int i = 0; i < answerList.size(); i++) {
+                toReturn = toReturn.concat(answerList.get(i).getLines()).concat("\n");
+            }
+        }
+
+
+        return toReturn;
+    }
+
+    /**
+     * Get the displayed label text associated with a block
+     *
+     * @param b A code block
+     * @return The id label associated with that block
+     */
     private String getFragmentIdLabel(Block b) {
         return puzzleIdMapping.get(b.getID());
     }
 
+    /**
+     * Get the letter label text (A-Z) for an integer
+     * Called recursively if multiple characters required
+     *
+     * @param k The number to be encoded
+     * @return The number encoded in alphabetical characters
+     */
     private String getFragmentLabelText(int k) {
         if (k < 26) {
             return Character.toString((char) ('A' + k));
