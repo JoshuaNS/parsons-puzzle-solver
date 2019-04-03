@@ -22,10 +22,10 @@
          <block id="9">		print(num)</block>
       </solution>
       <distractors>
-         <block id="0X1">for num in range(0, 21):</block>
-         <block id="0X2">	if num % 3 == 0:</block>
-         <block id="0X3">	elif num % 5 == 0:</block>
-         <block id="0X4">	elif num % 3 == 0 and num % 5 == 0</block>
+         <block id="X1">for num in range(0, 21):</block>
+         <block id="X2">	if num % 3 == 0:</block>
+         <block id="X3">	elif num % 5 == 0:</block>
+         <block id="X4">	elif num % 3 == 0 and num % 5 == 0</block>
       </distractors>
    </puzzle>
    
@@ -48,10 +48,10 @@
          <block id="9">        print(num)</block>
       </solution>
       <distractors>
-         <block id="0X1">for num in range(0, 21):</block>
-         <block id="0X2">    if num % 3 == 0:</block>
-         <block id="0X3">    elif num % 5 == 0:</block>
-         <block id="0X4">    elif num % 3 == 0 and num % 5 == 0</block>
+         <block id="X1">for num in range(0, 21):</block>
+         <block id="X2">    if num % 3 == 0:</block>
+         <block id="X3">    elif num % 5 == 0:</block>
+         <block id="X4">    elif num % 3 == 0 and num % 5 == 0</block>
       </distractors>
    </puzzle>
 
@@ -74,10 +74,10 @@
          <block id="9">        print(num)</block>
       </solution>
       <distractors>
-         <block id="0X1">for num in range(0, 21):</block>
-         <block id="0X2">	if num % 3 == 0:</block>
-         <block id="0X3">    elif num % 5 == 0:</block>
-         <block id="0X4">    elif num % 3 == 0 and num % 5 == 0</block>
+         <block id="X1">for num in range(0, 21):</block>
+         <block id="X2">	if num % 3 == 0:</block>
+         <block id="X3">    elif num % 5 == 0:</block>
+         <block id="X4">    elif num % 3 == 0 and num % 5 == 0</block>
       </distractors>
    </puzzle>
 

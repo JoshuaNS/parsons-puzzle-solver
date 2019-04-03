@@ -121,7 +121,7 @@ public class PuzzleCreatorController {
     /**
      * Sets the puzzle creator instance
      *
-     * @param creator The PuzzleCreator instance
+     * @param creator     The PuzzleCreator instance
      * @param isNewPuzzle Set true if it is a new puzzle, false is editing puzzle already in set
      */
     public void setPuzzleCreator(PuzzleCreator creator, boolean isNewPuzzle) {
@@ -129,7 +129,7 @@ public class PuzzleCreatorController {
         this.isNewPuzzle = isNewPuzzle;
 
         //TODO: Add some proper validation to puzzle creation
-        if(isNewPuzzle){
+        if (isNewPuzzle) {
             ProblemType.setValue(PuzzleType.DnD);
             PuzzleTypePropertyChanged(null);
         }
@@ -138,17 +138,17 @@ public class PuzzleCreatorController {
         if (currentSet != null) {
             HeaderText.setText("Editing PuzzleSet \"" + currentSet.getName() + "\"");
 
-            if(!isNewPuzzle){
+            if (!isNewPuzzle) {
                 loadCurrentPuzzle();
             }
         }
         RefreshCanSave();
     }
 
-    private void loadCurrentPuzzle(){
-        if(puzzleCreator != null && puzzleCreator.getCurrentSet() != null){
+    private void loadCurrentPuzzle() {
+        if (puzzleCreator != null && puzzleCreator.getCurrentSet() != null) {
             Puzzle currentPuzzle = puzzleCreator.getCurrentPuzzle();
-            if(currentPuzzle != null){
+            if (currentPuzzle != null) {
                 ProblemName.setText(currentPuzzle.getName());
                 ProblemDescription.setText(currentPuzzle.getDescription());
                 Language.setText(currentPuzzle.getLanguage());
@@ -157,12 +157,12 @@ public class PuzzleCreatorController {
                 PuzzleTypePropertyChanged(new ActionEvent()); //Trigger the MC answer display update
 
                 //Puzzle Lines
-                if(currentPuzzle.getLines().size() > 0) {
-                    List<Block> lines  = currentPuzzle.getLines();
+                if (currentPuzzle.getLines().size() > 0) {
+                    List<Block> lines = currentPuzzle.getLines();
                     List<Integer> newColumns = new ArrayList<>();
                     String newText = "";
 
-                    for(int i = 0; i < lines.size(); i++) {
+                    for (int i = 0; i < lines.size(); i++) {
                         if (i != 0)
                             newText = newText.concat("\n");
 
@@ -184,12 +184,12 @@ public class PuzzleCreatorController {
                 }
 
                 //Distractors
-                if(currentPuzzle.getDistractors().size() > 0) {
-                    List<Block> lines  = currentPuzzle.getDistractors();
+                if (currentPuzzle.getDistractors().size() > 0) {
+                    List<Block> lines = currentPuzzle.getDistractors();
                     List<Integer> newColumns = new ArrayList<>();
                     String newText = "";
 
-                    for(int i = 0; i < lines.size(); i++) {
+                    for (int i = 0; i < lines.size(); i++) {
                         if (i != 0)
                             newText = newText.concat("\n");
 
@@ -208,6 +208,24 @@ public class PuzzleCreatorController {
                     DistractorEditor.setText(newText);
                     distractorLines = newColumns;
                     SetDistractorLines();
+                }
+
+                //MC Answers
+                if (currentPuzzle.getType() == PuzzleType.MC) {
+                    MultipleChoicePuzzle mcPuzzle = (MultipleChoicePuzzle) currentPuzzle;
+                    if (mcPuzzle.getChoices().size() > 0) {
+                        List<List<Block>> falseAnswers = mcPuzzle.getFalseAnswers();
+                        for (List<Block> answer : falseAnswers) {
+                            String text = "";
+                            if (answer.size() > 0) {
+                                text = answer.get(0).getID();
+                                for (int i = 1; i < answer.size(); i++) {
+                                    text = text.concat(", ").concat(answer.get(i).getID());
+                                }
+                            }
+                            MCAnswersList.getItems().add(text);
+                        }
+                    }
                 }
             }
         }
@@ -368,24 +386,24 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void PuzzleTypePropertyChanged(ActionEvent event) {
-        //if (ProblemType.getValue() == PuzzleType.DnD) {
+        if (ProblemType.getValue() != PuzzleType.MC) {
             MCAnswerGrid.setVisible(false);
             MCAnswerHeader.setVisible(false);
             MCAnswerGrid.setManaged(false);
             MCAnswerHeader.setManaged(false);
-        //} else {
-        //    MCAnswerGrid.setVisible(true);
-        //    MCAnswerHeader.setVisible(true);
-        //    MCAnswerGrid.setManaged(true);
-        //    MCAnswerHeader.setManaged(true);
-        //}
+        } else {
+            MCAnswerGrid.setVisible(true);
+            MCAnswerHeader.setVisible(true);
+            MCAnswerGrid.setManaged(true);
+            MCAnswerHeader.setManaged(true);
+        }
         PuzzlePropertyChanged(event);
     }
 
     /**
      * Get key events in the source code editor, and sets flags as needed
      *
-     * @param event
+     * @param event The Key Event
      */
     @FXML
     public void SourceCodeKeyEvent(KeyEvent event) {
@@ -407,7 +425,7 @@ public class PuzzleCreatorController {
     /**
      * Get key events in the distractor editor, and sets flags as needed
      *
-     * @param event
+     * @param event The Key Event
      */
     @FXML
     public void DistractorKeyEvent(KeyEvent event) {
@@ -447,7 +465,16 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void AddMCAnswer(ActionEvent event) {
-        MCAnswersList.getItems().add("New Answer");
+        if (MCAnswersList.getSelectionModel() != null) {
+            List<Integer> indices = MCAnswersList.getSelectionModel().getSelectedIndices();
+            //Uses single selection mode, so we only have maximum one index
+            if (indices.size() > 0)
+                MCAnswersList.getItems().add(indices.get(0) + 1, "1, 2, 3");
+            else
+                MCAnswersList.getItems().add("1, 2, 3");
+        } else {
+            MCAnswersList.getItems().add("1, 2, 3");
+        }
         unsavedChanges = true;
     }
 
@@ -458,7 +485,19 @@ public class PuzzleCreatorController {
      */
     @FXML
     public void RemoveMCAnswer(ActionEvent event) {
-        MCAnswersList.getItems().remove(MCAnswersList.getItems().size() - 1);
+        if (MCAnswersList.getItems().size() == 0)
+            return;
+
+        if (MCAnswersList.getSelectionModel() != null) {
+            List<Integer> indices = MCAnswersList.getSelectionModel().getSelectedIndices();
+            //Uses single selection mode, so we only have maximum one index
+            if (indices.size() > 0)
+                MCAnswersList.getItems().remove((int) indices.get(0));
+            else
+                MCAnswersList.getItems().remove(MCAnswersList.getItems().size() - 1);
+        } else {
+            MCAnswersList.getItems().remove(MCAnswersList.getItems().size() - 1);
+        }
         unsavedChanges = true;
     }
 
@@ -489,7 +528,7 @@ public class PuzzleCreatorController {
             for (int i = 0; i < lines.length; i++) {
                 currentBlock = currentBlock.concat(lines[i]);
 
-                if (i != lines.length - 1 && codeLines.get(i) == codeLines.get(i + 1)) {
+                if (i != lines.length - 1 && codeLines.get(i).equals(codeLines.get(i + 1))) {
                     currentBlock = currentBlock.concat("\n");
                 } else {
                     blockStrings.add(currentBlock);
@@ -504,7 +543,7 @@ public class PuzzleCreatorController {
             for (int i = 0; i < lines.length; i++) {
                 currentBlock = currentBlock.concat(lines[i]);
 
-                if (i != lines.length - 1 && distractorLines.get(i) == distractorLines.get(i + 1)) {
+                if (i != lines.length - 1 && distractorLines.get(i).equals(distractorLines.get(i + 1))) {
                     currentBlock = currentBlock.concat("\n");
                 } else {
                     blockStrings.add(currentBlock);
@@ -513,9 +552,25 @@ public class PuzzleCreatorController {
             }
             currentPuzzle.setDistractors(puzzleCreator.convertLines(blockStrings, true));
 
+            //Create false answers
+            if (currentPuzzle.getType() == PuzzleType.MC) {
+                List<List<Block>> answers = new ArrayList<>();
+                for (String answerText : MCAnswersList.getItems()) {
+                    List<Block> answer = new ArrayList<>();
+                    String[] ids = answerText.split(",");
+                    for (String s : ids) {
+                        Block b = currentPuzzle.getBlock(s.trim());
+                        if (b == null) //Block missing, fallback
+                            new Block(s.trim(), "");
+                        answer.add(b);
+                    }
+                    answers.add(answer);
+                }
+                ((MultipleChoicePuzzle) currentPuzzle).setFalseAnswers(answers);
+            }
+
             unsavedChanges = false;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
@@ -557,8 +612,7 @@ public class PuzzleCreatorController {
     private void RefreshCanSave() {
         if (puzzleCreator != null && puzzleCreator.getCurrentSet() != null) {
             SavePuzzleButton.setDisable(false);
-        }
-        else {
+        } else {
             SavePuzzleButton.setDisable(true);
         }
     }
