@@ -80,7 +80,7 @@ public class PuzzleCreatorTest {
         creator.closeSession();
         System.out.println("Welcome to the puzzle creator. Please import a puzzle or create a new set.");
         //attempt to edit pre-existing file
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         System.out.print("Importing file......\n");
         PuzzleSet ps = null;
         try {

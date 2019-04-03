@@ -62,7 +62,7 @@ public class PuzzlePaneController {
         //TEST MODE OPTIONS
         if (IS_TEST_MODE) {
             //Only allow demo if demo file exists
-            if (new File("testfiles/puzzlesamp.xml").exists()) {
+            if (new File("testfiles/puzzlesamp.pzl").exists()) {
                 Button demoButton = new Button("Puzzle Demo");
                 demoButton.setOnAction(this::LoadDemo);
                 TitlePane.getChildren().add(demoButton);
@@ -87,7 +87,7 @@ public class PuzzlePaneController {
      */
     @FXML
     public void LoadDemo(ActionEvent event) {
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         setPuzzleSet(f);
     }
 
