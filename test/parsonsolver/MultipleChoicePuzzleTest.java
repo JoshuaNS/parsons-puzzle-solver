@@ -79,7 +79,7 @@ class MultipleChoicePuzzleTest {
         solution.add(new Block("9", "print(num)", p));
 
         List<Block> answer1 = new ArrayList<>();
-        answer1.add(p.getBlock("0X1"));
+        answer1.add(p.getBlock("X1"));
         answer1.add(p.getBlock("2"));
         answer1.add(p.getBlock("3"));
         answer1.add(p.getBlock("4"));
@@ -91,11 +91,11 @@ class MultipleChoicePuzzleTest {
 
         List<Block> answer2 = new ArrayList<>();
         answer2.add(p.getBlock("1"));
-        answer2.add(p.getBlock("0X2"));
+        answer2.add(p.getBlock("X2"));
         answer2.add(p.getBlock("3"));
-        answer2.add(p.getBlock("0X3"));
+        answer2.add(p.getBlock("X3"));
         answer2.add(p.getBlock("5"));
-        answer2.add(p.getBlock("0X4"));
+        answer2.add(p.getBlock("X4"));
         answer2.add(p.getBlock("7"));
         answer2.add(p.getBlock("8"));
         answer2.add(p.getBlock("9"));
