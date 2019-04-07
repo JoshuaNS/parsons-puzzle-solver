@@ -161,4 +161,42 @@ public class PuzzleTest {
         }
 
     }
+
+    @Test
+    void exportAndImportSpecialCharacterTest() {
+        // Set up puzzle set with special characters.
+        PuzzleSet ps1 = new PuzzleSet();
+        Puzzle p1 = new DragNDropPuzzle("Puzzle name", 1);
+        List<Block> soln = new ArrayList<>();
+        soln.add(new Block("1","This shouldn't fail either"));
+        p1.setSolutionSet(soln);
+        p1.setLines(soln);
+        p1.setDescription("Special characters: > < & ' \"");
+
+        ArrayList<Puzzle> l = new ArrayList<>();
+        l.add(p1);
+        ps1.setPuzzles(l);
+        ps1.setName("x");
+        ps1.setRandomOrder(false);
+        ps1.setSequentialCompletion(false);
+
+        File f = new File("testfiles/SpecialCharacter.pzl");
+        try {
+            ps1.exportToXML(f);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            PuzzleSet ps2 = new PuzzleSet();
+            ps2.importPuzzleSet(f);
+
+            assertEquals(ps1.getPuzzle(1).getDescription(), ps2.getPuzzle(1).getDescription());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 }
