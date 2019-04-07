@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<puzzleset>
+<setName>Parson's Demo Puzzle Set</setName>
+<randomOrder>false</randomOrder>
+<sequentialComp>false</sequentialComp>
+<puzzle>
+<name>Print an Integer (Java)</name>
+<index>1</index>
+<lang>Java</lang>
+<format>DnD</format>
+<indent>false</indent>
+<description>Declare a variable called x with a value 0. Then, print the variable x.</description>
+<solution>
+<block id="1">int x = 0;</block>
+<block id="2">System.out.println(x);</block>
+</solution>
+<distractors>
+<block id="X1">int x == 0;</block>
+<block id="X2">int x = 0</block>
+<block id="X3">printf(x);</block>
+</distractors>
+</puzzle>
+<puzzle>
+<name>FizzBuzz Lite (Python)</name>
+<index>2</index>
+<lang>Python</lang>
+<format>DnD</format>
+<indent>true</indent>
+<description>Iterate from numbers 1 to 5. Print Fizz if a number is divisble by 3. If it's not divisble by 3, and it is by 5, print Buzz.</description>
+<solution>
+<block id="1">for num in range(1, 6):</block>
+<block id="2">	if num % 3 == 0:</block>
+<block id="3">		print('Fizz')</block>
+<block id="4">	elif num % 5 == 0:</block>
+<block id="5">		print('Buzz')</block>
+</solution>
+<distractors>
+<block id="X1">for num in range(1, 5):</block>
+<block id="X2">for num in range(0, 5):</block>
+<block id="X3">if num % 5 == 0:</block>
+<block id="X4">elif num % 3 == 0:</block>
+</distractors>
+</puzzle>
+<puzzle>
+<name>FizzBuzz - DnD (Python)</name>
+<index>3</index>
+<lang>Python</lang>
+<format>DnD</format>
+<indent>true</indent>
+<description>Iterate over the numbers 1-20, print "FizzBuzz" if it is divisible by both 3 and 5, "Fizz" if the number is divisible 3 and not 5, and finally "Buzz" if it is divisible by 5 and not 3</description>
+<solution>
+<block id="1">for num in range(1, 21):</block>
+<block id="2">	if num % 3 == 0 and num % 5 == 0:</block>
+<block id="3">		print('FizzBuzz')</block>
+<block id="4">	elif num % 3 == 0:</block>
+<block id="5">		print('Fizz')</block>
+<block id="6">	elif num % 5 == 0:</block>
+<block id="7">		print('Buzz')</block>
+</solution>
+<distractors>
+<block id="X1">for num in range(0, 21):</block>
+<block id="X2">	elif num % 3 == 0 and num % 5 == 0</block>
+<block id="X3">	if num % 3 == 0:</block>
+</distractors>
+</puzzle>
+<puzzle>
+<name>FizzBuzz - MC (Python)</name>
+<index>4</index>
+<lang>Python</lang>
+<format>MC</format>
+<indent>false</indent>
+<description>Output the numbers 1-20, print "fizz" if the number is divisible by 3, "buzz" if it is divisible by 5, and "fizzbuzz" if it is divisible by both</description>
+<solution>
+<block id="1">for num in range(1, 21):</block>
+<block id="2">	if num % 3 == 0 and num % 5 == 0:</block>
+<block id="3">		print('FizzBuzz')</block>
+<block id="4">	elif num % 3 == 0:</block>
+<block id="5">		print('Fizz')</block>
+<block id="6">	elif num % 5 == 0:</block>
+<block id="7">		print('Buzz')</block>
+</solution>
+<distractors>
+<block id="X1">for num in range(0, 21):</block>
+<block id="X2">	elif num % 3 == 0 and num % 5 == 0</block>
+<block id="X3">	if num % 3 == 0:</block>
+</distractors>
+<falseAnswers>
+<answer>
+<id>X1</id>
+<id>2</id>
+<id>3</id>
+<id>4</id>
+<id>5</id>
+<id>6</id>
+<id>7</id>
+</answer>
+<answer>
+<id>1</id>
+<id>X3</id>
+<id>5</id>
+<id>6</id>
+<id>7</id>
+<id>X2</id>
+<id>3</id>
+</answer>
+</falseAnswers>
+</puzzle>
+</puzzleset>

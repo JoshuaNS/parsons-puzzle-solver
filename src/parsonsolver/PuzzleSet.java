@@ -30,8 +30,8 @@ import java.util.stream.IntStream;
  */
 public class PuzzleSet {
     private String name;
-    private Boolean sequentialCompletion;
-    private Boolean randomOrder;
+    private Boolean sequentialCompletion = false;
+    private Boolean randomOrder = false;
     private ArrayList<Puzzle> puzzles;
 
     /**
@@ -47,7 +47,7 @@ public class PuzzleSet {
      * Default Constructor
      */
     public PuzzleSet (){
-        puzzles = new ArrayList<>();
+        this("");
     }
 
     /**
@@ -180,7 +180,7 @@ public class PuzzleSet {
      * @param path Path to output the puzzle file to.
      * @throws UnformedPuzzleException Throws this exception if the puzzle cannot be exported as a valid puzzle
      */
-    public void exportToXML(String path) throws UnformedPuzzleException {
+    public void exportToXML(File file) throws UnformedPuzzleException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
         Document document = null;
@@ -213,8 +213,7 @@ public class PuzzleSet {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             DOMSource source = new DOMSource(document);
-            File outFile = new File(path);
-            StreamResult target = new StreamResult(outFile);
+            StreamResult target = new StreamResult(file);
             transformer.transform(source,target);
         } catch (TransformerException e) {
             e.printStackTrace();
