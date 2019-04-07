@@ -119,7 +119,7 @@ public class PuzzlePaneController {
     public void LoadPuzzleSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Puzzle Set File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PZL file", "*.pzl"));
         File f = fileChooser.showOpenDialog(null);
 
         if (f != null && f.exists()) { //if null no file was selected
@@ -136,7 +136,7 @@ public class PuzzlePaneController {
     public void LoadPuzzleCreatorSet(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Puzzle Set File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.pzl"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PZL file", "*.pzl"));
         File f = fileChooser.showOpenDialog(null);
 
         if (f != null && f.exists()) { //if null no file was selected
@@ -397,7 +397,7 @@ public class PuzzlePaneController {
                     fileChooser.setInitialDirectory(puzzleCreatorFile.getParentFile());
                     fileChooser.setInitialFileName(puzzleCreatorFile.getName());
                 }
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PZL file", "*.pzl"));
 
                 File f = fileChooser.showSaveDialog(null);
                 if (f != null) {

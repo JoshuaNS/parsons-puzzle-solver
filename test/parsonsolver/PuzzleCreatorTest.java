@@ -73,7 +73,7 @@ public class PuzzleCreatorTest {
         creator.closeEdit();
 
         System.out.println("Puzzle Select Screen: Please create or select a puzzle to edit, edit properties, or export.");
-        creator.exportSet();
+        //Perform Export
         System.out.println("Set exported.");
         //user selects quit
         System.out.println("Returning to home screen....");
@@ -98,7 +98,7 @@ public class PuzzleCreatorTest {
         creator.closeEdit();
 
         System.out.println("Puzzle Select Screen: Please create or select a puzzle to edit, edit properties, or export.");
-        creator.exportSet();
+        //Perform Export
         System.out.println("Set exported.");
         //user selects quit
         System.out.println("Returning to home screen....");
