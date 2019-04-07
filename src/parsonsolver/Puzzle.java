@@ -378,7 +378,7 @@ public abstract class Puzzle {
         Element descriptionN = document.createElement("description");
 
         try {
-            nameN.appendChild(document.createTextNode(XML.escapeXMLAttribute(getName().toString())));
+            nameN.appendChild(document.createTextNode(getName().toString()));
             root.appendChild(nameN);
         } catch (NullPointerException e) {
             nameN.appendChild(document.createTextNode("No Name"));
@@ -392,7 +392,7 @@ public abstract class Puzzle {
         }
 
         try {
-            langN.appendChild(document.createTextNode(XML.escapeXMLAttribute(getLanguage().toString())));
+            langN.appendChild(document.createTextNode(getLanguage().toString()));
             root.appendChild(langN);
         } catch (NullPointerException e) {
             // Lang is not necessary
@@ -413,7 +413,7 @@ public abstract class Puzzle {
         }
 
         try {
-            descriptionN.appendChild(document.createTextNode(XML.escapeXMLAttribute(getDescription().toString())));
+            descriptionN.appendChild(document.createTextNode(getDescription().toString()));
             root.appendChild(descriptionN);
         } catch (NullPointerException e) {
             descriptionN.appendChild(document.createTextNode(""));
@@ -426,7 +426,7 @@ public abstract class Puzzle {
                 Element blockN = document.createElement("block");
                 blockN.setAttribute("id", b.getID());
                 //String escapedLines = StringEscapeUtils.escapeXml10(b.getLinesTabbed()); // Is this necessary now?
-                blockN.appendChild(document.createTextNode(XML.escapeXMLAttribute(b.getLinesTabbed().toString())));
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed().toString()));
                 solutionN.appendChild(blockN);
             }
             root.appendChild(solutionN);
@@ -441,7 +441,7 @@ public abstract class Puzzle {
             for (Block b : getDistractors()) {
                 Element blockN = document.createElement("block");
                 blockN.setAttribute("id", b.getID());
-                blockN.appendChild(document.createTextNode(XML.escapeXMLAttribute(b.getLinesTabbed().toString())));
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed().toString()));
                 distractorsN.appendChild(blockN);
             }
             root.appendChild(distractorsN);
