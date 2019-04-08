@@ -95,7 +95,7 @@ public class PuzzlePaneController {
 
         //TEST MODE OPTIONS
         //Also validates that demo file exists
-        if (!IS_TEST_MODE || !new File("testfiles/puzzlesamp.xml").exists()) {
+        if (!IS_TEST_MODE || !new File("testfiles/puzzlesamp.pzl").exists()) {
             DemoSeparator.setVisible(false);
             PuzzleDemoButton.setVisible(false);
             CreatorDemoButton.setVisible(false); //Will be hidden if either mode is false
@@ -182,7 +182,7 @@ public class PuzzlePaneController {
      */
     @FXML
     public void CreatorDemo(ActionEvent event) {
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         setPuzzleCreatorSet(f);
     }
 
