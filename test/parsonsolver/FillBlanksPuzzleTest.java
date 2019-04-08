@@ -32,7 +32,7 @@ class FillBlanksPuzzleTest {
      */
     @BeforeAll
     static void setupSamplePuzzle() {
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         assertTrue(f.exists());
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
