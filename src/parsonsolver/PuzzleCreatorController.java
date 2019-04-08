@@ -596,12 +596,12 @@ public class PuzzleCreatorController {
      */
     private void SetDistractorLines() {
         int lineNum = 1;
-        String codeColumns = "X" + lineNum++;
+        String codeColumns = "0X" + lineNum++;
         for (int i = 1; i < distractorLines.size(); i++) {
             if (distractorLines.get(i).equals(distractorLines.get(i - 1)))
                 codeColumns = codeColumns.concat("\n-");
             else
-                codeColumns = codeColumns.concat("\nX" + lineNum++);
+                codeColumns = codeColumns.concat("\n0X" + lineNum++);
         }
         DistractorBlocks.setText(codeColumns);
     }
