@@ -180,7 +180,7 @@ public class PuzzleTest {
         ps1.setRandomOrder(false);
         ps1.setSequentialCompletion(false);
 
-        File f = new File("testfiles/SpecialCharacter.pzl");
+        File f = new File("out/test/SpecialCharacter.pzl");
         try {
             ps1.exportToXML(f);
         } catch (Exception e) {
