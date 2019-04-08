@@ -81,7 +81,7 @@ public class PuzzleCreator {
         for (int i = 0; i < lines.size(); i++){
             Block b;
             if (isDistractor){
-                b = new Block("X" +(String.valueOf(i + 1)), lines.get(i), currentPuzzle);
+                b = new Block("0X" +(String.valueOf(i + 1)), lines.get(i), currentPuzzle);
             } else {
                 b = new Block(String.valueOf(i + 1), lines.get(i), currentPuzzle);
             }
