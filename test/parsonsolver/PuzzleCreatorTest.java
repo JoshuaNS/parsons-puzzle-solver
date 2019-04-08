@@ -73,14 +73,14 @@ public class PuzzleCreatorTest {
         creator.closeEdit();
 
         System.out.println("Puzzle Select Screen: Please create or select a puzzle to edit, edit properties, or export.");
-        creator.exportSet();
+        //Perform Export
         System.out.println("Set exported.");
         //user selects quit
         System.out.println("Returning to home screen....");
         creator.closeSession();
         System.out.println("Welcome to the puzzle creator. Please import a puzzle or create a new set.");
         //attempt to edit pre-existing file
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         System.out.print("Importing file......\n");
         PuzzleSet ps = null;
         try {
@@ -98,7 +98,7 @@ public class PuzzleCreatorTest {
         creator.closeEdit();
 
         System.out.println("Puzzle Select Screen: Please create or select a puzzle to edit, edit properties, or export.");
-        creator.exportSet();
+        //Perform Export
         System.out.println("Set exported.");
         //user selects quit
         System.out.println("Returning to home screen....");

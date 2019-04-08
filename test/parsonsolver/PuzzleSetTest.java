@@ -32,7 +32,7 @@ class PuzzleSetTest {
     @Test
     void importSamplePuzzle1() {
         PuzzleSet ps = new PuzzleSet("Lab 1");
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         try {
             ps.importPuzzleSet(f);
         } catch (InvalidInputFileException e) {
@@ -53,7 +53,7 @@ class PuzzleSetTest {
     @Test
     void importSamplePuzzleInvalid() throws InvalidInputFileException {
         PuzzleSet ps = new PuzzleSet();
-        File f = new File("testfiles/puzzlesamperror2.xml");
+        File f = new File("testfiles/puzzlesamperror2.pzl");
 
         ps.importPuzzleSet(f);
 
@@ -69,7 +69,7 @@ class PuzzleSetTest {
     @Test
     void importOutOfOrderPuzzleIndices() throws InvalidInputFileException {
         PuzzleSet ps = new PuzzleSet();
-        File f = new File("testfiles/puzzlesamp_out_of_order.xml");
+        File f = new File("testfiles/puzzlesamp_out_of_order.pzl");
         assertTrue(f.exists());
         ps.importPuzzleSet(f);
         assertEquals(3, ps.getPuzzles().size());
@@ -81,7 +81,7 @@ class PuzzleSetTest {
     @Test
     void importMissingPuzzleIndex() {
         PuzzleSet ps = new PuzzleSet();
-        File f = new File("testfiles/puzzlesamperror_missing_index.xml");
+        File f = new File("testfiles/puzzlesamperror_missing_index.pzl");
         assertTrue(f.exists());
         assertThrows(InvalidInputFileException.class, ()-> ps.importPuzzleSet(f));
     }
@@ -93,7 +93,7 @@ class PuzzleSetTest {
     @Test
     void operationTest() throws InterruptedException{
         System.out.print("Welcome to the puzzle solver. Please import a puzzle.\n");
-        File f = new File("testfiles/puzzlesamp.xml");
+        File f = new File("testfiles/puzzlesamp.pzl");
         System.out.print("Importing file......\n");
         PuzzleSet ps = null;
         try {
@@ -243,14 +243,14 @@ class PuzzleSetTest {
     @Test
     void exportToXML() throws Exception {
         PuzzleSet ps = new PuzzleSet("Lab 1");
-        File f1 = new File("testfiles/puzzlesamp.xml");
+        File f1 = new File("testfiles/puzzlesamp.pzl");
         try {
             ps.importPuzzleSet(f1);
         } catch (InvalidInputFileException e) {
             fail(e);
         }
 
-        File f2 = new File("exportTest.xml");
+        File f2 = new File("exportTest.pzl");
         ps.exportToXML(f2);
         DocumentBuilder factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
