@@ -48,7 +48,7 @@ public class PuzzleTest {
      */
     @Test
     void importSamplePuzzle1() {
-        Document document = setup_document("testfiles/puzzlesamp.xml");
+        Document document = setup_document("testfiles/puzzlesamp.pzl");
 
         Puzzle p = null;
         try {
@@ -97,7 +97,7 @@ public class PuzzleTest {
      */
     @Test
     void importSamplePuzzleMissingParams() throws InvalidInputFileException {
-        Document document = setup_document("testfiles/puzzlesamperror1.xml");
+        Document document = setup_document("testfiles/puzzlesamperror1.pzl");
 
         Puzzle p = null;
         try {
@@ -122,7 +122,7 @@ public class PuzzleTest {
 
     @Test
     void importPuzzleTabsSpaces() {
-       Document document = setup_document("testfiles/puzzle_spaces_and_tabs.xml");
+       Document document = setup_document("testfiles/puzzle_spaces_and_tabs.pzl");
 
         Puzzle tabPuzzle = null;
         try {

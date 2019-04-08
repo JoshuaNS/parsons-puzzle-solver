@@ -100,13 +100,6 @@ public class PuzzleCreator {
         }
     }
 
-    /**
-     * Export the puzzle set as an xml file
-     */
-    public void exportSet(){
-        //todo export puzzle set as XML
-    }
-
     public PuzzleSet getCurrentSet() {
         return currentSet;
     }
