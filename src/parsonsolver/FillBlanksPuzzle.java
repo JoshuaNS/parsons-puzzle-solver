@@ -52,7 +52,7 @@ public class FillBlanksPuzzle extends Puzzle {
             return false;
         }
         for (int i = 0; i < getSolutionSet().size(); i++) {
-            if (!providedSolution.get(i).equals(getSolutionSet().get(i))) {
+            if (!providedSolution.get(i).getLines().equals(getSolutionSet().get(i).getLines())) {
                 return false;
             }
         }

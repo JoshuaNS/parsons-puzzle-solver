@@ -52,16 +52,28 @@ public class DragNDropPuzzle extends Puzzle {
         boolean isCorrect = true;
         boolean[] resultArr = new boolean[getSolutionSet().size()];
 
-        for (int i = 0; i < getLines().size(); i++) {
-            if (!providedSolution.get(i).equals(getSolutionSet().get(i))) {
-                resultArr[i] = false;
-                isCorrect = false;
-            } else if (isIndentRequired() && providedSolution.get(i).getSolutionTab() != getSolutionSet().get(i).getTab()) {
-                resultArr[i] = false;
-                isCorrect = false;
-            } else {
-                resultArr[i] = true;
+        for (int i = 0; i < getSolutionSet().size(); i++) {
+
+            if (isIndentRequired()) {
+                if (!providedSolution.get(i).getLines().equals(getSolutionSet().get(i).getLines())) {
+                    resultArr[i] = false;
+                    isCorrect = false;
+                } else if (providedSolution.get(i).getSolutionTab() != getSolutionSet().get(i).getTab()) {
+                    resultArr[i] = false;
+                    isCorrect = false;
+                } else {
+                    resultArr[i] = true;
+                }
             }
+            else {
+                if (!providedSolution.get(i).getLinesTabbed().equals(getSolutionSet().get(i).getLinesTabbed())) {
+                    resultArr[i] = false;
+                    isCorrect = false;
+                } else {
+                    resultArr[i] = true;
+                }
+            }
+
         }
 
         if (isCorrect) {
