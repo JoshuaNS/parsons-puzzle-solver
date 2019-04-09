@@ -250,7 +250,8 @@ class PuzzleSetTest {
             fail(e);
         }
 
-        File f2 = new File("exportTest.pzl");
+        File f2 = new File("out/test/exportTest.xml");
+
         ps.exportToXML(f2);
         DocumentBuilder factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 

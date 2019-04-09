@@ -1,5 +1,6 @@
 package parsonsolver;
 
+import Util.XML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -9,6 +10,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * A Puzzle object is the object that contains the data for a single puzzle in a puzzle set
  * Data that a puzzle contains includes the description, solutions and distractors, among other details
@@ -17,7 +19,6 @@ import java.util.regex.Pattern;
  *
  */
 public abstract class Puzzle {
-
     private String name;
     private int index;
     private String language;
@@ -67,7 +68,7 @@ public abstract class Puzzle {
         // Name
         NodeList nameNL = puzzleXML.getElementsByTagName("name");
         if (nameNL.getLength() > 0) {
-            this.setName(nameNL.item(0).getTextContent());
+            this.setName(XML.unescapeXMLAttribute(nameNL.item(0).getTextContent()));
         }
         else {
             //if the name is not provided, just use the index
@@ -77,7 +78,7 @@ public abstract class Puzzle {
         // Language
         NodeList languageNL = puzzleXML.getElementsByTagName("lang");
         if (languageNL.getLength() > 0) {
-            this.setLanguage(languageNL.item(0).getTextContent());
+            this.setLanguage(XML.unescapeXMLAttribute(languageNL.item(0).getTextContent()));
         }
         else {
             this.setLanguage("None Specified");
@@ -118,7 +119,7 @@ public abstract class Puzzle {
         // Description
         NodeList descNL = puzzleXML.getElementsByTagName("description");
         if (descNL.getLength() > 0) {
-            this.setDescription(descNL.item(0).getTextContent());
+            this.setDescription(XML.unescapeXMLAttribute(descNL.item(0).getTextContent()));
         }
         else {
             //if no description provided, initialize but keep blank
@@ -137,7 +138,7 @@ public abstract class Puzzle {
             for (int i = 0; i < solutionBlocks.getLength(); i++) {
                 String id = solutionBlocks.item(i).getAttributes().getNamedItem("id").getNodeValue();
                 int index = Integer.parseInt(id);
-                this.lines.add(index-1, new Block(id, solutionBlocks.item(i).getTextContent(), this));
+                this.lines.add(index-1, new Block(id, XML.unescapeXMLAttribute(solutionBlocks.item(i).getTextContent()), this));
             }
         }
         else {
@@ -163,7 +164,7 @@ public abstract class Puzzle {
                     associatedID = -1;
                 }
 
-                Block b = new Block(id, distractorBlocks.item(i).getTextContent(), this);
+                Block b = new Block(id, XML.unescapeXMLAttribute(distractorBlocks.item(i).getTextContent()), this);
 
                 // Add associated between both blocks
                 // associatedID of 0 means no association
@@ -368,7 +369,6 @@ public abstract class Puzzle {
 
     public Node exportToXML(Document document) throws UnformedPuzzleException{
         Element root = document.createElement("puzzle");
-
         // Export common puzzle stuff
         Element nameN = document.createElement("name");
         Element indexN = document.createElement("index");
@@ -378,21 +378,21 @@ public abstract class Puzzle {
         Element descriptionN = document.createElement("description");
 
         try {
-            nameN.appendChild(document.createTextNode(getName()));
+            nameN.appendChild(document.createTextNode(getName().toString()));
             root.appendChild(nameN);
         } catch (NullPointerException e) {
             nameN.appendChild(document.createTextNode("No Name"));
         }
 
-        try {
+        if (getIndex() > 0) {
             indexN.appendChild(document.createTextNode(String.valueOf(getIndex())));
             root.appendChild(indexN);
-        } catch (NullPointerException e) {
+        } else {
             throw new UnformedPuzzleException("No index");
         }
 
         try {
-            langN.appendChild(document.createTextNode(getLanguage()));
+            langN.appendChild(document.createTextNode(getLanguage().toString()));
             root.appendChild(langN);
         } catch (NullPointerException e) {
             // Lang is not necessary
@@ -413,7 +413,7 @@ public abstract class Puzzle {
         }
 
         try {
-            descriptionN.appendChild(document.createTextNode(getDescription()));
+            descriptionN.appendChild(document.createTextNode(getDescription().toString()));
             root.appendChild(descriptionN);
         } catch (NullPointerException e) {
             descriptionN.appendChild(document.createTextNode(""));
@@ -426,7 +426,7 @@ public abstract class Puzzle {
                 Element blockN = document.createElement("block");
                 blockN.setAttribute("id", b.getID());
                 //String escapedLines = StringEscapeUtils.escapeXml10(b.getLinesTabbed()); // Is this necessary now?
-                blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed().toString()));
                 solutionN.appendChild(blockN);
             }
             root.appendChild(solutionN);
@@ -441,7 +441,7 @@ public abstract class Puzzle {
             for (Block b : getDistractors()) {
                 Element blockN = document.createElement("block");
                 blockN.setAttribute("id", b.getID());
-                blockN.appendChild(document.createTextNode(b.getLinesTabbed()));
+                blockN.appendChild(document.createTextNode(b.getLinesTabbed().toString()));
                 distractorsN.appendChild(blockN);
             }
             root.appendChild(distractorsN);
